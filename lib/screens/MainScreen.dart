@@ -2,23 +2,57 @@ import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import 'OutputScreen.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen();
 
   @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>();
+  // ignore: unused_field
+  UnityWidgetController _unityWidgetController;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final AlertDialog dialog = AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      content: Builder(
+        builder: (context) {
+          // Get available height and width of the build area of this widget. Make a choice depending on the size.
+          var height = MediaQuery.of(context).size.height;
+          var width = MediaQuery.of(context).size.width;
+
+          return Container(
+            height: height,
+            width: width,
+            child: Text('Hello'),
+          );
+        },
+      ),
+    );
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);
       },
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
-        body: Center(
-          child: Text(
-            'Aquarium',
-            style: TextStyle(color: Colors.grey[900], fontSize: 20),
+        body: SafeArea(
+          top: false,
+          child: Container(
+            child: UnityWidget(
+              onUnityCreated: onUnityCreated,
+            ),
           ),
         ),
         bottomNavigationBar: BottomAppBar(
@@ -87,14 +121,9 @@ class MainScreen extends StatelessWidget {
                             leading: const Icon(Icons.contact_page),
                             title: const Text('Change User Information'),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      OutputScreen(),
-                                  fullscreenDialog: true,
-                                ),
-                              );
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (context) => dialog);
                             },
                           ),
                           ListTile(
@@ -125,5 +154,22 @@ class MainScreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
+  }
+
+  // Callback that connects the created controller to the unity controller
+  void onUnityCreated(controller) {
+    this._unityWidgetController = controller;
+  }
+
+  // Communication from Unity to Flutter
+  void onUnityMessage(message) {
+    print('Received message from unity: ${message.toString()}');
+  }
+
+  // Communication from Unity when new scene is loaded to Flutter
+  void onUnitySceneLoaded(SceneLoaded sceneInfo) {
+    print('Received scene loaded from unity: ${sceneInfo.name}');
+    print(
+        'Received scene loaded from unity buildIndex: ${sceneInfo.buildIndex}');
   }
 }

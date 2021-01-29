@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/CreateAccountScreen.dart';
+import 'screens/OutputScreen.dart';
 import 'screens/WelcomeScreen.dart';
 import 'screens/MainScreen.dart';
 
@@ -42,6 +43,7 @@ class _MyAppState extends State<MyApp> {
         'WelcomeScreen': (context) => WelcomeScreen(),
         'CreateAccountScreen': (context) => CreateAccountScreen(),
         'MainScreen': (context) => MainScreen(),
+        'OutputScreen': (context) => OutputScreen(),
       },
     );
   }
