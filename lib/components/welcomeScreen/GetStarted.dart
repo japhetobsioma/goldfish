@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
-class WelcomeScreenButton extends StatelessWidget {
-  const WelcomeScreenButton();
+class GetStarted extends StatelessWidget {
+  const GetStarted();
 
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
       onPressed: () {
-        print('Get Started');
+        Navigator.pushNamed(context, 'CreateAccountScreen');
       },
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       highlightColor: Colors.transparent,

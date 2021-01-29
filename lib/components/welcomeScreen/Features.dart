@@ -1,11 +1,11 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 
-import '../../model/customcard.dart';
+import '../../model/CustomCard.dart';
 import '../../constants.dart';
 
-class WelcomeScreenCard extends StatelessWidget {
-  const WelcomeScreenCard({this.customCard});
+class Features extends StatelessWidget {
+  const Features({this.customCard});
 
   final CustomCard customCard;
 

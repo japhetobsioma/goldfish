@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../model/customcard.dart';
+import '../../model/CustomCard.dart';
 import '../../constants.dart';
-import 'features_card.dart';
+import 'Features.dart';
 
-class WelcomeScreenCardList extends StatefulWidget {
-  const WelcomeScreenCardList();
+class FeaturesList extends StatefulWidget {
+  const FeaturesList();
 
   @override
-  _WelcomeScreenCardListState createState() => _WelcomeScreenCardListState();
+  _FeaturesListState createState() => _FeaturesListState();
 }
 
-class _WelcomeScreenCardListState extends State<WelcomeScreenCardList> {
+class _FeaturesListState extends State<FeaturesList> {
   List<Container> indicators = [];
   int currentPage = 0;
 
@@ -53,7 +53,7 @@ class _WelcomeScreenCardListState extends State<WelcomeScreenCardList> {
             itemBuilder: (context, index) {
               return Opacity(
                 opacity: currentPage == index ? 1.0 : 0.5,
-                child: WelcomeScreenCard(
+                child: Features(
                   customCard: welcomeScreenCards[index],
                 ),
               );

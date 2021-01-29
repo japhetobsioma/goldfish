@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
-class WelcomeScreenTitle extends StatelessWidget {
-  const WelcomeScreenTitle();
+class ScreenTitle extends StatelessWidget {
+  const ScreenTitle();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          'Application Title here',
+          'Create your account',
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
@@ -24,12 +24,12 @@ class WelcomeScreenTitle extends StatelessWidget {
                   Color(0xFF0076FF),
                 ],
               ).createShader(
-                Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                Rect.fromLTWH(0.0, 0.0, 350.0, 30.0),
               ),
           ),
         ),
         Text(
-          'Application Subtitle here',
+          'Please fill up the following.',
           style: kSubtitleStyle,
         ),
       ],
