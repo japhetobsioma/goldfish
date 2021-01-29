@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'screens/CreateAccountScreen.dart';
 import 'screens/WelcomeScreen.dart';
 import 'screens/MainScreen.dart';
-import 'systemUIStyle.dart';
 
-bool isUserSignedUp = false;
+var isUserSignedUp = false;
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -35,9 +34,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    systemUIStyle(
-      style: Style.defaultStyle,
-    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'goldfish',
