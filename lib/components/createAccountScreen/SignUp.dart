@@ -16,7 +16,11 @@ class _SignUpState extends State<SignUp> {
         final prefs = await SharedPreferences.getInstance();
         prefs.setBool('isUserSignedUp', true);
 
-        Navigator.pushNamed(context, 'MainScreen');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          'MainScreen',
+          (Route<dynamic> route) => false,
+        );
       },
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       highlightColor: Colors.transparent,

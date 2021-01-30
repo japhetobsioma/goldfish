@@ -37,20 +37,30 @@ class _OutputScreenState extends State<OutputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: kBackgroundColor,
-        child: Center(
-          child: Text(
-            'Date of birth: ${userDOB ?? null}'
-            '\nAge: ${userAge.toString() ?? null}'
-            '\nGender: ${userGender ?? null}'
-            '\nWake-Up time: ${userWakeUptime ?? null}'
-            '\nBedtime: ${userBedtime ?? null}'
-            '\nWater goal: ${userWaterGoal.toString() ?? null} L/day',
-            style: kTitle2Style,
-          ),
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
         ),
+      ),
+      content: Builder(
+        builder: (context) {
+          var height = MediaQuery.of(context).size.height;
+          var width = MediaQuery.of(context).size.width;
+          return Container(
+            height: height,
+            width: width,
+            child: Text(
+              'Date of birth: ${userDOB ?? null}'
+              '\nAge: ${userAge.toString() ?? null}'
+              '\nGender: ${userGender ?? null}'
+              '\nWake-Up time: ${userWakeUptime ?? null}'
+              '\nBedtime: ${userBedtime ?? null}'
+              '\nWater goal: ${userWaterGoal.toString() ?? null} L/day',
+              style: kTitle2Style,
+            ),
+          );
+        },
       ),
     );
   }
