@@ -21,12 +21,12 @@ class _GenderState extends State<Gender> {
 
   Future<void> saveUserGender() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('userGender', gender);
+    await prefs.setString('userGender', gender);
   }
 
   @override
   Widget build(BuildContext context) {
-    final SimpleDialog dialog = SimpleDialog(
+    final dialog = SimpleDialog(
       title: Text('Select gender'),
       children: [
         GenderDialog(
@@ -34,7 +34,7 @@ class _GenderState extends State<Gender> {
           text: 'Male',
           onPressed: () async {
             final prefs = await SharedPreferences.getInstance();
-            prefs.setString('userGender', 'Male');
+            await prefs.setString('userGender', 'Male');
 
             setState(() {
               gender = 'Male';
@@ -48,7 +48,7 @@ class _GenderState extends State<Gender> {
           text: 'Female',
           onPressed: () async {
             final prefs = await SharedPreferences.getInstance();
-            prefs.setString('userGender', 'Male');
+            await prefs.setString('userGender', 'Male');
 
             setState(() {
               gender = 'Female';

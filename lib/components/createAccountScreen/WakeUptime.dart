@@ -17,7 +17,7 @@ class _WakeUptimeState extends State<WakeUptime> {
   );
 
   void selectWakeUptime() async {
-    final TimeOfDay newWakeUpTime = await showTimePicker(
+    final newWakeUpTime = await showTimePicker(
       context: context,
       initialTime: wakeUpTime,
     );
@@ -25,7 +25,7 @@ class _WakeUptimeState extends State<WakeUptime> {
       setState(() {
         wakeUpTime = newWakeUpTime;
       });
-      saveUserWakeUptime();
+      await saveUserWakeUptime();
     }
   }
 
@@ -37,7 +37,7 @@ class _WakeUptimeState extends State<WakeUptime> {
 
   Future<void> saveUserWakeUptime() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('userWakeUptime', wakeUpTime.format(context));
+    await prefs.setString('userWakeUptime', wakeUpTime.format(context));
   }
 
   @override
