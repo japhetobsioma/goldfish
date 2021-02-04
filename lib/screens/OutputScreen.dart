@@ -21,7 +21,7 @@ class _OutputScreenState extends State<OutputScreen> {
   }
 
   Future<void> readAllUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
 
     setState(() {
       userDOB = prefs.getString('userDOB');
@@ -51,12 +51,12 @@ class _OutputScreenState extends State<OutputScreen> {
             height: height,
             width: width,
             child: Text(
-              'Date of birth: ${userDOB ?? null}'
-              '\nAge: ${userAge.toString() ?? null}'
-              '\nGender: ${userGender ?? null}'
-              '\nWake-Up time: ${userWakeUptime ?? null}'
-              '\nBedtime: ${userBedtime ?? null}'
-              '\nWater goal: ${userWaterGoal.toString() ?? null} L/day',
+              'Date of birth: ${userDOB}'
+              '\nAge: ${userAge.toString()}'
+              '\nGender: ${userGender}'
+              '\nWake-Up time: ${userWakeUptime}'
+              '\nBedtime: ${userBedtime}'
+              '\nWater goal: ${userWaterGoal.toString()} L/day',
               style: kTitle2Style,
             ),
           );

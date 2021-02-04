@@ -33,6 +33,11 @@ dependencies:
   intl: ^0.16.1
   shared_preferences: ^0.5.12+4
   flutter_unity_widget: ^3.0.3
+  pedantic: ^1.9.2
+  syncfusion_flutter_gauges: ^18.4.41
+  flutter_hooks: ^0.15.0
+  hooks_riverpod: ^0.12.3
+  confetti: ^0.5.4+1
 
 dev_dependencies:
   flutter_test:

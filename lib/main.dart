@@ -11,7 +11,7 @@ var isUserSignedUp = false;
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: const Color(0),
+      statusBarColor: Color(0),
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: const Color(0xFFE7EEFB),
       systemNavigationBarDividerColor: const Color(0xFFE7EEFB),
@@ -20,19 +20,14 @@ Future<void> main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var prefs = await SharedPreferences.getInstance();
   isUserSignedUp = prefs.getBool('isUserSignedUp') ?? false;
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp();
 
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

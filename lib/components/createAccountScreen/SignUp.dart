@@ -14,9 +14,9 @@ class _SignUpState extends State<SignUp> {
     return RawMaterialButton(
       onPressed: () async {
         final prefs = await SharedPreferences.getInstance();
-        prefs.setBool('isUserSignedUp', true);
+        await prefs.setBool('isUserSignedUp', true);
 
-        Navigator.pushNamedAndRemoveUntil(
+        await Navigator.pushNamedAndRemoveUntil(
           context,
           'MainScreen',
           (Route<dynamic> route) => false,

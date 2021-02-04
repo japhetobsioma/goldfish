@@ -16,7 +16,7 @@ class _BedtimeState extends State<Bedtime> {
   );
 
   void selectBedtime() async {
-    final TimeOfDay newBedtime = await showTimePicker(
+    final newBedtime = await showTimePicker(
       context: context,
       initialTime: bedtime,
     );
@@ -24,7 +24,7 @@ class _BedtimeState extends State<Bedtime> {
       setState(() {
         bedtime = newBedtime;
       });
-      saveUserBedtime();
+      await saveUserBedtime();
     }
   }
 
@@ -36,7 +36,7 @@ class _BedtimeState extends State<Bedtime> {
 
   Future<void> saveUserBedtime() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('userBedtime', bedtime.format(context));
+    await prefs.setString('userBedtime', bedtime.format(context));
   }
 
   @override

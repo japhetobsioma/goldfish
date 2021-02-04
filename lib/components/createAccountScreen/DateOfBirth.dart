@@ -19,7 +19,7 @@ class _DateOfBirthState extends State<DateOfBirth> {
   void selectDate() async {
     var today = DateTime.now();
 
-    final DateTime newDate = await showDatePicker(
+    final newDate = await showDatePicker(
       context: context,
       initialDate: date,
       firstDate: DateTime(1905, 1),
@@ -38,8 +38,8 @@ class _DateOfBirthState extends State<DateOfBirth> {
         age = newAge;
       });
 
-      saveUserDOB();
-      saveUserAge();
+      await saveUserDOB();
+      await saveUserAge();
     }
   }
 
@@ -52,12 +52,12 @@ class _DateOfBirthState extends State<DateOfBirth> {
 
   Future<void> saveUserDOB() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('userDOB', formattedDate);
+    await prefs.setString('userDOB', formattedDate);
   }
 
   Future<void> saveUserAge() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('userAge', age);
+    await prefs.setInt('userAge', age);
   }
 
   @override
