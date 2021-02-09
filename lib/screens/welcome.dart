@@ -29,6 +29,7 @@ class WelcomeScreen extends StatelessWidget {
             const WakeUpTimeWidget(),
             const Text('Bedtime'),
             const BedtimeWidget(),
+            const ApplyWidget(),
           ],
         ),
       ),
@@ -76,7 +77,7 @@ class GenderWidget extends HookWidget {
 }
 
 final _dateOfBirthState = Provider<DateTime>((ref) {
-  return ref.watch(_userInformationProvider.state).date;
+  return ref.watch(_userInformationProvider.state).dateOfBirth;
 });
 
 final _dateOfBirthProvider = Provider<DateTime>((ref) {
@@ -194,6 +195,22 @@ class BedtimeWidget extends HookWidget {
         ),
         Text('Selected bedtime: ${_bedtimeModel.format(context)}'),
       ],
+    );
+  }
+}
+
+class ApplyWidget extends HookWidget {
+  const ApplyWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        context.read(_userInformationProvider).setWaterIntakeGoal();
+        context.read(_userInformationProvider).insertUserInformation();
+        context.read(_userInformationProvider).queryAllRows();
+      },
+      child: const Text('APPLY'),
     );
   }
 }
