@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../models/user_information.dart';
 
-final _userInformationProvider = StateNotifierProvider<UserInformationNotifier>(
-    (ref) => UserInformationNotifier());
+final _userInformationProvider =
+    StateNotifierProvider((ref) => UserInformationNotifier());
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen();
@@ -15,24 +15,185 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: MediaQuery.of(context).orientation == Orientation.portrait
+              ? PortraitStyleWidget()
+              : LandscapeStyleWidget(),
+        ),
+      ),
+    );
+  }
+}
+
+const welcomeScreenTitleText = 'Customize your hydration plan';
+const genderText = 'GENDER';
+const birthdayText = 'BIRTHDAY';
+const wakeUpTimeText = 'WAKE-UP TIME';
+const bedtimeText = 'BEDTIME';
+
+class LandscapeStyleWidget extends StatelessWidget {
+  const LandscapeStyleWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 40.0,
+          ),
+          child: Column(
+            children: [
+              Text(
+                welcomeScreenTitleText,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 40.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                genderText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const GenderWidget(),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                birthdayText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const BirthdayWidget(),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                wakeUpTimeText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const WakeUpTimeWidget(),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                bedtimeText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const BedtimeWidget(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 40.0,
+          ),
+          child: Column(
+            children: [
+              const ApplyWidget(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PortraitStyleWidget extends StatelessWidget {
+  const PortraitStyleWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
           children: [
-            const Text(
-                'Input your information to customize your hydration plan'),
-            const Text('Gender'),
-            const GenderWidget(),
-            const Text('Date of birth'),
-            const DateOfBirthWidget(),
-            const Text('Wake-up time'),
-            const WakeUpTimeWidget(),
-            const Text('Bedtime'),
-            const BedtimeWidget(),
+            Text(
+              welcomeScreenTitleText,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 40.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                genderText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const GenderWidget(),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                birthdayText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const BirthdayWidget(),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                wakeUpTimeText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const WakeUpTimeWidget(),
+              const SizedBox(
+                height: 32.0,
+              ),
+              Text(
+                bedtimeText,
+                style: Theme.of(context).textTheme.overline,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              const BedtimeWidget(),
+            ],
+          ),
+        ),
+        Column(
+          children: [
             const ApplyWidget(),
           ],
         ),
-      ),
+      ],
     );
   }
 }
@@ -52,23 +213,23 @@ class GenderWidget extends HookWidget {
   Widget build(BuildContext context) {
     final _genderModel = useProvider(_genderProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        RadioListTile(
-          title: const Text('Male'),
-          value: Gender.male,
-          groupValue: _genderModel,
-          onChanged: (value) {
-            context.read(_userInformationProvider).selectGender(value);
+        ChoiceChip(
+          label: const Text('Male'),
+          selected: _genderModel == Gender.male ? true : false,
+          onSelected: (_) {
+            context.read(_userInformationProvider).selectGender(Gender.male);
           },
         ),
-        RadioListTile(
-          title: const Text('Female'),
-          value: Gender.female,
-          groupValue: _genderModel,
-          onChanged: (value) {
-            context.read(_userInformationProvider).selectGender(value);
+        const SizedBox(
+          width: 10.0,
+        ),
+        ChoiceChip(
+          label: const Text('Female'),
+          selected: _genderModel == Gender.female ? true : false,
+          onSelected: (_) {
+            context.read(_userInformationProvider).selectGender(Gender.female);
           },
         ),
       ],
@@ -76,46 +237,55 @@ class GenderWidget extends HookWidget {
   }
 }
 
-final _dateOfBirthState = Provider<DateTime>((ref) {
-  return ref.watch(_userInformationProvider.state).dateOfBirth;
+final _birthdayState = Provider<DateTime>((ref) {
+  return ref.watch(_userInformationProvider.state).birthday;
 });
 
-final _dateOfBirthProvider = Provider<DateTime>((ref) {
-  return ref.watch(_dateOfBirthState);
+final _birthdayProvider = Provider<DateTime>((ref) {
+  return ref.watch(_birthdayState);
 });
 
-class DateOfBirthWidget extends HookWidget {
-  const DateOfBirthWidget();
+class BirthdayWidget extends HookWidget {
+  const BirthdayWidget();
 
   @override
   Widget build(BuildContext context) {
-    final _dateOfBirthModel = useProvider(_dateOfBirthProvider);
+    final _birthdayModel = useProvider(_birthdayProvider);
 
     Future<void> _showDatePicker() async {
       final _dateNow = DateTime.now();
 
       final _selectedDate = await showDatePicker(
         context: context,
-        initialDate: _dateOfBirthModel,
+        initialDate: _birthdayModel,
         firstDate: DateTime(1905, 1),
         lastDate: DateTime(_dateNow.year, _dateNow.day),
         initialDatePickerMode: DatePickerMode.year,
       );
 
-      if (_selectedDate != null && _selectedDate != _dateOfBirthModel) {
-        context.read(_userInformationProvider).selectDateOfBirth(_selectedDate);
+      if (_selectedDate != null && _selectedDate != _birthdayModel) {
+        context.read(_userInformationProvider).selectBirthday(_selectedDate);
       }
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton(
-          onPressed: _showDatePicker,
-          child: const Text('SHOW DATE PICKER'),
+        InkWell(
+          splashColor: Colors.transparent,
+          onTap: _showDatePicker,
+          child: IgnorePointer(
+            child: TextFormField(
+              key: Key(_birthdayModel.toString()),
+              initialValue: DateFormat.yMd().format(_birthdayModel),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                suffixIcon: const Icon(
+                  Icons.calendar_today,
+                ),
+              ),
+            ),
+          ),
         ),
-        Text(
-            'Selected date of birth: ${DateFormat.yMd().format(_dateOfBirthModel)}'),
       ],
     );
   }
@@ -148,13 +318,23 @@ class WakeUpTimeWidget extends HookWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton(
-          onPressed: _showTimePicker,
-          child: const Text('SHOW TIME PICKER'),
+        InkWell(
+          splashColor: Colors.transparent,
+          onTap: _showTimePicker,
+          child: IgnorePointer(
+            child: TextFormField(
+              key: Key(_wakeUpTimeModel.toString()),
+              initialValue: _wakeUpTimeModel.format(context),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                suffixIcon: const Icon(
+                  Icons.brightness_5,
+                ),
+              ),
+            ),
+          ),
         ),
-        Text('Selected wake-up time: ${_wakeUpTimeModel.format(context)}'),
       ],
     );
   }
@@ -187,13 +367,23 @@ class BedtimeWidget extends HookWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton(
-          onPressed: _showTimePicker,
-          child: const Text('SHOW TIME PICKER'),
+        InkWell(
+          splashColor: Colors.transparent,
+          onTap: _showTimePicker,
+          child: IgnorePointer(
+            child: TextFormField(
+              key: Key(_bedtimeModel.toString()),
+              initialValue: _bedtimeModel.format(context),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                suffixIcon: const Icon(
+                  Icons.nights_stay,
+                ),
+              ),
+            ),
+          ),
         ),
-        Text('Selected bedtime: ${_bedtimeModel.format(context)}'),
       ],
     );
   }
@@ -204,13 +394,16 @@ class ApplyWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: () {
         context.read(_userInformationProvider).setWaterIntakeGoal();
         context.read(_userInformationProvider).insertUserInformation();
         context.read(_userInformationProvider).queryAllRows();
       },
-      child: const Text('APPLY'),
+      icon: const Icon(
+        Icons.how_to_reg,
+      ),
+      label: const Text('APPLY PLAN'),
     );
   }
 }

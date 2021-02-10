@@ -15,7 +15,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
 
   static final _initialState = UserInformationModel(
     gender: Gender.male,
-    dateOfBirth: DateTime.now(),
+    birthday: DateTime.now(),
     age: 0,
     wakeUpTime: TimeOfDay(
       hour: 8,
@@ -31,7 +31,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
   void selectGender(Gender gender) {
     state = UserInformationModel(
       gender: gender,
-      dateOfBirth: state.dateOfBirth,
+      birthday: state.birthday,
       age: state.age,
       wakeUpTime: state.wakeUpTime,
       bedtime: state.bedtime,
@@ -39,12 +39,12 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
     );
   }
 
-  void selectDateOfBirth(DateTime date) {
+  void selectBirthday(DateTime date) {
     final age = getAge(date);
 
     state = UserInformationModel(
       gender: state.gender,
-      dateOfBirth: date,
+      birthday: date,
       age: age,
       wakeUpTime: state.wakeUpTime,
       bedtime: state.bedtime,
@@ -64,7 +64,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
   void selectWakeUpTime(TimeOfDay time) {
     state = UserInformationModel(
       gender: state.gender,
-      dateOfBirth: state.dateOfBirth,
+      birthday: state.birthday,
       age: state.age,
       wakeUpTime: time,
       bedtime: state.bedtime,
@@ -75,7 +75,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
   void selectBedtime(TimeOfDay time) {
     state = UserInformationModel(
       gender: state.gender,
-      dateOfBirth: state.dateOfBirth,
+      birthday: state.birthday,
       age: state.age,
       wakeUpTime: state.wakeUpTime,
       bedtime: time,
@@ -91,7 +91,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
 
     state = UserInformationModel(
       gender: state.gender,
-      dateOfBirth: state.dateOfBirth,
+      birthday: state.birthday,
       age: state.age,
       wakeUpTime: state.wakeUpTime,
       bedtime: state.bedtime,
@@ -146,7 +146,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
 
   void insertUserInformation() async {
     final gender = state.gender.toString().split('.').last;
-    final dateOfBirth = DateFormat.yMd().format(state.dateOfBirth);
+    final birthday = DateFormat.yMd().format(state.birthday);
 
     final nowDate = DateTime.now();
     final dateWakeUpTime = DateTime(nowDate.year, nowDate.month, nowDate.day,
@@ -159,7 +159,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
     final row = <String, dynamic>{
       DatabaseHelper.columnId: 1,
       DatabaseHelper.columnGender: gender,
-      DatabaseHelper.columnDateOfBirth: dateOfBirth,
+      DatabaseHelper.columnBirthday: birthday,
       DatabaseHelper.columnAge: state.age,
       DatabaseHelper.columnWakeUpTime: wakeUpTime,
       DatabaseHelper.columnBedtime: bedtime,
@@ -179,7 +179,7 @@ class UserInformationNotifier extends StateNotifier<UserInformationModel> {
 
 class UserInformationModel {
   final Gender gender;
-  final DateTime dateOfBirth;
+  final DateTime birthday;
   final int age;
   final TimeOfDay wakeUpTime;
   final TimeOfDay bedtime;
@@ -187,7 +187,7 @@ class UserInformationModel {
 
   const UserInformationModel({
     this.gender,
-    this.dateOfBirth,
+    this.birthday,
     this.age,
     this.wakeUpTime,
     this.bedtime,

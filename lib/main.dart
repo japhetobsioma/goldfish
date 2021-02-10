@@ -14,12 +14,13 @@ void main() {
 
 class App extends StatelessWidget {
   const App();
+  static const appTitle = 'project goldfish';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'project goldfish',
+      title: appTitle,
       initialRoute: '/',
       routes: {
         '/': (context) => const WelcomeScreen(),
