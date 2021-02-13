@@ -1,4 +1,4 @@
-name: Build and release Flutter application
+name: build
 on:
   push:
     # Sequence of patterns matched against refs/tags
@@ -25,10 +25,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          ##
-          tag_name: v0.1-alpha
-          ##
-          release_name: goldfish v0.1-alpha
+          tag_name: ${{ github.ref }}
+          release_name: goldfish ${{ github.ref }}
           ##
           body: |
             - Use riverpod for state management
@@ -59,7 +57,7 @@ jobs:
           channel: "stable"
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build apk --split-per-abi
+      - run: flutter build apk
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
