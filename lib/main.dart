@@ -1,44 +1,35 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/CreateAccountScreen.dart';
-import 'screens/OutputScreen.dart';
-import 'screens/WelcomeScreen.dart';
-import 'screens/MainScreen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-var isUserSignedUp = false;
-Future<void> main() async {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      statusBarColor: Color(0),
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: const Color(0xFFE7EEFB),
-      systemNavigationBarDividerColor: const Color(0xFFE7EEFB),
-      systemNavigationBarIconBrightness: Brightness.dark,
+import 'theme.dart';
+import 'screens/welcome.dart';
+
+// Wrap the entire application in a 'ProviderScope' so that it can read
+// 'providers'. Check out https://riverpod.dev/ for more information.
+void main() {
+  runApp(
+    const ProviderScope(
+      child: App(),
     ),
   );
-
-  WidgetsFlutterBinding.ensureInitialized();
-  var prefs = await SharedPreferences.getInstance();
-  isUserSignedUp = prefs.getBool('isUserSignedUp') ?? false;
-  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp();
+class App extends StatelessWidget {
+  const App();
+
+  static const appTitle = 'project goldfish';
+  static const initialRouteName = '/';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'goldfish',
-      initialRoute: isUserSignedUp ? 'MainScreen' : 'WelcomeScreen',
+      theme: goldfishTheme(),
+      title: appTitle,
+      initialRoute: initialRouteName,
       routes: {
-        'WelcomeScreen': (context) => WelcomeScreen(),
-        'CreateAccountScreen': (context) => CreateAccountScreen(),
-        'MainScreen': (context) => MainScreen(),
-        'OutputScreen': (context) => OutputScreen(),
+        '/': (context) => const WelcomeScreen(),
       },
     );
   }
