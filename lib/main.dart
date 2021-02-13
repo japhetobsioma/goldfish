@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'theme.dart';
 import 'screens/welcome.dart';
 
+// Wrap the entire application in a 'ProviderScope' so that it can read
+// 'providers'. Check out https://riverpod.dev/ for more information.
 void main() {
   runApp(
     const ProviderScope(
@@ -14,14 +17,17 @@ void main() {
 
 class App extends StatelessWidget {
   const App();
+
   static const appTitle = 'project goldfish';
+  static const initialRouteName = '/';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: goldfishTheme(),
       title: appTitle,
-      initialRoute: '/',
+      initialRoute: initialRouteName,
       routes: {
         '/': (context) => const WelcomeScreen(),
       },

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../models/user_information.dart';
 
+// Create a provider for UserInformationModel and UserInformationNotifier
 final _userInformationProvider =
     StateNotifierProvider((ref) => UserInformationNotifier());
 
@@ -15,26 +16,126 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: MediaQuery.of(context).orientation == Orientation.portrait
-              ? PortraitStyleWidget()
-              : LandscapeStyleWidget(),
+              // Separate the designs for the portrait and landscape.
+              ? const PortraitStyleWidget()
+              : const LandscapeStyleWidget(),
         ),
       ),
     );
   }
 }
 
-const welcomeScreenTitleText = 'Customize your hydration plan';
-const genderText = 'GENDER';
-const birthdayText = 'BIRTHDAY';
-const wakeUpTimeText = 'WAKE-UP TIME';
-const bedtimeText = 'BEDTIME';
+const _titleText = 'Customize your hydration plan';
+const _genderText = 'GENDER';
+const _birthdayText = 'BIRTHDAY';
+const _wakeUpTimeText = 'WAKE-UP TIME';
+const _bedtimeText = 'BEDTIME';
 
+class TitleTextWidget extends StatelessWidget {
+  const TitleTextWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _titleText,
+      style: Theme.of(context).textTheme.headline6,
+    );
+  }
+}
+
+// Widget that handles GenderWidget, BirthdayWidget, WakeUpTime Widget and
+// Bedtime Widget. I separate this widget and include it on LandscapeStyleWidget
+// and PortraitStyleWidgte.
+class InformationFieldsWidget extends StatelessWidget {
+  const InformationFieldsWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _genderText,
+          style: Theme.of(context).textTheme.overline,
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        const GenderWidget(),
+        const SizedBox(
+          height: 32.0,
+        ),
+        Text(
+          _birthdayText,
+          style: Theme.of(context).textTheme.overline,
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        const BirthdayWidget(),
+        const SizedBox(
+          height: 32.0,
+        ),
+        Text(
+          _wakeUpTimeText,
+          style: Theme.of(context).textTheme.overline,
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        const WakeUpTimeWidget(),
+        const SizedBox(
+          height: 32.0,
+        ),
+        Text(
+          _bedtimeText,
+          style: Theme.of(context).textTheme.overline,
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        const BedtimeWidget(),
+      ],
+    );
+  }
+}
+
+// Design for the portrait orientation.
+class PortraitStyleWidget extends StatelessWidget {
+  const PortraitStyleWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          children: [
+            const TitleTextWidget(),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 40.0,
+          ),
+          child: const InformationFieldsWidget(),
+        ),
+        Column(
+          children: [
+            const ApplyWidget(),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+// Design for the landscape orientation.
 class LandscapeStyleWidget extends StatelessWidget {
   const LandscapeStyleWidget();
 
@@ -48,10 +149,7 @@ class LandscapeStyleWidget extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Text(
-                welcomeScreenTitleText,
-                style: Theme.of(context).textTheme.headline6,
-              ),
+              const TitleTextWidget(),
             ],
           ),
         ),
@@ -59,52 +157,7 @@ class LandscapeStyleWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: 40.0,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                genderText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const GenderWidget(),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Text(
-                birthdayText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const BirthdayWidget(),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Text(
-                wakeUpTimeText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const WakeUpTimeWidget(),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Text(
-                bedtimeText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const BedtimeWidget(),
-            ],
-          ),
+          child: const InformationFieldsWidget(),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(
@@ -121,83 +174,8 @@ class LandscapeStyleWidget extends StatelessWidget {
   }
 }
 
-class PortraitStyleWidget extends StatelessWidget {
-  const PortraitStyleWidget();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Column(
-          children: [
-            Text(
-              welcomeScreenTitleText,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 40.0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                genderText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const GenderWidget(),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Text(
-                birthdayText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const BirthdayWidget(),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Text(
-                wakeUpTimeText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const WakeUpTimeWidget(),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Text(
-                bedtimeText,
-                style: Theme.of(context).textTheme.overline,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              const BedtimeWidget(),
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            const ApplyWidget(),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
+// Declare gender state and provider so that this will be the only widget to be
+// rebuild later after the state has changed.
 final _genderState = Provider<Gender>((ref) {
   return ref.watch(_userInformationProvider.state).gender;
 });
@@ -237,6 +215,10 @@ class GenderWidget extends HookWidget {
   }
 }
 
+// Declare birthday state and provider so that this will be the only widget to
+// be rebuild later after the state has changed. I prevent the user from
+// entering a value in TextFormField so that it will function as a holder of
+// the value generated from the DatePicker.
 final _birthdayState = Provider<DateTime>((ref) {
   return ref.watch(_userInformationProvider.state).birthday;
 });
@@ -291,6 +273,10 @@ class BirthdayWidget extends HookWidget {
   }
 }
 
+// Declare wake-up time state and provider so that this will be the only widget
+// to be rebuild later after the state has changed. I prevent the user from
+// entering a value in TextFormField so that it will function as a holder of
+// the value generated from the TimePicker.
 final _wakeUpTimeState = Provider<TimeOfDay>((ref) {
   return ref.watch(_userInformationProvider.state).wakeUpTime;
 });
@@ -340,6 +326,10 @@ class WakeUpTimeWidget extends HookWidget {
   }
 }
 
+// Declare bedtime state and provider so that this will be the only widget to
+// be rebuild later after the state has changed. I prevent the user from
+// entering a value in TextFormField so that it will function as a holder of
+// the value generated from the DatePicker.
 final _bedtimeState = Provider<TimeOfDay>((ref) {
   return ref.watch(_userInformationProvider.state).bedtime;
 });
@@ -389,6 +379,8 @@ class BedtimeWidget extends HookWidget {
   }
 }
 
+// After the user clicked the 'APPLY PLAN' button, all users data will be
+// inserted in SQLite database using SQFlite library.
 class ApplyWidget extends HookWidget {
   const ApplyWidget();
 
@@ -398,6 +390,7 @@ class ApplyWidget extends HookWidget {
       onPressed: () {
         context.read(_userInformationProvider).setWaterIntakeGoal();
         context.read(_userInformationProvider).insertUserInformation();
+        // Show all rows. For #testing only.
         context.read(_userInformationProvider).queryAllRows();
       },
       icon: const Icon(
