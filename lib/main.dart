@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'theme.dart';
-import 'screens/welcome.dart';
+import 'screens/central.dart';
 
 // Wrap the entire application in a 'ProviderScope' so that it can read
 // 'providers'. Check out https://riverpod.dev/ for more information.
 void main() {
+  // debugPaintSizeEnabled = true;
   runApp(
     const ProviderScope(
       child: App(),
@@ -29,7 +30,7 @@ class App extends StatelessWidget {
       title: appTitle,
       initialRoute: initialRouteName,
       routes: {
-        '/': (context) => const WelcomeScreen(),
+        '/': (context) => const CentralScreen(), // Testing home screen
       },
     );
   }
