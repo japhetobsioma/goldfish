@@ -1,4 +1,4 @@
-name: Build and release Flutter application
+name: build
 on:
   push:
     # Sequence of patterns matched against refs/tags
@@ -25,16 +25,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          ##
-          tag_name: v0.1-alpha
-          ##
-          release_name: goldfish v0.1-alpha
-          ##
+          tag_name: ${{ github.ref }}
+          release_name: goldfish ${{ github.ref }}
+          # Change body
           body: |
-            - Use riverpod for state management
-            - Redesign the welcome screen
-            - Use SQFlite for managing SQLite
-          ##
+            - Add home page
+            - Add aquarium page
+            - Fix some issues on build.gradle files
+          # Change prerelease (boolean)
           prerelease: true
       - name: Upload asset to GitHub Release
         uses: actions/upload-release-asset@v1
@@ -43,8 +41,8 @@ jobs:
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
           asset_path: ./buildApk.zip
-          ##
-          asset_name: goldfish-v0.1-alpha.zip
+          # Change asset name
+          asset_name: goldfish-v0.1.2-alpha.zip
           asset_content_type: application/zip
   build-apk:
     name: Build Flutter (Android)
@@ -59,7 +57,7 @@ jobs:
           channel: "stable"
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build apk --split-per-abi
+      - run: flutter build apk
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:

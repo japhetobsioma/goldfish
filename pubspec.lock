@@ -83,6 +83,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.8"
   flutter_riverpod:
     dependency: transitive
     description:
@@ -90,11 +97,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.3+1"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_unity_widget:
+    dependency: "direct main"
+    description:
+      name: flutter_unity_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.3"
   freezed_annotation:
     dependency: transitive
     description:
@@ -214,13 +235,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.3"
-  sizer:
-    dependency: "direct main"
-    description:
-      name: sizer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.8"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -268,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.1"
+  stream_transform:
+    dependency: transitive
+    description:
+      name: stream_transform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   string_scanner:
     dependency: transitive
     description:
@@ -275,6 +296,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0-nullsafety.1"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.4.42"
+  syncfusion_flutter_gauges:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_gauges
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.4.42"
   synchronized:
     dependency: transitive
     description:
