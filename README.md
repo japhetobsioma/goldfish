@@ -1,4 +1,5 @@
 # project goldfish
+[![build](https://github.com/japhetobsioma/goldfish/actions/workflows/release.yml/badge.svg?branch=v0.1.2-alpha)](https://github.com/japhetobsioma/goldfish/actions/workflows/release.yml)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/japhetobsioma/goldfish?include_prereleases)
 
 Final year project. (Work in progress)
