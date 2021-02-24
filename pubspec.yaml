@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^1.6.27
   flutter_speed_dial: ^2.1.1
   syncfusion_flutter_gauges: ^18.4.42
+  flutter_unity_widget: ^3.0.3
 
 dev_dependencies:
   flutter_test:

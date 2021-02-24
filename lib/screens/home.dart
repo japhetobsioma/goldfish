@@ -20,6 +20,8 @@ final _totalIntakeProvider = Provider<double>((ref) {
 });
 
 class HomeScreen extends HookWidget {
+  const HomeScreen();
+
   @override
   Widget build(BuildContext context) {
     final _waterIntakeModel = useProvider(waterIntakeProvider.state);

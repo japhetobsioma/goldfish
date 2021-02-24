@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 
 import '../models/user_information.dart';
 
-// Create a provider for UserInformationModel and UserInformationNotifier
 final _userInformationProvider =
     StateNotifierProvider((ref) => UserInformationNotifier());
 
@@ -21,7 +20,6 @@ class WelcomeScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: MediaQuery.of(context).orientation == Orientation.portrait
-              // Separate the designs for the portrait and landscape.
               ? const PortraitStyleWidget()
               : const LandscapeStyleWidget(),
         ),
@@ -48,9 +46,6 @@ class TitleTextWidget extends StatelessWidget {
   }
 }
 
-// Widget that handles GenderWidget, BirthdayWidget, WakeUpTime Widget and
-// Bedtime Widget. I separate this widget and include it on LandscapeStyleWidget
-// and PortraitStyleWidgte.
 class InformationFieldsWidget extends StatelessWidget {
   const InformationFieldsWidget();
 
@@ -105,7 +100,6 @@ class InformationFieldsWidget extends StatelessWidget {
   }
 }
 
-// Design for the portrait orientation.
 class PortraitStyleWidget extends StatelessWidget {
   const PortraitStyleWidget();
 
@@ -135,7 +129,6 @@ class PortraitStyleWidget extends StatelessWidget {
   }
 }
 
-// Design for the landscape orientation.
 class LandscapeStyleWidget extends StatelessWidget {
   const LandscapeStyleWidget();
 
@@ -174,8 +167,6 @@ class LandscapeStyleWidget extends StatelessWidget {
   }
 }
 
-// Declare gender state and provider so that this will be the only widget to be
-// rebuild later after the state has changed.
 final _genderState = Provider<Gender>((ref) {
   return ref.watch(_userInformationProvider.state).gender;
 });
@@ -215,10 +206,6 @@ class GenderWidget extends HookWidget {
   }
 }
 
-// Declare birthday state and provider so that this will be the only widget to
-// be rebuild later after the state has changed. I prevent the user from
-// entering a value in TextFormField so that it will function as a holder of
-// the value generated from the DatePicker.
 final _birthdayState = Provider<DateTime>((ref) {
   return ref.watch(_userInformationProvider.state).birthday;
 });
@@ -273,10 +260,6 @@ class BirthdayWidget extends HookWidget {
   }
 }
 
-// Declare wake-up time state and provider so that this will be the only widget
-// to be rebuild later after the state has changed. I prevent the user from
-// entering a value in TextFormField so that it will function as a holder of
-// the value generated from the TimePicker.
 final _wakeUpTimeState = Provider<TimeOfDay>((ref) {
   return ref.watch(_userInformationProvider.state).wakeUpTime;
 });
@@ -326,10 +309,6 @@ class WakeUpTimeWidget extends HookWidget {
   }
 }
 
-// Declare bedtime state and provider so that this will be the only widget to
-// be rebuild later after the state has changed. I prevent the user from
-// entering a value in TextFormField so that it will function as a holder of
-// the value generated from the DatePicker.
 final _bedtimeState = Provider<TimeOfDay>((ref) {
   return ref.watch(_userInformationProvider.state).bedtime;
 });
@@ -379,8 +358,6 @@ class BedtimeWidget extends HookWidget {
   }
 }
 
-// After the user clicked the 'APPLY PLAN' button, all users data will be
-// inserted in SQLite database using SQFlite library.
 class ApplyWidget extends HookWidget {
   const ApplyWidget();
 
@@ -390,7 +367,7 @@ class ApplyWidget extends HookWidget {
       onPressed: () {
         context.read(_userInformationProvider).setWaterIntakeGoal();
         context.read(_userInformationProvider).insertUserInformation();
-        // Show all rows. For #testing only.
+
         context.read(_userInformationProvider).queryAllRows();
       },
       icon: const Icon(

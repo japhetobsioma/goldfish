@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../models/navigation_index.dart';
 import 'home.dart';
+import 'aquarium.dart';
+import '../models/navigation_index.dart';
 
 final _navigationIndexProvider =
     StateNotifierProvider((ref) => NavigationIndexNotifier());
@@ -15,15 +16,16 @@ class CentralScreen extends HookWidget {
 
   static const _itemLabels = ['Home', 'Aquarium', 'History', 'Settings'];
 
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final _colorScheme = Theme.of(context).colorScheme;
     final _navigationIndexModel = useProvider(_navigationIndexProvider.state);
     final _availableScreens = [
       HomeScreen(),
-      Center(
-        child: Text('Aquarium'),
-      ),
+      Aquarium(),
       Center(
         child: Text('History'),
       ),
@@ -33,6 +35,7 @@ class CentralScreen extends HookWidget {
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
       body: _availableScreens.elementAt(_navigationIndexModel.index),
       floatingActionButton:
           _navigationIndexModel.index == 0 ? ActionWidget() : null,
@@ -103,7 +106,6 @@ class ActionWidget extends HookWidget {
           foregroundColor: colorScheme.onPrimary,
           onTap: () {
             context.read(waterIntakeProvider).addIntake();
-            print('Intake');
           },
           label: 'Add intake',
           labelStyle: TextStyle(
