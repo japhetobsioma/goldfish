@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'screens/central.dart';
 
 import 'theme.dart';
 import 'screens/welcome.dart';
@@ -17,7 +18,8 @@ class App extends StatelessWidget {
   const App();
 
   static const appTitle = 'project goldfish';
-  static const initialRouteName = '/';
+  static const welcomeScreen = '/';
+  static const centralScreen = 'CentralScreen';
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +27,10 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: goldfishTheme(),
       title: appTitle,
-      initialRoute: initialRouteName,
+      initialRoute: welcomeScreen,
       routes: {
-        initialRouteName: (context) => const WelcomeScreen(),
+        welcomeScreen: (context) => const WelcomeScreen(),
+        centralScreen: (context) => const CentralScreen(),
       },
     );
   }

@@ -27,12 +27,11 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: goldfish ${{ github.ref }}
-          ##
+          # Change body
           body: |
-            - Use riverpod for state management
-            - Redesign the welcome screen
-            - Use SQFlite for managing SQLite
-          ##
+            - Add home page
+            - Add aquarium page
+          # Change prerelease (boolean)
           prerelease: true
       - name: Upload asset to GitHub Release
         uses: actions/upload-release-asset@v1
@@ -41,8 +40,8 @@ jobs:
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
           asset_path: ./buildApk.zip
-          ##
-          asset_name: goldfish-v0.1-alpha.zip
+          # Change asset name
+          asset_name: goldfish-v0.1.1-alpha.zip
           asset_content_type: application/zip
   build-apk:
     name: Build Flutter (Android)

@@ -369,6 +369,12 @@ class ApplyWidget extends HookWidget {
         context.read(_userInformationProvider).insertUserInformation();
 
         context.read(_userInformationProvider).queryAllRows();
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          'CentralScreen',
+          (Route<dynamic> route) => false,
+        );
       },
       icon: const Icon(
         Icons.how_to_reg,
