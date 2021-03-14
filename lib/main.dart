@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'screens/createPlan.dart';
-import 'common/strings.dart';
 import 'common/theme.dart';
 
 void main() {
@@ -19,11 +18,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: myAppTitle,
+      title: 'Project goldfish',
       theme: goldfishTheme(),
-      initialRoute: createPlanScreen,
+      initialRoute: '/',
       routes: {
-        createPlanScreen: (context) => const CreatePlanScreen(),
+        '/': (context) => const CreatePlanScreen(),
       },
     );
   }

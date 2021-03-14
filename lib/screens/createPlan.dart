@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 import '../common/colors.dart';
 import '../common/helpers.dart';
-import '../common/strings.dart';
 
 class CreatePlanScreen extends StatelessWidget {
   const CreatePlanScreen();
@@ -150,7 +149,7 @@ class _BuildBirthdayFieldState extends State<BuildBirthdayField> {
               controller: _birthdayTextController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: birthdayLabel,
+                labelText: 'Birthday',
                 hintText: 'Ex. ${dateToString(DateTime.now())}',
               ),
             ),
@@ -207,8 +206,8 @@ class _BuildWakeupTimeFieldState extends State<BuildWakeupTimeField> {
               controller: _wakeUpTimetextController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: wakeupTimeLabel,
-                hintText: wakeupTimeHint,
+                labelText: 'Wake-up Time',
+                hintText: 'Ex. 8:30 AM',
               ),
             ),
             Positioned(
@@ -263,8 +262,8 @@ class _BuildBedtimeFieldState extends State<BuildBedtimeField> {
               controller: _bedtimeTextController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: bedtimeLabel,
-                hintText: bedtimeHint,
+                labelText: 'Bedtime',
+                hintText: 'Ex. 10:30 PM',
               ),
             ),
             Positioned(
@@ -313,8 +312,8 @@ class _BuildDailyGoalState extends State<BuildDailyGoal> {
   }
 
   String liquidMeasurementToString(LiquidMeasurement value) => {
-        LiquidMeasurement.ml: milliliterPerDay,
-        LiquidMeasurement.fl_oz: fluidOuncePerDay,
+        LiquidMeasurement.ml: 'ml/per day',
+        LiquidMeasurement.fl_oz: 'fl oz/per day',
       }[value];
 
   @override
