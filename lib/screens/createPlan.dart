@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../models/createPlan.dart';
+import '../states/createPlan.dart';
 import '../common/colors.dart';
 import '../common/helpers.dart';
 
-class CreatePlanScreen extends StatelessWidget {
+class CreatePlanScreen extends HookWidget {
   const CreatePlanScreen();
 
   @override
@@ -40,8 +45,8 @@ class BuildScreenHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 24,
         left: 37.0,
+        top: 25.0,
         right: 37.0,
       ),
       child: const Text(
@@ -55,102 +60,120 @@ class BuildScreenHeading extends StatelessWidget {
   }
 }
 
-enum Gender { male, female }
-
-class BuildGenderField extends StatefulWidget {
-  const BuildGenderField({Key key}) : super(key: key);
-
-  @override
-  _BuildGenderFieldState createState() => _BuildGenderFieldState();
-}
-
-class _BuildGenderFieldState extends State<BuildGenderField> {
-  Gender _selectedGender;
+class BuildGenderField extends HookWidget {
+  const BuildGenderField();
 
   @override
   Widget build(BuildContext context) {
+    final selectedGender = useProvider(selectedGenderProvider);
+    final isGenderNone = useProvider(isGenderNoneProvider);
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 37.0,
+        top: 30.0,
         right: 37.0,
-        top: 35.0,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 1.0,
-            color: goldfishContainerBorderColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1.0,
+                color: isGenderNone
+                    ? Theme.of(context).errorColor
+                    : goldfishContainerBorderColor,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'GENDER',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: goldfishContainerTextColor,
+                  ),
+                ),
+                RadioListTile(
+                  title: Text(genderToString(Gender.male)),
+                  value: Gender.male,
+                  groupValue: selectedGender,
+                  onChanged: (value) {
+                    context.read(createPlanProvider).setGender(value);
+                  },
+                ),
+                RadioListTile(
+                  title: Text(genderToString(Gender.female)),
+                  value: Gender.female,
+                  groupValue: selectedGender,
+                  onChanged: (value) {
+                    context.read(createPlanProvider).setGender(value);
+                  },
+                ),
+              ],
+            ),
           ),
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'GENDER',
-              style: TextStyle(
-                fontSize: 12.0,
-                color: goldfishContainerTextColor,
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 3.0,
+              left: 13.0,
+            ),
+            child: Visibility(
+              visible: isGenderNone,
+              child: Text(
+                'Enter gender',
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).errorColor,
+                ),
               ),
             ),
-            RadioListTile(
-              title: const Text('Male'),
-              value: Gender.male,
-              groupValue: _selectedGender,
-              onChanged: (value) {
-                setState(() {
-                  _selectedGender = value;
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text('Female'),
-              value: Gender.female,
-              groupValue: _selectedGender,
-              onChanged: (value) {
-                setState(() {
-                  _selectedGender = value;
-                });
-              },
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class BuildBirthdayField extends StatefulWidget {
-  const BuildBirthdayField({Key key}) : super(key: key);
-
-  @override
-  _BuildBirthdayFieldState createState() => _BuildBirthdayFieldState();
-}
-
-class _BuildBirthdayFieldState extends State<BuildBirthdayField> {
-  final _birthdayFormKey = GlobalKey<FormState>();
-  final _birthdayTextController = TextEditingController();
+class BuildBirthdayField extends HookWidget {
+  const BuildBirthdayField();
 
   @override
   Widget build(BuildContext context) {
+    final birthdayFormKey = useProvider(birthdayFormKeyProvider);
+    final birthdayTextController = useProvider(birthdayTextControllerProvider);
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 37.0,
+        top: 15.0,
         right: 37.0,
-        top: 24.0,
       ),
       child: Container(
         child: Stack(
           alignment: Alignment.centerRight,
           children: <Widget>[
-            TextFormField(
-              key: _birthdayFormKey,
-              controller: _birthdayTextController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Birthday',
-                hintText: 'Ex. ${dateToString(DateTime.now())}',
+            Form(
+              key: birthdayFormKey,
+              child: TextFormField(
+                controller: birthdayTextController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Birthday',
+                  hintText: 'e.g. ${dateToString(DateTime.now())}',
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter birthday';
+                  }
+
+                  return null;
+                },
               ),
             ),
             Positioned(
@@ -166,7 +189,7 @@ class _BuildBirthdayFieldState extends State<BuildBirthdayField> {
                   );
 
                   if (selectedDate != null) {
-                    _birthdayTextController.text = dateToString(selectedDate);
+                    birthdayTextController.text = dateToString(selectedDate);
                   }
                 },
               ),
@@ -178,36 +201,41 @@ class _BuildBirthdayFieldState extends State<BuildBirthdayField> {
   }
 }
 
-class BuildWakeupTimeField extends StatefulWidget {
-  const BuildWakeupTimeField({Key key}) : super(key: key);
-
-  @override
-  _BuildWakeupTimeFieldState createState() => _BuildWakeupTimeFieldState();
-}
-
-class _BuildWakeupTimeFieldState extends State<BuildWakeupTimeField> {
-  final _wakeupTimeFormKey = GlobalKey<FormState>();
-  final _wakeUpTimetextController = TextEditingController();
+class BuildWakeupTimeField extends HookWidget {
+  const BuildWakeupTimeField();
 
   @override
   Widget build(BuildContext context) {
+    final wakeupTimeFormKey = useProvider(wakeupTimeFormKeyProvider);
+    final wakeupTimeTextController =
+        useProvider(wakeupTimeTextControllerProvider);
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 37.0,
+        top: 15.0,
         right: 37.0,
-        top: 24.0,
       ),
       child: Container(
         child: Stack(
           alignment: Alignment.centerRight,
           children: <Widget>[
-            TextFormField(
-              key: _wakeupTimeFormKey,
-              controller: _wakeUpTimetextController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Wake-up Time',
-                hintText: 'Ex. 8:30 AM',
+            Form(
+              key: wakeupTimeFormKey,
+              child: TextFormField(
+                controller: wakeupTimeTextController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Wake-up Time',
+                  hintText: 'e.g. 8:30 AM',
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter wake-up time';
+                  }
+
+                  return null;
+                },
               ),
             ),
             Positioned(
@@ -221,7 +249,7 @@ class _BuildWakeupTimeFieldState extends State<BuildWakeupTimeField> {
                   );
 
                   if (selectedTime != null) {
-                    _wakeUpTimetextController.text =
+                    wakeupTimeTextController.text =
                         timeToString(selectedTime, context);
                   }
                 },
@@ -234,36 +262,40 @@ class _BuildWakeupTimeFieldState extends State<BuildWakeupTimeField> {
   }
 }
 
-class BuildBedtimeField extends StatefulWidget {
-  const BuildBedtimeField({Key key}) : super(key: key);
-
-  @override
-  _BuildBedtimeFieldState createState() => _BuildBedtimeFieldState();
-}
-
-class _BuildBedtimeFieldState extends State<BuildBedtimeField> {
-  final _bedtimeFormKey = GlobalKey<FormState>();
-  final _bedtimeTextController = TextEditingController();
+class BuildBedtimeField extends HookWidget {
+  const BuildBedtimeField();
 
   @override
   Widget build(BuildContext context) {
+    final bedtimeFormKey = useProvider(bedtimeFormKeyProvider);
+    final bedtimeTextController = useProvider(bedtimeTextControllerProvider);
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 37.0,
+        top: 15.0,
         right: 37.0,
-        top: 24.0,
       ),
       child: Container(
         child: Stack(
           alignment: Alignment.centerRight,
           children: <Widget>[
-            TextFormField(
-              key: _bedtimeFormKey,
-              controller: _bedtimeTextController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Bedtime',
-                hintText: 'Ex. 10:30 PM',
+            Form(
+              key: bedtimeFormKey,
+              child: TextFormField(
+                controller: bedtimeTextController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Bedtime',
+                  hintText: 'e.g. 10:30 PM',
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter bedtime';
+                  }
+
+                  return null;
+                },
               ),
             ),
             Positioned(
@@ -277,7 +309,7 @@ class _BuildBedtimeFieldState extends State<BuildBedtimeField> {
                   );
 
                   if (selectedTime != null) {
-                    _bedtimeTextController.text =
+                    bedtimeTextController.text =
                         timeToString(selectedTime, context);
                   }
                 },
@@ -290,62 +322,56 @@ class _BuildBedtimeFieldState extends State<BuildBedtimeField> {
   }
 }
 
-enum LiquidMeasurement { ml, fl_oz }
-
-class BuildDailyGoal extends StatefulWidget {
-  const BuildDailyGoal({Key key}) : super(key: key);
-
-  @override
-  _BuildDailyGoalState createState() => _BuildDailyGoalState();
-}
-
-class _BuildDailyGoalState extends State<BuildDailyGoal> {
-  final _dailyGoalformKey = GlobalKey<FormState>();
-  final _dailyGoaltextController = TextEditingController();
-
-  var _selectedLiquidMeasurement = LiquidMeasurement.ml;
-
-  void setLiquidMeasurement(LiquidMeasurement value) {
-    setState(() {
-      _selectedLiquidMeasurement = value;
-    });
-  }
-
-  String liquidMeasurementToString(LiquidMeasurement value) => {
-        LiquidMeasurement.ml: 'ml/per day',
-        LiquidMeasurement.fl_oz: 'fl oz/per day',
-      }[value];
+class BuildDailyGoal extends HookWidget {
+  const BuildDailyGoal();
 
   @override
   Widget build(BuildContext context) {
+    final dailyGoalFormKey = useProvider(dailyGoalFormKeyProvider);
+    final dailyGoalTextController =
+        useProvider(dailyGoalTextControllerProvider);
+    final selectedLiquidMeasurement =
+        useProvider(selectedLiquidMeasurementProvider);
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 37.0,
+        top: 15.0,
         right: 37.0,
-        top: 24.0,
       ),
       child: Container(
         child: Stack(
           alignment: Alignment.centerRight,
           children: <Widget>[
-            TextFormField(
-              key: _dailyGoalformKey,
-              controller: _dailyGoaltextController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Daily Goal',
+            Form(
+              key: dailyGoalFormKey,
+              child: TextFormField(
+                controller: dailyGoalTextController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Daily Goal',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter daily goal';
+                  }
+
+                  return null;
+                },
               ),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
             ),
             Positioned(
+              top: 10.0,
               right: 5.0,
               child: PopupMenuButton(
-                padding: EdgeInsets.zero,
-                initialValue: _selectedLiquidMeasurement,
-                onSelected: (value) => setLiquidMeasurement(value),
+                initialValue: selectedLiquidMeasurement,
+                onSelected: (value) => context
+                    .read(createPlanProvider)
+                    .setLiquideMeasurement(value),
                 itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                   const PopupMenuItem(
                     value: LiquidMeasurement.ml,
@@ -359,7 +385,7 @@ class _BuildDailyGoalState extends State<BuildDailyGoal> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    liquidMeasurementToString(_selectedLiquidMeasurement),
+                    liquidMeasurementToString(selectedLiquidMeasurement),
                     style: TextStyle(color: goldfishBlack),
                   ),
                 ),
@@ -372,27 +398,56 @@ class _BuildDailyGoalState extends State<BuildDailyGoal> {
   }
 }
 
-class BuildBottomButtons extends StatelessWidget {
+class BuildBottomButtons extends HookWidget {
   const BuildBottomButtons();
 
   @override
   Widget build(BuildContext context) {
+    final selectedGender = useProvider(selectedGenderProvider);
+    final birthdayFormKey = useProvider(birthdayFormKeyProvider);
+    final wakeupTimeFormKey = useProvider(wakeupTimeFormKeyProvider);
+    final bedtimeFormKey = useProvider(bedtimeFormKeyProvider);
+    final dailyGoalFormKey = useProvider(dailyGoalFormKeyProvider);
+
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 37.0,
-        right: 37.0,
-        top: 24.0,
-        bottom: 24.0,
+      padding: const EdgeInsets.symmetric(
+        vertical: 25.0,
+        horizontal: 37.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              context.read(createPlanProvider).clearCreatePlan();
+            },
             child: const Text('Clear'),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              if (genderToString(selectedGender) == 'None') {
+                context.read(createPlanProvider).isGenderHasError(true);
+              } else {
+                context.read(createPlanProvider).isGenderHasError(false);
+                print('Gender Field is filled up');
+              }
+
+              if (birthdayFormKey.currentState.validate()) {
+                print('Birthday Field is filled up.');
+              }
+
+              if (wakeupTimeFormKey.currentState.validate()) {
+                print('Wake-up time Field is filled up.');
+              }
+
+              if (bedtimeFormKey.currentState.validate()) {
+                print('Bedtime Field is filled up.');
+              }
+
+              if (dailyGoalFormKey.currentState.validate()) {
+                print('Daily goal Field is filled up.');
+              }
+            },
             child: const Text('Save Plan'),
           ),
         ],
