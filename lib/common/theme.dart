@@ -7,5 +7,11 @@ ThemeData goldfishTheme() {
     primaryColor: goldfishPrimaryBlue,
     scaffoldBackgroundColor: goldfishWhite,
     toggleableActiveColor: goldfishPrimaryBlue,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(primary: goldfishPrimaryBlue),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(primary: goldfishPrimaryBlue),
+    ),
   );
 }
