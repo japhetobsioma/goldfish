@@ -67,6 +67,8 @@ class BuildGenderField extends HookWidget {
   Widget build(BuildContext context) {
     final selectedGender = useProvider(selectedGenderProvider);
     final isGenderNone = useProvider(isGenderNoneProvider);
+    final isUsingRecommendedDailyGoal =
+        useProvider(isUsingRecommendedDailyGoalProvider);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -104,6 +106,12 @@ class BuildGenderField extends HookWidget {
                   groupValue: selectedGender,
                   onChanged: (value) {
                     context.read(createPlanProvider).setGender(value);
+
+                    isUsingRecommendedDailyGoal
+                        ? context.read(createPlanProvider).calculateDailyGoal()
+                        : context
+                            .read(createPlanProvider)
+                            .setDailyGoalTextController('0');
                   },
                 ),
                 RadioListTile(
@@ -112,6 +120,12 @@ class BuildGenderField extends HookWidget {
                   groupValue: selectedGender,
                   onChanged: (value) {
                     context.read(createPlanProvider).setGender(value);
+
+                    isUsingRecommendedDailyGoal
+                        ? context.read(createPlanProvider).calculateDailyGoal()
+                        : context
+                            .read(createPlanProvider)
+                            .setDailyGoalTextController('0');
                   },
                 ),
               ],
@@ -147,6 +161,8 @@ class BuildBirthdayField extends HookWidget {
   Widget build(BuildContext context) {
     final birthdayFormKey = useProvider(birthdayFormKeyProvider);
     final birthdayTextController = useProvider(birthdayTextControllerProvider);
+    final isUsingRecommendedDailyGoal =
+        useProvider(isUsingRecommendedDailyGoalProvider);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -165,11 +181,27 @@ class BuildBirthdayField extends HookWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Birthday',
-                  hintText: 'e.g. ${dateToString(DateTime.now())}',
+                  hintText: 'e.g. ${dateTimeToString(DateTime.now())}',
                 ),
+                onChanged: (_) {
+                  isUsingRecommendedDailyGoal
+                      ? context.read(createPlanProvider).calculateDailyGoal()
+                      : context
+                          .read(createPlanProvider)
+                          .setDailyGoalTextController('0');
+                },
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Enter birthday';
+                  }
+
+                  if (!isDateFormatValid(value)) {
+                    return 'Invalid date format';
+                  }
+
+                  if (!isMinimumAge(value)) {
+                    return 'Your age is below our minimum age (6 years old) '
+                        'requirement';
                   }
 
                   return null;
@@ -189,7 +221,9 @@ class BuildBirthdayField extends HookWidget {
                   );
 
                   if (selectedDate != null) {
-                    birthdayTextController.text = dateToString(selectedDate);
+                    birthdayTextController.text =
+                        dateTimeToString(selectedDate);
+                    context.read(createPlanProvider).calculateDailyGoal();
                   }
                 },
               ),
@@ -234,6 +268,10 @@ class BuildWakeupTimeField extends HookWidget {
                     return 'Enter wake-up time';
                   }
 
+                  if (!isTimeFormatCorrect(value, context)) {
+                    return 'Invalid time format';
+                  }
+
                   return null;
                 },
               ),
@@ -250,7 +288,7 @@ class BuildWakeupTimeField extends HookWidget {
 
                   if (selectedTime != null) {
                     wakeupTimeTextController.text =
-                        timeToString(selectedTime, context);
+                        timeOfDayToString(selectedTime, context);
                   }
                 },
               ),
@@ -294,6 +332,10 @@ class BuildBedtimeField extends HookWidget {
                     return 'Enter bedtime';
                   }
 
+                  if (!isTimeFormatCorrect(value, context)) {
+                    return 'Invalid time format';
+                  }
+
                   return null;
                 },
               ),
@@ -310,7 +352,7 @@ class BuildBedtimeField extends HookWidget {
 
                   if (selectedTime != null) {
                     bedtimeTextController.text =
-                        timeToString(selectedTime, context);
+                        timeOfDayToString(selectedTime, context);
                   }
                 },
               ),
@@ -332,6 +374,8 @@ class BuildDailyGoal extends HookWidget {
         useProvider(dailyGoalTextControllerProvider);
     final selectedLiquidMeasurement =
         useProvider(selectedLiquidMeasurementProvider);
+    final isUsingRecommendedDailyGoal =
+        useProvider(isUsingRecommendedDailyGoalProvider);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -340,56 +384,100 @@ class BuildDailyGoal extends HookWidget {
         right: 37.0,
       ),
       child: Container(
-        child: Stack(
-          alignment: Alignment.centerRight,
-          children: <Widget>[
-            Form(
-              key: dailyGoalFormKey,
-              child: TextFormField(
-                controller: dailyGoalTextController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Daily Goal',
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Enter daily goal';
-                  }
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: Alignment.centerRight,
+              children: <Widget>[
+                Form(
+                  key: dailyGoalFormKey,
+                  child: TextFormField(
+                    controller: dailyGoalTextController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Daily Goal',
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    enabled: !isUsingRecommendedDailyGoal,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Enter daily goal';
+                      }
 
-                  return null;
-                },
-              ),
-            ),
-            Positioned(
-              top: 10.0,
-              right: 5.0,
-              child: PopupMenuButton(
-                initialValue: selectedLiquidMeasurement,
-                onSelected: (value) => context
-                    .read(createPlanProvider)
-                    .setLiquideMeasurement(value),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                  const PopupMenuItem(
-                    value: LiquidMeasurement.ml,
-                    child: Text('milliliter'),
-                  ),
-                  const PopupMenuItem(
-                    value: LiquidMeasurement.fl_oz,
-                    child: Text('fluid ounce'),
-                  ),
-                ],
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    liquidMeasurementToString(selectedLiquidMeasurement),
-                    style: TextStyle(color: goldfishBlack),
+                      if (value == '0') {
+                        return 'Daily goal cannot be 0';
+                      }
+
+                      if (int.tryParse(value) == null) {
+                        return 'Invalid number format';
+                      }
+
+                      return null;
+                    },
                   ),
                 ),
+                Positioned(
+                  top: 10.0,
+                  right: 5.0,
+                  child: PopupMenuButton(
+                    initialValue: selectedLiquidMeasurement,
+                    onSelected: (value) {
+                      context
+                          .read(createPlanProvider)
+                          .setLiquidMeasurement(value);
+
+                      isUsingRecommendedDailyGoal
+                          ? context
+                              .read(createPlanProvider)
+                              .calculateDailyGoal()
+                          : context.read(createPlanProvider).convertDailyGoal();
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                      const PopupMenuItem(
+                        value: LiquidMeasurement.ml,
+                        child: Text('milliliter'),
+                      ),
+                      const PopupMenuItem(
+                        value: LiquidMeasurement.fl_oz,
+                        child: Text('fluid ounce'),
+                      ),
+                    ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        liquidMeasurementToString(selectedLiquidMeasurement),
+                        style: TextStyle(color: goldfishBlack),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            CheckboxListTile(
+              title: const Text(
+                'Use recommended daily goal',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                ),
               ),
+              value: isUsingRecommendedDailyGoal,
+              onChanged: (value) {
+                context
+                    .read(createPlanProvider)
+                    .setUsingRecommendedDailyGoal(value);
+
+                value
+                    ? context.read(createPlanProvider).calculateDailyGoal()
+                    : context
+                        .read(createPlanProvider)
+                        .setDailyGoalTextController('0');
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: EdgeInsets.zero,
             ),
           ],
         ),
@@ -410,25 +498,26 @@ class BuildBottomButtons extends HookWidget {
     final dailyGoalFormKey = useProvider(dailyGoalFormKeyProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 25.0,
-        horizontal: 37.0,
+      padding: const EdgeInsets.only(
+        left: 37.0,
+        right: 37.0,
+        bottom: 25.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton(
             onPressed: () {
-              context.read(createPlanProvider).clearCreatePlan();
+              context.read(createPlanProvider).clearAllFields();
             },
             child: const Text('Clear'),
           ),
           ElevatedButton(
             onPressed: () {
               if (genderToString(selectedGender) == 'None') {
-                context.read(createPlanProvider).isGenderHasError(true);
+                context.read(createPlanProvider).setGenderNone(true);
               } else {
-                context.read(createPlanProvider).isGenderHasError(false);
+                context.read(createPlanProvider).setGenderNone(false);
                 print('Gender Field is filled up');
               }
 

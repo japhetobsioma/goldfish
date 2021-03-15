@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../models/createPlan.dart';
+import '../common/helpers.dart';
 
 class CreatePlanNotifier extends StateNotifier<CreatePlan> {
   CreatePlanNotifier() : super(_initialValue);
@@ -17,8 +18,9 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     bedtimeFormKey: GlobalKey<FormState>(),
     bedtimeTextController: TextEditingController(),
     dailyGoalFormKey: GlobalKey<FormState>(),
-    dailyGoalTextController: TextEditingController(),
+    dailyGoalTextController: TextEditingController(text: '0'),
     selectedLiquidMeasurement: LiquidMeasurement.ml,
+    isUsingRecommendedDailyGoal: true,
   );
 
   void setGender(Gender gender) {
@@ -34,10 +36,11 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
       dailyGoalFormKey: state.dailyGoalFormKey,
       dailyGoalTextController: state.dailyGoalTextController,
       selectedLiquidMeasurement: state.selectedLiquidMeasurement,
+      isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
     );
   }
 
-  void isGenderHasError(bool value) {
+  void setGenderNone(bool value) {
     state = CreatePlan(
       selectedGender: state.selectedGender,
       isGenderNone: value,
@@ -50,10 +53,11 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
       dailyGoalFormKey: state.dailyGoalFormKey,
       dailyGoalTextController: state.dailyGoalTextController,
       selectedLiquidMeasurement: state.selectedLiquidMeasurement,
+      isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
     );
   }
 
-  void setLiquideMeasurement(LiquidMeasurement liquidMeasurement) {
+  void setLiquidMeasurement(LiquidMeasurement liquidMeasurement) {
     state = CreatePlan(
       selectedGender: state.selectedGender,
       isGenderNone: state.isGenderNone,
@@ -66,10 +70,107 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
       dailyGoalFormKey: state.dailyGoalFormKey,
       dailyGoalTextController: state.dailyGoalTextController,
       selectedLiquidMeasurement: liquidMeasurement,
+      isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
     );
   }
 
-  void clearCreatePlan() {
+  void calculateDailyGoal() {
+    final gender = state.selectedGender;
+    final birthday = state.birthdayTextController.text;
+    final liquidMeasurement = state.selectedLiquidMeasurement;
+    int dailyGoal;
+
+    if (!genderToString(gender).contains('None') && birthday.isNotEmpty) {
+      if (isDateFormatValid(birthday) && isMinimumAge(birthday)) {
+        final age = getAge(stringToDateTime(birthday));
+        dailyGoal = getDailyGoal(gender, age, liquidMeasurement);
+
+        state = CreatePlan(
+          selectedGender: state.selectedGender,
+          isGenderNone: state.isGenderNone,
+          birthdayFormKey: state.birthdayFormKey,
+          birthdayTextController: state.birthdayTextController,
+          wakeupTimeFormKey: state.wakeupTimeFormKey,
+          wakeupTimeTextController: state.wakeupTimeTextController,
+          bedtimeFormKey: state.bedtimeFormKey,
+          bedtimeTextController: state.bedtimeTextController,
+          dailyGoalFormKey: state.dailyGoalFormKey,
+          dailyGoalTextController:
+              TextEditingController(text: dailyGoal.toString()),
+          selectedLiquidMeasurement: state.selectedLiquidMeasurement,
+          isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
+        );
+      }
+    }
+  }
+
+  void convertDailyGoal() {
+    final liquidMeasurement = state.selectedLiquidMeasurement;
+    final dailyGoalTextController =
+        double.tryParse(state.dailyGoalTextController.text);
+    int dailyGoal;
+
+    switch (liquidMeasurement) {
+      case LiquidMeasurement.ml:
+        dailyGoal = fluidOunceToMilliliters(dailyGoalTextController);
+        break;
+      case LiquidMeasurement.fl_oz:
+        dailyGoal = millilitersToFluidOunce(dailyGoalTextController);
+        break;
+    }
+
+    state = CreatePlan(
+      selectedGender: state.selectedGender,
+      isGenderNone: state.isGenderNone,
+      birthdayFormKey: state.birthdayFormKey,
+      birthdayTextController: state.birthdayTextController,
+      wakeupTimeFormKey: state.wakeupTimeFormKey,
+      wakeupTimeTextController: state.wakeupTimeTextController,
+      bedtimeFormKey: state.bedtimeFormKey,
+      bedtimeTextController: state.bedtimeTextController,
+      dailyGoalFormKey: state.dailyGoalFormKey,
+      dailyGoalTextController:
+          TextEditingController(text: dailyGoal.toString()),
+      selectedLiquidMeasurement: state.selectedLiquidMeasurement,
+      isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
+    );
+  }
+
+  void setDailyGoalTextController(String value) {
+    state = CreatePlan(
+      selectedGender: state.selectedGender,
+      isGenderNone: state.isGenderNone,
+      birthdayFormKey: state.birthdayFormKey,
+      birthdayTextController: state.birthdayTextController,
+      wakeupTimeFormKey: state.wakeupTimeFormKey,
+      wakeupTimeTextController: state.wakeupTimeTextController,
+      bedtimeFormKey: state.bedtimeFormKey,
+      bedtimeTextController: state.bedtimeTextController,
+      dailyGoalFormKey: state.dailyGoalFormKey,
+      dailyGoalTextController: TextEditingController(text: value),
+      selectedLiquidMeasurement: state.selectedLiquidMeasurement,
+      isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
+    );
+  }
+
+  void setUsingRecommendedDailyGoal(bool value) {
+    state = CreatePlan(
+      selectedGender: state.selectedGender,
+      isGenderNone: state.isGenderNone,
+      birthdayFormKey: state.birthdayFormKey,
+      birthdayTextController: state.birthdayTextController,
+      wakeupTimeFormKey: state.wakeupTimeFormKey,
+      wakeupTimeTextController: state.wakeupTimeTextController,
+      bedtimeFormKey: state.bedtimeFormKey,
+      bedtimeTextController: state.bedtimeTextController,
+      dailyGoalFormKey: state.dailyGoalFormKey,
+      dailyGoalTextController: state.dailyGoalTextController,
+      selectedLiquidMeasurement: state.selectedLiquidMeasurement,
+      isUsingRecommendedDailyGoal: value,
+    );
+  }
+
+  void clearAllFields() {
     state = CreatePlan(
       selectedGender: Gender.none,
       isGenderNone: false,
@@ -80,8 +181,9 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
       bedtimeFormKey: GlobalKey<FormState>(),
       bedtimeTextController: TextEditingController(),
       dailyGoalFormKey: GlobalKey<FormState>(),
-      dailyGoalTextController: TextEditingController(),
+      dailyGoalTextController: TextEditingController(text: '0'),
       selectedLiquidMeasurement: LiquidMeasurement.ml,
+      isUsingRecommendedDailyGoal: true,
     );
   }
 }
@@ -175,4 +277,12 @@ final _selectedLiquidMeasurementState = Provider<LiquidMeasurement>((ref) {
 
 final selectedLiquidMeasurementProvider = Provider<LiquidMeasurement>((ref) {
   return ref.watch(_selectedLiquidMeasurementState);
+});
+
+final _isUsingRecommendedDailyGoalState = Provider<bool>((ref) {
+  return ref.watch(createPlanProvider.state).isUsingRecommendedDailyGoal;
+});
+
+final isUsingRecommendedDailyGoalProvider = Provider<bool>((ref) {
+  return ref.watch(_isUsingRecommendedDailyGoalState);
 });

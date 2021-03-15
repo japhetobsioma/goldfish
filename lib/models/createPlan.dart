@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 enum Gender { male, female, none }
-
 enum LiquidMeasurement { ml, fl_oz }
 
 class CreatePlan {
@@ -17,6 +16,7 @@ class CreatePlan {
     this.dailyGoalFormKey,
     this.dailyGoalTextController,
     this.selectedLiquidMeasurement,
+    this.isUsingRecommendedDailyGoal,
   });
 
   final Gender selectedGender;
@@ -30,4 +30,5 @@ class CreatePlan {
   final GlobalKey<FormState> dailyGoalFormKey;
   final TextEditingController dailyGoalTextController;
   final LiquidMeasurement selectedLiquidMeasurement;
+  final bool isUsingRecommendedDailyGoal;
 }
