@@ -4,21 +4,37 @@ import 'package:intl/intl.dart';
 
 import '../models/createPlan.dart';
 
-const datePattern = 'd MMMM y';
-const timePattern = 'jm';
-const minimumAge = 6;
+const _datePattern = 'd MMMM y';
+const _timePattern = 'jm';
+const _minimumAge = 6;
 
-String dateTimeToString(DateTime dateTime) {
-  return DateFormat(datePattern).format(dateTime);
+/// Return a string representing time of day based on given date.
+///
+/// The default time pattern is `jm`.
+String dateToStingTime(DateTime date) {
+  return DateFormat(_timePattern).format(date);
 }
 
-DateTime stringToDateTime(String value) {
-  return DateFormat(datePattern).parseStrict(value);
+/// Return a string representing date based on given date.
+///
+/// The default date pattern is `d MMMM y`.
+String dateToString(DateTime date) {
+  return DateFormat(_datePattern).format(date);
 }
 
-bool isDateFormatValid(String dateTime) {
+/// Return a date based on given string representing date.
+///
+/// The default date pattern is `d MMMM y`.
+DateTime stringToDate(String stringDate) {
+  return DateFormat(_datePattern).parseStrict(stringDate);
+}
+
+/// Check if the string representing date is in valid format.
+///
+/// Return `true` if valid, otherwise `false`.
+bool isDateFormatValid(String stringDate) {
   try {
-    DateFormat(datePattern).parseStrict(dateTime);
+    DateFormat(_datePattern).parseStrict(stringDate);
   } on FormatException {
     return false;
   }
@@ -26,6 +42,43 @@ bool isDateFormatValid(String dateTime) {
   return true;
 }
 
+/// Return string representing time of day based on given time of day.
+///
+/// The default date pattern is `jm`.
+String timeToString(TimeOfDay time) {
+  final dateNow = DateTime.now();
+  final date = DateTime(
+    dateNow.year,
+    dateNow.month,
+    dateNow.day,
+    time.hour,
+    time.minute,
+  );
+
+  return DateFormat(_timePattern).format(date);
+}
+
+/// Return date based on given string representing time of day.
+///
+/// The default time patern is `jm`.
+DateTime stringTimeToDate(String stringTime) {
+  return DateFormat(_timePattern).parseStrict(stringTime);
+}
+
+/// Check if the string representing time of day is in valid format.
+///
+/// Return `true` if valid, otherwise `false`.
+bool isTimeFormatValid(String timeOfDay) {
+  try {
+    DateFormat(_timePattern).parseStrict(timeOfDay);
+  } on FormatException {
+    return false;
+  }
+
+  return true;
+}
+
+/// Return age based on given birthday.
 int getAge(DateTime birthday) {
   final todaysDate = DateTime.now();
   var age = todaysDate.year - birthday.year;
@@ -35,42 +88,41 @@ int getAge(DateTime birthday) {
   return age;
 }
 
+/// Checks if the age is within the minimum age.
+///
+/// Minimum age default value is `6`. Return `true` if its within the minimum
+/// age, otherwise `false`.
 bool isMinimumAge(String birthday) {
-  final birthdayDateTime = stringToDateTime(birthday);
+  final birthdayDateTime = stringToDate(birthday);
   final age = getAge(birthdayDateTime);
 
-  if (age >= minimumAge) {
+  if (age >= _minimumAge) {
     return true;
   }
 
   return false;
 }
 
-String timeOfDayToString(TimeOfDay timeOfDay, BuildContext context) {
-  return timeOfDay.format(context);
-}
-
-bool isTimeFormatCorrect(String timeOfDay, BuildContext context) {
-  try {
-    DateFormat(timePattern).parseStrict(timeOfDay);
-  } on FormatException {
-    return false;
-  }
-
-  return true;
-}
-
+/// Return string representing gender based on given gender enum.
 String genderToString(Gender gender) => {
       Gender.male: 'Male',
       Gender.female: 'Female',
       Gender.none: 'None',
     }[gender];
 
+/// Return string representing liquid measurement based on given liquid
+/// measurement enum.
 String liquidMeasurementToString(LiquidMeasurement liquidMeasurement) => {
       LiquidMeasurement.ml: 'ml/per day',
       LiquidMeasurement.fl_oz: 'fl oz/per day',
     }[liquidMeasurement];
 
+/// Return a daily goal based on given Gender, age.
+///
+/// Reference: https://www.who.int/water_sanitation_health/dwq/nutwaterrequir.pdf
+///
+/// This automatically converts the water volume based on given liquid
+/// measurement.
 int getDailyGoal(
   Gender gender,
   int age,
@@ -128,18 +180,36 @@ int getDailyGoal(
   return convertedDailyGoal;
 }
 
+/// Convert liters to milliliters.
+///
+/// This use the formula `liters * 1000`. This round off the result to get the
+/// whole number. This was created because the documentation that we follow to
+/// get the daily water goal is in liters.
 int litersToMilliliters(double liters) {
   return (liters * 1000).round();
 }
 
+/// Convert liters to fluid ounce.
+///
+/// This use the formula `liters * 33.814`. This round off the result to the
+/// whole number. This was created because the documentation that we follow
+/// to get the daily water goal is in liters.
 int litersToFluidOunce(double liters) {
   return (liters * 33.814).round();
 }
 
+/// Convert milliliters to fluid ounce.
+///
+/// This use the formula `milliliters / 29.574`. This round off the result to
+/// get whole number.
 int millilitersToFluidOunce(double milliliters) {
   return (milliliters / 29.574).round();
 }
 
+/// Convert milliliters to fluid ounce.
+///
+/// This use the formula `fluid ounce / 29.574`. This round off the result to
+/// get the whole number.
 int fluidOunceToMilliliters(double fluidOunce) {
   return (fluidOunce * 29.574).round();
 }

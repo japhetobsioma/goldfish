@@ -1,0 +1,17 @@
+CREATE TABLE hydrationPlans (
+    id INT,
+    gender TEXT,
+    birthday TEXT,
+    wakeupTime TEXT,
+    bedtime TEXT,
+    dailyGoal INT,
+    liquidMeasurement TEXT,
+    isUsingRecommendedDailyGoal INT,
+    joinedDate TEXT
+);
+
+readHydrationPlan: SELECT * FROM hydrationPlans;
+
+createHydrationPlan: INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteHydrationPlan: DELETE FROM hydrationPlans WHERE id = 1;

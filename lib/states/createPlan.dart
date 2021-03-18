@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'appDatabase.dart';
 import '../models/createPlan.dart';
 import '../common/helpers.dart';
 
 class CreatePlanNotifier extends StateNotifier<CreatePlan> {
-  CreatePlanNotifier() : super(_initialValue);
+  CreatePlanNotifier(this.providerReference) : super(_initialValue);
+
+  final ProviderReference providerReference;
 
   static final _initialValue = CreatePlan(
     selectedGender: Gender.none,
@@ -23,6 +26,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     isUsingRecommendedDailyGoal: true,
   );
 
+  /// Set selected gender of create plan state.
   void setGender(Gender gender) {
     state = CreatePlan(
       selectedGender: gender,
@@ -40,6 +44,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
+  /// Set gender to value none of create plan state.
   void setGenderNone(bool value) {
     state = CreatePlan(
       selectedGender: state.selectedGender,
@@ -57,6 +62,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
+  /// Set selected liquid measurement of create plan state.
   void setLiquidMeasurement(LiquidMeasurement liquidMeasurement) {
     state = CreatePlan(
       selectedGender: state.selectedGender,
@@ -74,6 +80,11 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
+  /// Calculate daily goal based on gender and age.
+  ///
+  /// Reference: https://www.who.int/water_sanitation_health/dwq/nutwaterrequir.pdf
+  ///
+  /// This validate the gender and birthday first before calculating.
   void calculateDailyGoal() {
     final gender = state.selectedGender;
     final birthday = state.birthdayTextController.text;
@@ -82,7 +93,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
 
     if (!genderToString(gender).contains('None') && birthday.isNotEmpty) {
       if (isDateFormatValid(birthday) && isMinimumAge(birthday)) {
-        final age = getAge(stringToDateTime(birthday));
+        final age = getAge(stringToDate(birthday));
         dailyGoal = getDailyGoal(gender, age, liquidMeasurement);
 
         state = CreatePlan(
@@ -104,6 +115,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     }
   }
 
+  /// Convert daily goal based on selected liquid measurement.
   void convertDailyGoal() {
     final liquidMeasurement = state.selectedLiquidMeasurement;
     final dailyGoalTextController =
@@ -136,7 +148,8 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  void setDailyGoalTextController(String value) {
+  /// Set daily goal of create plan state.
+  void setDailyGoal(String value) {
     state = CreatePlan(
       selectedGender: state.selectedGender,
       isGenderNone: state.isGenderNone,
@@ -153,6 +166,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
+  /// Set using recommended daily goal field of create plan state.
   void setUsingRecommendedDailyGoal(bool value) {
     state = CreatePlan(
       selectedGender: state.selectedGender,
@@ -170,6 +184,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
+  /// Reset all states of create plan state.
   void clearAllFields() {
     state = CreatePlan(
       selectedGender: Gender.none,
@@ -186,10 +201,49 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
       isUsingRecommendedDailyGoal: true,
     );
   }
+
+  /// Get all the data from create plan state, then insert it to database.
+  void createHydrationPlan() async {
+    await providerReference.read(appDatabaseProvider.state).createHydrationPlan(
+          genderToString(state.selectedGender),
+          state.birthdayTextController.text,
+          state.wakeupTimeTextController.text,
+          state.bedtimeTextController.text,
+          int.tryParse(state.dailyGoalTextController.text),
+          liquidMeasurementToString(state.selectedLiquidMeasurement),
+          state.isUsingRecommendedDailyGoal == true ? 1 : 0,
+          dateToString(DateTime.now()),
+        );
+  }
+
+  /// Print hydration plan from the database.
+  void printHydrationPlan() async {
+    final hydrationPlan = await providerReference
+        .read(appDatabaseProvider.state)
+        .readHydrationPlan()
+        .get();
+
+    hydrationPlan.forEach((element) {
+      print(element.gender);
+      print(element.birthday);
+      print(element.wakeupTime);
+      print(element.bedtime);
+      print(element.dailyGoal);
+      print(element.liquidMeasurement);
+      print(element.isUsingRecommendedDailyGoal == 1 ? true : false);
+      print(element.joinedDate);
+    });
+  }
+
+  void deleteHydrationPlan() async {
+    await providerReference
+        .read(appDatabaseProvider.state)
+        .deleteHydrationPlan();
+  }
 }
 
 final createPlanProvider =
-    StateNotifierProvider<CreatePlanNotifier>((ref) => CreatePlanNotifier());
+    StateNotifierProvider<CreatePlanNotifier>((ref) => CreatePlanNotifier(ref));
 
 final _selectedGenderState = Provider<Gender>((ref) {
   return ref.watch(createPlanProvider.state).selectedGender;

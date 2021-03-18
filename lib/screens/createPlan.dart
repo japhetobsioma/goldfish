@@ -109,9 +109,7 @@ class BuildGenderField extends HookWidget {
 
                     isUsingRecommendedDailyGoal
                         ? context.read(createPlanProvider).calculateDailyGoal()
-                        : context
-                            .read(createPlanProvider)
-                            .setDailyGoalTextController('0');
+                        : context.read(createPlanProvider).setDailyGoal('0');
                   },
                 ),
                 RadioListTile(
@@ -123,9 +121,7 @@ class BuildGenderField extends HookWidget {
 
                     isUsingRecommendedDailyGoal
                         ? context.read(createPlanProvider).calculateDailyGoal()
-                        : context
-                            .read(createPlanProvider)
-                            .setDailyGoalTextController('0');
+                        : context.read(createPlanProvider).setDailyGoal('0');
                   },
                 ),
               ],
@@ -181,14 +177,12 @@ class BuildBirthdayField extends HookWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Birthday',
-                  hintText: 'e.g. ${dateTimeToString(DateTime.now())}',
+                  hintText: 'e.g. ${dateToString(DateTime.now())}',
                 ),
                 onChanged: (_) {
                   isUsingRecommendedDailyGoal
                       ? context.read(createPlanProvider).calculateDailyGoal()
-                      : context
-                          .read(createPlanProvider)
-                          .setDailyGoalTextController('0');
+                      : context.read(createPlanProvider).setDailyGoal('0');
                 },
                 validator: (value) {
                   if (value.isEmpty) {
@@ -221,8 +215,7 @@ class BuildBirthdayField extends HookWidget {
                   );
 
                   if (selectedDate != null) {
-                    birthdayTextController.text =
-                        dateTimeToString(selectedDate);
+                    birthdayTextController.text = dateToString(selectedDate);
                     context.read(createPlanProvider).calculateDailyGoal();
                   }
                 },
@@ -268,7 +261,7 @@ class BuildWakeupTimeField extends HookWidget {
                     return 'Enter wake-up time';
                   }
 
-                  if (!isTimeFormatCorrect(value, context)) {
+                  if (!isTimeFormatValid(value)) {
                     return 'Invalid time format';
                   }
 
@@ -287,8 +280,7 @@ class BuildWakeupTimeField extends HookWidget {
                   );
 
                   if (selectedTime != null) {
-                    wakeupTimeTextController.text =
-                        timeOfDayToString(selectedTime, context);
+                    wakeupTimeTextController.text = timeToString(selectedTime);
                   }
                 },
               ),
@@ -332,7 +324,7 @@ class BuildBedtimeField extends HookWidget {
                     return 'Enter bedtime';
                   }
 
-                  if (!isTimeFormatCorrect(value, context)) {
+                  if (!isTimeFormatValid(value)) {
                     return 'Invalid time format';
                   }
 
@@ -351,8 +343,7 @@ class BuildBedtimeField extends HookWidget {
                   );
 
                   if (selectedTime != null) {
-                    bedtimeTextController.text =
-                        timeOfDayToString(selectedTime, context);
+                    bedtimeTextController.text = timeToString(selectedTime);
                   }
                 },
               ),
@@ -472,9 +463,7 @@ class BuildDailyGoal extends HookWidget {
 
                 value
                     ? context.read(createPlanProvider).calculateDailyGoal()
-                    : context
-                        .read(createPlanProvider)
-                        .setDailyGoalTextController('0');
+                    : context.read(createPlanProvider).setDailyGoal('0');
               },
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
@@ -513,28 +502,27 @@ class BuildBottomButtons extends HookWidget {
             child: const Text('Clear'),
           ),
           ElevatedButton(
+            // Validate every fields, then insert all the data to database.
             onPressed: () {
               if (genderToString(selectedGender) == 'None') {
                 context.read(createPlanProvider).setGenderNone(true);
               } else {
                 context.read(createPlanProvider).setGenderNone(false);
-                print('Gender Field is filled up');
               }
 
-              if (birthdayFormKey.currentState.validate()) {
-                print('Birthday Field is filled up.');
-              }
+              birthdayFormKey.currentState.validate();
+              wakeupTimeFormKey.currentState.validate();
+              bedtimeFormKey.currentState.validate();
+              dailyGoalFormKey.currentState.validate();
 
-              if (wakeupTimeFormKey.currentState.validate()) {
-                print('Wake-up time Field is filled up.');
-              }
-
-              if (bedtimeFormKey.currentState.validate()) {
-                print('Bedtime Field is filled up.');
-              }
-
-              if (dailyGoalFormKey.currentState.validate()) {
-                print('Daily goal Field is filled up.');
+              if (genderToString(selectedGender) != 'None' &&
+                  birthdayFormKey.currentState.validate() &&
+                  wakeupTimeFormKey.currentState.validate() &&
+                  bedtimeFormKey.currentState.validate() &&
+                  dailyGoalFormKey.currentState.validate()) {
+                context.read(createPlanProvider).deleteHydrationPlan();
+                context.read(createPlanProvider).createHydrationPlan();
+                context.read(createPlanProvider).printHydrationPlan();
               }
             },
             child: const Text('Save Plan'),
