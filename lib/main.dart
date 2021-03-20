@@ -1,36 +1,27 @@
 import 'package:flutter/material.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'screens/central.dart';
 
-import 'theme.dart';
-import 'screens/welcome.dart';
+import 'common/theme.dart';
+import 'screens/create_plan.dart';
 
 void main() {
   runApp(
-    const ProviderScope(
-      child: App(),
-    ),
+    const ProviderScope(child: MyApp()),
   );
 }
 
-class App extends StatelessWidget {
-  const App();
-
-  static const appTitle = 'project goldfish';
-  static const welcomeScreen = '/';
-  static const centralScreen = 'CentralScreen';
+class MyApp extends StatelessWidget {
+  const MyApp();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Project goldfish',
       theme: goldfishTheme(),
-      title: appTitle,
-      initialRoute: welcomeScreen,
+      initialRoute: '/',
       routes: {
-        welcomeScreen: (context) => const WelcomeScreen(),
-        centralScreen: (context) => const CentralScreen(),
+        '/': (context) => const CreatePlanScreen(),
       },
     );
   }

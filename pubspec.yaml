@@ -33,14 +33,20 @@ dependencies:
   hooks_riverpod: ^0.13.1
   intl: ^0.17.0
   sqflite: ^2.0.0+2
-  path_provider: ^2.0.1
+  path_provider:
   flutter_speed_dial: ^2.1.1
   syncfusion_flutter_gauges: ^18.4.47
   flutter_unity_widget: ^3.0.3
+  moor: ^4.1.0
+  sqlite3_flutter_libs: ^0.4.1
+  path:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  moor_generator: ^4.1.0
+  build_runner: 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

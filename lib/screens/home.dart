@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../models/water_intake.dart';
+// import '../models/water_intake.dart';
 
 // waterIntakeProvider will be also used in central.dart because we need to
 // listen for any changes when the user clicked the FAB buttons.
-final waterIntakeProvider =
+/* final waterIntakeProvider =
     StateNotifierProvider((ref) => WaterIntakeNotifier());
 
 final _totalIntakeState = Provider<double>((ref) {
@@ -17,21 +16,21 @@ final _totalIntakeState = Provider<double>((ref) {
 
 final _totalIntakeProvider = Provider<double>((ref) {
   return ref.watch(_totalIntakeState);
-});
+}); */
 
 class HomeScreen extends HookWidget {
   const HomeScreen();
 
   @override
   Widget build(BuildContext context) {
-    final _waterIntakeModel = useProvider(waterIntakeProvider.state);
+    // final _waterIntakeModel = useProvider(waterIntakeProvider.state);
     const _waterGoal = 3700.0;
     final _colorScheme = Theme.of(context).colorScheme;
 
-    final _totalIntakeModel = useProvider(_totalIntakeProvider);
+    // final _totalIntakeModel = useProvider(_totalIntakeProvider);
 
-    var sTotalIntake =
-        _totalIntakeModel.toString().replaceAll(RegExp(r'([.]*0)(?!.*\d)'), '');
+    /* var sTotalIntake =
+        _totalIntakeModel.toString().replaceAll(RegExp(r'([.]*0)(?!.*\d)'), ''); */
     var sWaterGoal =
         _waterGoal.toString().replaceAll(RegExp(r'([.]*0)(?!.*\d)'), '');
 
@@ -40,7 +39,7 @@ class HomeScreen extends HookWidget {
         SfRadialGauge(
           axes: <RadialAxis>[
             RadialAxis(
-              interval: _waterIntakeModel.cup,
+              interval: /* _waterIntakeModel.cup */ 0,
               startAngle: 270,
               endAngle: 270,
               minimum: 0,
@@ -52,7 +51,7 @@ class HomeScreen extends HookWidget {
               ),
               pointers: <GaugePointer>[
                 RangePointer(
-                  value: _totalIntakeModel,
+                  value: /* _totalIntakeModel */ 0,
                   width: 20,
                   color: _colorScheme.primary,
                   enableAnimation: true,
@@ -66,7 +65,7 @@ class HomeScreen extends HookWidget {
                       style: Theme.of(context).textTheme.headline5,
                       children: [
                         TextSpan(
-                          text: '${sTotalIntake}ml',
+                          text: /* '${sTotalIntake}ml' */ '0',
                           style: TextStyle(
                             color: _colorScheme.primary,
                           ),
