@@ -105,7 +105,7 @@ class ActionWidget extends HookWidget {
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           onTap: () {
-            context.read(waterIntakeProvider).addIntake();
+            // context.read(waterIntakeProvider).addIntake();
           },
           label: 'Add intake',
           labelStyle: TextStyle(

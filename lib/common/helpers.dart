@@ -44,15 +44,7 @@ extension StringExtension on String {
   }
 
   /// Check if the date is not in a valid format.
-  bool get dateFormatIsNotValid {
-    try {
-      DateFormat(_datePattern).parseStrict(this);
-    } on FormatException {
-      return true;
-    }
-
-    return false;
-  }
+  bool get dateFormatIsNotValid => !this.dateFormatIsValid;
 
   /// Return a formatted time.
   ///
@@ -74,9 +66,7 @@ extension StringExtension on String {
   }
 
   /// Check if the time is not in a valid format.
-  bool get timeFormatIsNotValid {
-    return !this.timeFormatIsValid;
-  }
+  bool get timeFormatIsNotValid => !this.timeFormatIsValid;
 
   /// Return a formatted date in type of string.
   ///
@@ -101,9 +91,7 @@ extension StringExtension on String {
   }
 
   /// Check if the string is equal to `0`.
-  bool get isZero {
-    return this == '0' ? true : false;
-  }
+  bool get isZero => this == '0' ? true : false;
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -147,14 +135,10 @@ extension GenderExtension on Gender {
   String get name => describeEnum(this);
 
   /// Check if the string is equal to `None`.
-  bool get isNone {
-    return this.name == 'None' ? true : false;
-  }
+  bool get isNone => this.name == 'None' ? true : false;
 
   /// Check if the string is not equal to `None`.
-  bool get isNotNone {
-    return !this.isNone;
-  }
+  bool get isNotNone => !this.isNone;
 }
 
 extension LiquidMeasurementExtension on LiquidMeasurement {
@@ -170,16 +154,12 @@ extension LiquidMeasurementExtension on LiquidMeasurement {
 
 extension BooleanExtension on bool {
   /// Return `1` if its `true`, otherwise `0`.
-  int get toInt {
-    return this ? 1 : 0;
-  }
+  int get toInt => this ? 1 : 0;
 }
 
 extension IntegerExtension on int {
   /// Return `true` if its `1`, otherwise `0`.
-  bool get toBool {
-    return this == 1 ? true : false;
-  }
+  bool get toBool => this == 1 ? true : false;
 }
 
 /// Return an age based on the given birthday.
@@ -204,6 +184,8 @@ bool isBelowMinimumAge(String birthday) {
 
   return true;
 }
+
+bool isNotBelowMinimumAge(String birthday) => !isBelowMinimumAge(birthday);
 
 /// Return a daily goal based on the given gender and age.
 ///
@@ -273,31 +255,24 @@ int getDailyGoal(
 /// This uses the formula `liters * 1000`. This rounds off the result to get
 /// the whole number. This was created because the documentation that we follow
 /// to get the daily water goal is in liters.
-int litersToMilliliters(double liters) {
-  return (liters * 1000).round();
-}
+int litersToMilliliters(double liters) => (liters * 1000).round();
 
 /// Convert liters to fluid ounce.
 ///
 /// This uses the formula 'liters * 33.814'. This rounds off the result to get
 /// the whole number. This was created because the documentation that we follow
 /// to get the daily water goal is in liters.
-int litersToFluidOunce(double liters) {
-  return (liters * 33.814).round();
-}
+int litersToFluidOunce(double liters) => (liters * 33.814).round();
 
 /// Convert milliliters to fluid ounce.
 ///
 /// This use the formula `milliliters / 29.574`. This round off the result to
 /// get whole number.
-int millilitersToFluidOunce(double milliliters) {
-  return (milliliters / 29.574).round();
-}
+int millilitersToFluidOunce(double milliliters) =>
+    (milliliters / 29.574).round();
 
 /// Convert milliliters to fluid ounce.
 ///
 /// This use the formula `fluid ounce / 29.574`. This round off the result to
 /// get the whole number.
-int fluidOunceToMilliliters(double fluidOunce) {
-  return (fluidOunce * 29.574).round();
-}
+int fluidOunceToMilliliters(double fluidOunce) => (fluidOunce * 29.574).round();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:goldfish/database/app_database.dart';
+import 'package:goldfish/states/app_database.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/colors.dart';
@@ -195,17 +197,14 @@ class BuildBirthdayField extends HookWidget {
                       : context.read(createPlanFormProvider).setDailyGoal('0');
                 },
                 validator: (birthday) {
-                  if (birthday.isEmpty) {
-                    return 'Enter birthday';
-                  }
+                  if (birthday.isEmpty) return 'Enter birthday';
 
                   if (birthday.dateFormatIsNotValid) {
                     return 'Invalid date format';
                   }
 
                   if (isBelowMinimumAge(birthday)) {
-                    return 'Your age is below our minimum age (6 years old) '
-                        'requirement';
+                    return 'Your age is below our minimum age (6 years old) requirement';
                   }
 
                   return null;
@@ -541,7 +540,14 @@ class BuildBottomButtons extends HookWidget {
                 context.read(createPlanFormProvider).setUserInfo();
                 context.read(userInfoProvider).deleteHydrationPlan();
                 context.read(userInfoProvider).createHydrationPlan();
-                context.read(userInfoProvider).printHydrationPlan();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => FullScreenDialog(),
+                    fullscreenDialog: true,
+                  ),
+                );
               }
             },
             child: const Text('Save Plan'),
@@ -550,4 +556,42 @@ class BuildBottomButtons extends HookWidget {
       ),
     );
   }
+}
+
+class FullScreenDialog extends HookWidget {
+  const FullScreenDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Database Output'),
+      ),
+      body: Center(
+        child: FutureBuilder(
+            future: getHydrationPlan(context),
+            builder: (context, AsyncSnapshot<List<HydrationPlan>> snapshot) {
+              final _hydrationPlan = snapshot.data ?? [];
+
+              if (snapshot.hasData) {
+                return Text(
+                  'gender: ${_hydrationPlan[0].gender}\n'
+                  'birthday: ${_hydrationPlan[0].birthday.toStringDate}\n'
+                  'wakeupTime: ${_hydrationPlan[0].wakeupTime.toStringTime}\n'
+                  'bedtime: ${_hydrationPlan[0].bedtime.toStringTime}\n'
+                  'dailyGoal: ${_hydrationPlan[0].dailyGoal}\n'
+                  'liquidMeasurement: ${_hydrationPlan[0].liquidMeasurement}\n'
+                  'isUsingRecommendedDailyGoal: ${_hydrationPlan[0].isUsingRecommendedDailyGoal.toBool}\n'
+                  'joinedDate: ${_hydrationPlan[0].joinedDate.toStringDate}\n',
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
+            }),
+      ),
+    );
+  }
+
+  Future<List<HydrationPlan>> getHydrationPlan(BuildContext context) async =>
+      await context.read(appDatabaseProvider.state).readHydrationPlan().get();
 }
