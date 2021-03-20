@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../models/createPlan.dart';
-import '../states/createPlan.dart';
 import '../common/colors.dart';
 import '../common/helpers.dart';
+import '../models/user_info.dart';
+import '../states/create_plan.dart';
+import '../states/user_info.dart';
 
 class CreatePlanScreen extends HookWidget {
   const CreatePlanScreen();
@@ -101,27 +101,35 @@ class BuildGenderField extends HookWidget {
                   ),
                 ),
                 RadioListTile(
-                  title: Text(genderToString(Gender.male)),
-                  value: Gender.male,
+                  title: Text(Gender.Male.name),
+                  value: Gender.Male,
                   groupValue: selectedGender,
                   onChanged: (value) {
-                    context.read(createPlanProvider).setGender(value);
+                    context.read(createPlanFormProvider).setGender(value);
 
                     isUsingRecommendedDailyGoal
-                        ? context.read(createPlanProvider).calculateDailyGoal()
-                        : context.read(createPlanProvider).setDailyGoal('0');
+                        ? context
+                            .read(createPlanFormProvider)
+                            .calculateDailyGoal()
+                        : context
+                            .read(createPlanFormProvider)
+                            .setDailyGoal('0');
                   },
                 ),
                 RadioListTile(
-                  title: Text(genderToString(Gender.female)),
-                  value: Gender.female,
+                  title: Text(Gender.Female.name),
+                  value: Gender.Female,
                   groupValue: selectedGender,
                   onChanged: (value) {
-                    context.read(createPlanProvider).setGender(value);
+                    context.read(createPlanFormProvider).setGender(value);
 
                     isUsingRecommendedDailyGoal
-                        ? context.read(createPlanProvider).calculateDailyGoal()
-                        : context.read(createPlanProvider).setDailyGoal('0');
+                        ? context
+                            .read(createPlanFormProvider)
+                            .calculateDailyGoal()
+                        : context
+                            .read(createPlanFormProvider)
+                            .setDailyGoal('0');
                   },
                 ),
               ],
@@ -177,23 +185,25 @@ class BuildBirthdayField extends HookWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Birthday',
-                  hintText: 'e.g. ${dateToString(DateTime.now())}',
+                  hintText: 'e.g. ${DateTime.now().toFormattedString}',
                 ),
                 onChanged: (_) {
                   isUsingRecommendedDailyGoal
-                      ? context.read(createPlanProvider).calculateDailyGoal()
-                      : context.read(createPlanProvider).setDailyGoal('0');
+                      ? context
+                          .read(createPlanFormProvider)
+                          .calculateDailyGoal()
+                      : context.read(createPlanFormProvider).setDailyGoal('0');
                 },
-                validator: (value) {
-                  if (value.isEmpty) {
+                validator: (birthday) {
+                  if (birthday.isEmpty) {
                     return 'Enter birthday';
                   }
 
-                  if (!isDateFormatValid(value)) {
+                  if (birthday.dateFormatIsNotValid) {
                     return 'Invalid date format';
                   }
 
-                  if (!isMinimumAge(value)) {
+                  if (isBelowMinimumAge(birthday)) {
                     return 'Your age is below our minimum age (6 years old) '
                         'requirement';
                   }
@@ -215,8 +225,9 @@ class BuildBirthdayField extends HookWidget {
                   );
 
                   if (selectedDate != null) {
-                    birthdayTextController.text = dateToString(selectedDate);
-                    context.read(createPlanProvider).calculateDailyGoal();
+                    birthdayTextController.text =
+                        selectedDate.toFormattedString;
+                    context.read(createPlanFormProvider).calculateDailyGoal();
                   }
                 },
               ),
@@ -256,12 +267,12 @@ class BuildWakeupTimeField extends HookWidget {
                   labelText: 'Wake-up Time',
                   hintText: 'e.g. 8:30 AM',
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
+                validator: (wakeupTime) {
+                  if (wakeupTime.isEmpty) {
                     return 'Enter wake-up time';
                   }
 
-                  if (!isTimeFormatValid(value)) {
+                  if (wakeupTime.timeFormatIsNotValid) {
                     return 'Invalid time format';
                   }
 
@@ -280,7 +291,8 @@ class BuildWakeupTimeField extends HookWidget {
                   );
 
                   if (selectedTime != null) {
-                    wakeupTimeTextController.text = timeToString(selectedTime);
+                    wakeupTimeTextController.text =
+                        selectedTime.toFormattedString;
                   }
                 },
               ),
@@ -319,12 +331,12 @@ class BuildBedtimeField extends HookWidget {
                   labelText: 'Bedtime',
                   hintText: 'e.g. 10:30 PM',
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
+                validator: (bedtime) {
+                  if (bedtime.isEmpty) {
                     return 'Enter bedtime';
                   }
 
-                  if (!isTimeFormatValid(value)) {
+                  if (bedtime.timeFormatIsNotValid) {
                     return 'Invalid time format';
                   }
 
@@ -343,7 +355,7 @@ class BuildBedtimeField extends HookWidget {
                   );
 
                   if (selectedTime != null) {
-                    bedtimeTextController.text = timeToString(selectedTime);
+                    bedtimeTextController.text = selectedTime.toFormattedString;
                   }
                 },
               ),
@@ -394,16 +406,16 @@ class BuildDailyGoal extends HookWidget {
                       FilteringTextInputFormatter.digitsOnly
                     ],
                     enabled: !isUsingRecommendedDailyGoal,
-                    validator: (value) {
-                      if (value.isEmpty) {
+                    validator: (dailyGoal) {
+                      if (dailyGoal.isEmpty) {
                         return 'Enter daily goal';
                       }
 
-                      if (value == '0') {
+                      if (dailyGoal.isZero) {
                         return 'Daily goal cannot be 0';
                       }
 
-                      if (int.tryParse(value) == null) {
+                      if (int.tryParse(dailyGoal) == null) {
                         return 'Invalid number format';
                       }
 
@@ -418,29 +430,31 @@ class BuildDailyGoal extends HookWidget {
                     initialValue: selectedLiquidMeasurement,
                     onSelected: (value) {
                       context
-                          .read(createPlanProvider)
+                          .read(createPlanFormProvider)
                           .setLiquidMeasurement(value);
 
                       isUsingRecommendedDailyGoal
                           ? context
-                              .read(createPlanProvider)
+                              .read(createPlanFormProvider)
                               .calculateDailyGoal()
-                          : context.read(createPlanProvider).convertDailyGoal();
+                          : context
+                              .read(createPlanFormProvider)
+                              .convertDailyGoal();
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                       const PopupMenuItem(
-                        value: LiquidMeasurement.ml,
-                        child: Text('milliliter'),
+                        value: LiquidMeasurement.Milliliter,
+                        child: Text('Milliliter'),
                       ),
                       const PopupMenuItem(
-                        value: LiquidMeasurement.fl_oz,
-                        child: Text('fluid ounce'),
+                        value: LiquidMeasurement.FluidOunce,
+                        child: Text('Fluid Ounce'),
                       ),
                     ],
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        liquidMeasurementToString(selectedLiquidMeasurement),
+                        selectedLiquidMeasurement.description,
                         style: TextStyle(color: goldfishBlack),
                       ),
                     ),
@@ -458,12 +472,12 @@ class BuildDailyGoal extends HookWidget {
               value: isUsingRecommendedDailyGoal,
               onChanged: (value) {
                 context
-                    .read(createPlanProvider)
+                    .read(createPlanFormProvider)
                     .setUsingRecommendedDailyGoal(value);
 
                 value
-                    ? context.read(createPlanProvider).calculateDailyGoal()
-                    : context.read(createPlanProvider).setDailyGoal('0');
+                    ? context.read(createPlanFormProvider).calculateDailyGoal()
+                    : context.read(createPlanFormProvider).setDailyGoal('0');
               },
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
@@ -497,17 +511,18 @@ class BuildBottomButtons extends HookWidget {
         children: [
           TextButton(
             onPressed: () {
-              context.read(createPlanProvider).clearAllFields();
+              context.read(createPlanFormProvider).clearAllFields();
             },
             child: const Text('Clear'),
           ),
           ElevatedButton(
-            // Validate every fields, then insert all the data to database.
             onPressed: () {
-              if (genderToString(selectedGender) == 'None') {
-                context.read(createPlanProvider).setGenderNone(true);
+              // Validate all the fields.
+              if (selectedGender.isNone) {
+                // Show an error message if the gender is none.
+                context.read(createPlanFormProvider).setGenderNone(true);
               } else {
-                context.read(createPlanProvider).setGenderNone(false);
+                context.read(createPlanFormProvider).setGenderNone(false);
               }
 
               birthdayFormKey.currentState.validate();
@@ -515,14 +530,18 @@ class BuildBottomButtons extends HookWidget {
               bedtimeFormKey.currentState.validate();
               dailyGoalFormKey.currentState.validate();
 
-              if (genderToString(selectedGender) != 'None' &&
+              // If all the fields are correct, set all the data to users'
+              // information, then insert all the data from the user's data
+              // into the application's database.
+              if (selectedGender.isNotNone &&
                   birthdayFormKey.currentState.validate() &&
                   wakeupTimeFormKey.currentState.validate() &&
                   bedtimeFormKey.currentState.validate() &&
                   dailyGoalFormKey.currentState.validate()) {
-                context.read(createPlanProvider).deleteHydrationPlan();
-                context.read(createPlanProvider).createHydrationPlan();
-                context.read(createPlanProvider).printHydrationPlan();
+                context.read(createPlanFormProvider).setUserInfo();
+                context.read(userInfoProvider).deleteHydrationPlan();
+                context.read(userInfoProvider).createHydrationPlan();
+                context.read(userInfoProvider).printHydrationPlan();
               }
             },
             child: const Text('Save Plan'),

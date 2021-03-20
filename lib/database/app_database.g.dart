@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'appDatabase.dart';
+part of 'app_database.dart';
 
 // **************************************************************************
 // MoorGenerator
@@ -533,7 +533,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Future<int> createHydrationPlan(String var1, String var2, String var3,
       String var4, int var5, String var6, int var7, String var8) {
     return customInsert(
-      'INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, \r\n?)',
       variables: [
         Variable<String>(var1),
         Variable<String>(var2),
@@ -550,7 +550,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
   Future<int> deleteHydrationPlan() {
     return customUpdate(
-      'DELETE FROM hydrationPlans WHERE id = 1',
+      'DELETE FROM hydrationPlans',
       variables: [],
       updates: {hydrationPlans},
       updateKind: UpdateKind.delete,

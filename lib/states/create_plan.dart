@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'appDatabase.dart';
-import '../models/createPlan.dart';
 import '../common/helpers.dart';
+import '../models/create_plan.dart';
+import '../models/user_info.dart';
+import 'user_info.dart';
 
-class CreatePlanNotifier extends StateNotifier<CreatePlan> {
-  CreatePlanNotifier(this.providerReference) : super(_initialValue);
+class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
+  CreatePlanFormNotifier(this.read) : super(_initialValue);
 
-  final ProviderReference providerReference;
+  final Reader read;
 
-  static final _initialValue = CreatePlan(
-    selectedGender: Gender.none,
+  static final _initialValue = CreatePlanForm(
+    selectedGender: Gender.None,
     isGenderNone: false,
     birthdayFormKey: GlobalKey<FormState>(),
     birthdayTextController: TextEditingController(),
@@ -22,13 +22,13 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     bedtimeTextController: TextEditingController(),
     dailyGoalFormKey: GlobalKey<FormState>(),
     dailyGoalTextController: TextEditingController(text: '0'),
-    selectedLiquidMeasurement: LiquidMeasurement.ml,
+    selectedLiquidMeasurement: LiquidMeasurement.Milliliter,
     isUsingRecommendedDailyGoal: true,
   );
 
-  /// Set selected gender of create plan state.
+  /// Set selected gender of the create plan.
   void setGender(Gender gender) {
-    state = CreatePlan(
+    state = CreatePlanForm(
       selectedGender: gender,
       isGenderNone: state.isGenderNone,
       birthdayFormKey: state.birthdayFormKey,
@@ -44,9 +44,9 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  /// Set gender to value none of create plan state.
+  /// Set gender to value none of create plan.
   void setGenderNone(bool value) {
-    state = CreatePlan(
+    state = CreatePlanForm(
       selectedGender: state.selectedGender,
       isGenderNone: value,
       birthdayFormKey: state.birthdayFormKey,
@@ -62,9 +62,9 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  /// Set selected liquid measurement of create plan state.
+  /// Set selected liquid measurement of the create plan.
   void setLiquidMeasurement(LiquidMeasurement liquidMeasurement) {
-    state = CreatePlan(
+    state = CreatePlanForm(
       selectedGender: state.selectedGender,
       isGenderNone: state.isGenderNone,
       birthdayFormKey: state.birthdayFormKey,
@@ -80,23 +80,24 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  /// Calculate daily goal based on gender and age.
+  /// Calculate the daily goal based on gender and age.
   ///
   /// Reference: https://www.who.int/water_sanitation_health/dwq/nutwaterrequir.pdf
   ///
   /// This validate the gender and birthday first before calculating.
   void calculateDailyGoal() {
     final gender = state.selectedGender;
+    final genderIsNotNone = !gender.name.contains('None');
     final birthday = state.birthdayTextController.text;
     final liquidMeasurement = state.selectedLiquidMeasurement;
     int dailyGoal;
 
-    if (!genderToString(gender).contains('None') && birthday.isNotEmpty) {
-      if (isDateFormatValid(birthday) && isMinimumAge(birthday)) {
-        final age = getAge(stringToDate(birthday));
+    if (genderIsNotNone && birthday.isNotEmpty) {
+      if (birthday.dateFormatIsValid && isBelowMinimumAge(birthday)) {
+        final age = getAge(birthday.toFormattedDate);
         dailyGoal = getDailyGoal(gender, age, liquidMeasurement);
 
-        state = CreatePlan(
+        state = CreatePlanForm(
           selectedGender: state.selectedGender,
           isGenderNone: state.isGenderNone,
           birthdayFormKey: state.birthdayFormKey,
@@ -115,7 +116,7 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     }
   }
 
-  /// Convert daily goal based on selected liquid measurement.
+  /// Convert the daily goal based on the selected liquid measurement.
   void convertDailyGoal() {
     final liquidMeasurement = state.selectedLiquidMeasurement;
     final dailyGoalTextController =
@@ -123,15 +124,15 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     int dailyGoal;
 
     switch (liquidMeasurement) {
-      case LiquidMeasurement.ml:
+      case LiquidMeasurement.Milliliter:
         dailyGoal = fluidOunceToMilliliters(dailyGoalTextController);
         break;
-      case LiquidMeasurement.fl_oz:
+      case LiquidMeasurement.FluidOunce:
         dailyGoal = millilitersToFluidOunce(dailyGoalTextController);
         break;
     }
 
-    state = CreatePlan(
+    state = CreatePlanForm(
       selectedGender: state.selectedGender,
       isGenderNone: state.isGenderNone,
       birthdayFormKey: state.birthdayFormKey,
@@ -148,9 +149,9 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  /// Set daily goal of create plan state.
+  /// Set daily goal of the create plan.
   void setDailyGoal(String value) {
-    state = CreatePlan(
+    state = CreatePlanForm(
       selectedGender: state.selectedGender,
       isGenderNone: state.isGenderNone,
       birthdayFormKey: state.birthdayFormKey,
@@ -166,9 +167,9 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  /// Set using recommended daily goal field of create plan state.
+  /// Set using recommended daily goal field of create plan.
   void setUsingRecommendedDailyGoal(bool value) {
-    state = CreatePlan(
+    state = CreatePlanForm(
       selectedGender: state.selectedGender,
       isGenderNone: state.isGenderNone,
       birthdayFormKey: state.birthdayFormKey,
@@ -184,10 +185,10 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
     );
   }
 
-  /// Reset all states of create plan state.
+  /// Reset all states of create plan.
   void clearAllFields() {
-    state = CreatePlan(
-      selectedGender: Gender.none,
+    state = CreatePlanForm(
+      selectedGender: Gender.None,
       isGenderNone: false,
       birthdayFormKey: GlobalKey<FormState>(),
       birthdayTextController: TextEditingController(),
@@ -197,56 +198,30 @@ class CreatePlanNotifier extends StateNotifier<CreatePlan> {
       bedtimeTextController: TextEditingController(),
       dailyGoalFormKey: GlobalKey<FormState>(),
       dailyGoalTextController: TextEditingController(text: '0'),
-      selectedLiquidMeasurement: LiquidMeasurement.ml,
+      selectedLiquidMeasurement: LiquidMeasurement.Milliliter,
       isUsingRecommendedDailyGoal: true,
     );
   }
 
-  /// Get all the data from create plan state, then insert it to database.
-  void createHydrationPlan() async {
-    await providerReference.read(appDatabaseProvider.state).createHydrationPlan(
-          genderToString(state.selectedGender),
-          state.birthdayTextController.text,
-          state.wakeupTimeTextController.text,
-          state.bedtimeTextController.text,
-          int.tryParse(state.dailyGoalTextController.text),
-          liquidMeasurementToString(state.selectedLiquidMeasurement),
-          state.isUsingRecommendedDailyGoal == true ? 1 : 0,
-          dateToString(DateTime.now()),
-        );
-  }
-
-  /// Print hydration plan from the database.
-  void printHydrationPlan() async {
-    final hydrationPlan = await providerReference
-        .read(appDatabaseProvider.state)
-        .readHydrationPlan()
-        .get();
-
-    hydrationPlan.forEach((element) {
-      print(element.gender);
-      print(element.birthday);
-      print(element.wakeupTime);
-      print(element.bedtime);
-      print(element.dailyGoal);
-      print(element.liquidMeasurement);
-      print(element.isUsingRecommendedDailyGoal == 1 ? true : false);
-      print(element.joinedDate);
-    });
-  }
-
-  void deleteHydrationPlan() async {
-    await providerReference
-        .read(appDatabaseProvider.state)
-        .deleteHydrationPlan();
+  /// Get all the date from create plan form then set it to user info.
+  void setUserInfo() {
+    read(userInfoProvider).setUserInfo(
+      state.selectedGender,
+      state.birthdayTextController.text,
+      state.wakeupTimeTextController.text,
+      state.bedtimeTextController.text,
+      state.dailyGoalTextController.text,
+      state.selectedLiquidMeasurement,
+      state.isUsingRecommendedDailyGoal,
+    );
   }
 }
 
-final createPlanProvider =
-    StateNotifierProvider<CreatePlanNotifier>((ref) => CreatePlanNotifier(ref));
+final createPlanFormProvider = StateNotifierProvider<CreatePlanFormNotifier>(
+    (ref) => CreatePlanFormNotifier(ref.read));
 
 final _selectedGenderState = Provider<Gender>((ref) {
-  return ref.watch(createPlanProvider.state).selectedGender;
+  return ref.watch(createPlanFormProvider.state).selectedGender;
 });
 
 final selectedGenderProvider = Provider<Gender>((ref) {
@@ -254,7 +229,7 @@ final selectedGenderProvider = Provider<Gender>((ref) {
 });
 
 final _isGenderNoneState = Provider<bool>((ref) {
-  return ref.watch(createPlanProvider.state).isGenderNone;
+  return ref.watch(createPlanFormProvider.state).isGenderNone;
 });
 
 final isGenderNoneProvider = Provider<bool>((ref) {
@@ -262,7 +237,7 @@ final isGenderNoneProvider = Provider<bool>((ref) {
 });
 
 final _birthdayFormKeyState = Provider<GlobalKey<FormState>>((ref) {
-  return ref.watch(createPlanProvider.state).birthdayFormKey;
+  return ref.watch(createPlanFormProvider.state).birthdayFormKey;
 });
 
 final birthdayFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
@@ -270,7 +245,7 @@ final birthdayFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
 });
 
 final _birthdayTextControllerState = Provider<TextEditingController>((ref) {
-  return ref.watch(createPlanProvider.state).birthdayTextController;
+  return ref.watch(createPlanFormProvider.state).birthdayTextController;
 });
 
 final birthdayTextControllerProvider = Provider<TextEditingController>((ref) {
@@ -278,7 +253,7 @@ final birthdayTextControllerProvider = Provider<TextEditingController>((ref) {
 });
 
 final _wakeupTimeFormKeyState = Provider<GlobalKey<FormState>>((ref) {
-  return ref.watch(createPlanProvider.state).wakeupTimeFormKey;
+  return ref.watch(createPlanFormProvider.state).wakeupTimeFormKey;
 });
 
 final wakeupTimeFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
@@ -286,7 +261,7 @@ final wakeupTimeFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
 });
 
 final _wakeupTimeTextControllerState = Provider<TextEditingController>((ref) {
-  return ref.watch(createPlanProvider.state).wakeupTimeTextController;
+  return ref.watch(createPlanFormProvider.state).wakeupTimeTextController;
 });
 
 final wakeupTimeTextControllerProvider = Provider<TextEditingController>((ref) {
@@ -294,7 +269,7 @@ final wakeupTimeTextControllerProvider = Provider<TextEditingController>((ref) {
 });
 
 final _bedtimeFormKeyState = Provider<GlobalKey<FormState>>((ref) {
-  return ref.watch(createPlanProvider.state).bedtimeFormKey;
+  return ref.watch(createPlanFormProvider.state).bedtimeFormKey;
 });
 
 final bedtimeFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
@@ -302,7 +277,7 @@ final bedtimeFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
 });
 
 final _bedtimeTextControllerState = Provider<TextEditingController>((ref) {
-  return ref.watch(createPlanProvider.state).bedtimeTextController;
+  return ref.watch(createPlanFormProvider.state).bedtimeTextController;
 });
 
 final bedtimeTextControllerProvider = Provider<TextEditingController>((ref) {
@@ -310,7 +285,7 @@ final bedtimeTextControllerProvider = Provider<TextEditingController>((ref) {
 });
 
 final _dailyGoalFormKeyState = Provider<GlobalKey<FormState>>((ref) {
-  return ref.watch(createPlanProvider.state).dailyGoalFormKey;
+  return ref.watch(createPlanFormProvider.state).dailyGoalFormKey;
 });
 
 final dailyGoalFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
@@ -318,7 +293,7 @@ final dailyGoalFormKeyProvider = Provider<GlobalKey<FormState>>((ref) {
 });
 
 final _dailyGoalTextControllerState = Provider<TextEditingController>((ref) {
-  return ref.watch(createPlanProvider.state).dailyGoalTextController;
+  return ref.watch(createPlanFormProvider.state).dailyGoalTextController;
 });
 
 final dailyGoalTextControllerProvider = Provider<TextEditingController>((ref) {
@@ -326,7 +301,7 @@ final dailyGoalTextControllerProvider = Provider<TextEditingController>((ref) {
 });
 
 final _selectedLiquidMeasurementState = Provider<LiquidMeasurement>((ref) {
-  return ref.watch(createPlanProvider.state).selectedLiquidMeasurement;
+  return ref.watch(createPlanFormProvider.state).selectedLiquidMeasurement;
 });
 
 final selectedLiquidMeasurementProvider = Provider<LiquidMeasurement>((ref) {
@@ -334,7 +309,7 @@ final selectedLiquidMeasurementProvider = Provider<LiquidMeasurement>((ref) {
 });
 
 final _isUsingRecommendedDailyGoalState = Provider<bool>((ref) {
-  return ref.watch(createPlanProvider.state).isUsingRecommendedDailyGoal;
+  return ref.watch(createPlanFormProvider.state).isUsingRecommendedDailyGoal;
 });
 
 final isUsingRecommendedDailyGoalProvider = Provider<bool>((ref) {

@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../database/appDatabase.dart';
+import '../database/app_database.dart';
 
 class AppDatabaseNotifier extends StateNotifier<AppDatabase> {
   AppDatabaseNotifier() : super(_initialValue);

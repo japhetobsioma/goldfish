@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-enum Gender { male, female, none }
-enum LiquidMeasurement { ml, fl_oz }
+import 'user_info.dart';
 
-class CreatePlan {
-  const CreatePlan({
+class CreatePlanForm {
+  const CreatePlanForm({
     this.selectedGender,
     this.isGenderNone,
     this.birthdayFormKey,

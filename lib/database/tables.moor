@@ -10,8 +10,9 @@ CREATE TABLE hydrationPlans (
     joinedDate TEXT
 );
 
+createHydrationPlan: INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, 
+    ?);
+
 readHydrationPlan: SELECT * FROM hydrationPlans;
 
-createHydrationPlan: INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?);
-
-deleteHydrationPlan: DELETE FROM hydrationPlans WHERE id = 1;
+deleteHydrationPlan: DELETE FROM hydrationPlans;
