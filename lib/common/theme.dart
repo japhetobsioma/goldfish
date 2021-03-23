@@ -13,5 +13,8 @@ ThemeData goldfishTheme() {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(primary: goldfishPrimaryBlue),
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: goldfishPrimaryBlue,
+    ),
   );
 }

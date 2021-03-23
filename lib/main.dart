@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:goldfish/screens/new_home.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'common/theme.dart';
-import 'screens/create_plan.dart';
 
 void main() {
   runApp(
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: goldfishTheme(),
       initialRoute: '/',
       routes: {
-        '/': (context) => const CreatePlanScreen(),
+        '/': (context) => const NewHomeScreen(),
       },
     );
   }
