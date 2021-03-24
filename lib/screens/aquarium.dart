@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 
 class Aquarium extends StatefulWidget {
@@ -15,8 +14,16 @@ class _AquariumState extends State<Aquarium> {
 
   @override
   Widget build(BuildContext context) {
-    return UnityWidget(
-      onUnityCreated: onUnityCreated,
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('Aquarium'),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      body: UnityWidget(
+        onUnityCreated: onUnityCreated,
+      ),
     );
   }
 

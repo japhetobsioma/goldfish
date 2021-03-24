@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:goldfish/database/app_database.dart';
-import 'package:goldfish/states/app_database.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/colors.dart';
 import '../common/helpers.dart';
+import '../database/app_database.dart';
 import '../models/user_info.dart';
+import '../states/app_database.dart';
 import '../states/create_plan.dart';
 import '../states/user_info.dart';
 
-class CreatePlanScreen extends HookWidget {
+class CreatePlanScreen extends StatelessWidget {
   const CreatePlanScreen();
 
   @override
@@ -24,13 +24,13 @@ class CreatePlanScreen extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const BuildScreenHeading(),
-                const BuildGenderField(),
-                const BuildBirthdayField(),
-                const BuildWakeupTimeField(),
-                const BuildBedtimeField(),
-                const BuildDailyGoal(),
-                const BuildBottomButtons(),
+                const ScreenHeading(),
+                const GenderField(),
+                const BirthdayField(),
+                const WakeupTimeField(),
+                const BedtimeField(),
+                const DailyGoal(),
+                const BottomButtons(),
               ],
             ),
           ),
@@ -40,8 +40,8 @@ class CreatePlanScreen extends HookWidget {
   }
 }
 
-class BuildScreenHeading extends StatelessWidget {
-  const BuildScreenHeading();
+class ScreenHeading extends StatelessWidget {
+  const ScreenHeading();
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +62,8 @@ class BuildScreenHeading extends StatelessWidget {
   }
 }
 
-class BuildGenderField extends HookWidget {
-  const BuildGenderField();
+class GenderField extends HookWidget {
+  const GenderField();
 
   @override
   Widget build(BuildContext context) {
@@ -160,8 +160,8 @@ class BuildGenderField extends HookWidget {
   }
 }
 
-class BuildBirthdayField extends HookWidget {
-  const BuildBirthdayField();
+class BirthdayField extends HookWidget {
+  const BirthdayField();
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +204,8 @@ class BuildBirthdayField extends HookWidget {
                   }
 
                   if (isBelowMinimumAge(birthday)) {
-                    return 'Your age is below our minimum age (6 years old) requirement';
+                    return 'Your age is below our minimum age (6 years old) '
+                        'requirement';
                   }
 
                   return null;
@@ -238,8 +239,8 @@ class BuildBirthdayField extends HookWidget {
   }
 }
 
-class BuildWakeupTimeField extends HookWidget {
-  const BuildWakeupTimeField();
+class WakeupTimeField extends HookWidget {
+  const WakeupTimeField();
 
   @override
   Widget build(BuildContext context) {
@@ -303,8 +304,8 @@ class BuildWakeupTimeField extends HookWidget {
   }
 }
 
-class BuildBedtimeField extends HookWidget {
-  const BuildBedtimeField();
+class BedtimeField extends HookWidget {
+  const BedtimeField();
 
   @override
   Widget build(BuildContext context) {
@@ -366,8 +367,8 @@ class BuildBedtimeField extends HookWidget {
   }
 }
 
-class BuildDailyGoal extends HookWidget {
-  const BuildDailyGoal();
+class DailyGoal extends HookWidget {
+  const DailyGoal();
 
   @override
   Widget build(BuildContext context) {
@@ -488,8 +489,8 @@ class BuildDailyGoal extends HookWidget {
   }
 }
 
-class BuildBottomButtons extends HookWidget {
-  const BuildBottomButtons();
+class BottomButtons extends HookWidget {
+  const BottomButtons();
 
   @override
   Widget build(BuildContext context) {
@@ -558,6 +559,7 @@ class BuildBottomButtons extends HookWidget {
   }
 }
 
+/// For testing only
 class FullScreenDialog extends HookWidget {
   const FullScreenDialog();
 
