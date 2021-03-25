@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    ## Runs the CI whenever there is a push in main branch.
+    # branches: [ main ]
+  pull_request:
+    ## Runs the CI whenever there is a pull request  in main branch.
+    # branches: [ main ]
+  schedule:
+    ## Runs the CI once a week at 00:00 on Sunday.
+    - cron: '0 0 * * 0'
+
+jobs:
+  analyze:
+    name: Analyze and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1.4.0
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: flutter format --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: flutter analyze
+      
+      ## I will make tests for this project soon :)
+      # - name: Run tests
+      #   run: flutter test
+
+      - name: Build an APK
+        run: flutter build apk
