@@ -1,6 +1,6 @@
 # project goldfish
 [![style: pedantic](https://img.shields.io/badge/style-pedantic-00B5A8.svg)](https://pub.dev/packages/pedantic)
-[![build](https://github.com/japhetobsioma/goldfish/actions/workflows/release.yml/badge.svg?branch=v0.1.2-alpha)](https://github.com/japhetobsioma/goldfish/actions/workflows/release.yml)
+[![build](https://github.com/japhetobsioma/goldfish/actions/workflows/analyze_and_build.yml/badge.svg)](https://github.com/japhetobsioma/goldfish/actions/workflows/analyze_and_build.yml)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/japhetobsioma/goldfish?include_prereleases)
 
 Final year project. (Work in progress)
