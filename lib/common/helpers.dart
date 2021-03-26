@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/drink_type.dart';
+import '../models/tile_color.dart';
 import '../models/user_info.dart';
 
 // ignore_for_file: unnecessary_this
@@ -276,3 +278,69 @@ int millilitersToFluidOunce(double milliliters) =>
 /// This use the formula `fluid ounce / 29.574`. This round off the result to
 /// get the whole number.
 int fluidOunceToMilliliters(double fluidOunce) => (fluidOunce * 29.574).round();
+
+extension DrinkExtension on DrinkTypes {
+  String get name => {
+        DrinkTypes.Water: 'Water',
+        DrinkTypes.HotChocolate: 'Hot Chocolate',
+        DrinkTypes.Coffee: 'Coffee',
+        DrinkTypes.Lemonade: 'Lemonade',
+        DrinkTypes.IcedTea: 'Iced Tea',
+        DrinkTypes.Juice: 'Juice',
+        DrinkTypes.Milkshake: 'Milkshake',
+        DrinkTypes.Tea: 'Tea',
+        DrinkTypes.Milk: 'Milk',
+        DrinkTypes.Beer: 'Beer',
+        DrinkTypes.Soda: 'Soda',
+        DrinkTypes.Wine: 'Wine',
+        DrinkTypes.Liquor: 'Liquor',
+      }[this];
+
+  IconData get icon => {
+        DrinkTypes.Water: Icons.local_cafe,
+        DrinkTypes.HotChocolate: Icons.local_cafe,
+        DrinkTypes.Coffee: Icons.local_cafe,
+        DrinkTypes.Lemonade: Icons.local_cafe,
+        DrinkTypes.IcedTea: Icons.local_cafe,
+        DrinkTypes.Juice: Icons.local_cafe,
+        DrinkTypes.Milkshake: Icons.local_cafe,
+        DrinkTypes.Tea: Icons.emoji_food_beverage,
+        DrinkTypes.Milk: Icons.local_cafe,
+        DrinkTypes.Beer: Icons.sports_bar,
+        DrinkTypes.Soda: Icons.fastfood,
+        DrinkTypes.Wine: Icons.wine_bar,
+        DrinkTypes.Liquor: Icons.liquor,
+      }[this];
+}
+
+extension CardColorExtension on TileColors {
+  String get name => {
+        TileColors.Default: 'Default',
+        TileColors.Red: 'Red',
+        TileColors.Orange: 'Orange',
+        TileColors.Yellow: 'Yellow',
+        TileColors.Green: 'Green',
+        TileColors.Teal: 'Teal',
+        TileColors.Blue: 'Blue',
+        TileColors.LightBlue: 'Light Blue',
+        TileColors.Purple: 'Purple',
+        TileColors.Pink: 'Pink',
+        TileColors.Brown: 'Brown',
+        TileColors.Grey: 'Grey',
+      }[this];
+
+  Color get color => {
+        TileColors.Default: Colors.white,
+        TileColors.Red: Colors.red,
+        TileColors.Orange: Colors.orange,
+        TileColors.Yellow: Colors.yellow,
+        TileColors.Green: Colors.green,
+        TileColors.Teal: Colors.teal,
+        TileColors.Blue: Colors.blue,
+        TileColors.LightBlue: Colors.lightBlue,
+        TileColors.Purple: Colors.purple,
+        TileColors.Pink: Colors.pink,
+        TileColors.Brown: Colors.brown,
+        TileColors.Grey: Colors.grey,
+      }[this];
+}

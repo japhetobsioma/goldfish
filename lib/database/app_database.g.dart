@@ -524,16 +524,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   HydrationPlans _hydrationPlans;
   HydrationPlans get hydrationPlans => _hydrationPlans ??= HydrationPlans(this);
-  Selectable<HydrationPlan> readHydrationPlan() {
-    return customSelect('SELECT * FROM hydrationPlans',
-        variables: [],
-        readsFrom: {hydrationPlans}).map(hydrationPlans.mapFromRow);
-  }
-
   Future<int> createHydrationPlan(String var1, String var2, String var3,
       String var4, int var5, String var6, int var7, String var8) {
     return customInsert(
-      'INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, \r\n?)',
+      'INSERT INTO hydrationPlans VALUES (1, ?, ?, ?, ?, ?, ?, ?, \r\n    ?)',
       variables: [
         Variable<String>(var1),
         Variable<String>(var2),
@@ -546,6 +540,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ],
       updates: {hydrationPlans},
     );
+  }
+
+  Selectable<HydrationPlan> readHydrationPlan() {
+    return customSelect('SELECT * FROM hydrationPlans',
+        variables: [],
+        readsFrom: {hydrationPlans}).map(hydrationPlans.mapFromRow);
   }
 
   Future<int> deleteHydrationPlan() {
