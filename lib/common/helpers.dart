@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:goldfish/models/water_intake.dart';
 import 'package:intl/intl.dart';
 
-import '../models/drink_type.dart';
-import '../models/tile_color.dart';
 import '../models/user_info.dart';
 
 // ignore_for_file: unnecessary_this
@@ -94,6 +93,22 @@ extension StringExtension on String {
 
   /// Check if the string is equal to `0`.
   bool get isZero => this == '0' ? true : false;
+
+  DrinkTypes get toDrinkTypes => {
+        'Water': DrinkTypes.Water,
+        'Hot Chocolate': DrinkTypes.HotChocolate,
+        'Coffee': DrinkTypes.Coffee,
+        'Lemonade': DrinkTypes.Lemonade,
+        'Iced Tea': DrinkTypes.IcedTea,
+        'Juice': DrinkTypes.Juice,
+        'Milkshake': DrinkTypes.Milkshake,
+        'Tea': DrinkTypes.Tea,
+        'Milk': DrinkTypes.Milk,
+        'Beer': DrinkTypes.Beer,
+        'Soda': DrinkTypes.Soda,
+        'Wine': DrinkTypes.Wine,
+        'Liquor': DrinkTypes.Liquor,
+      }[this];
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -313,7 +328,7 @@ extension DrinkExtension on DrinkTypes {
       }[this];
 }
 
-extension CardColorExtension on TileColors {
+extension TileColorExtension on TileColors {
   String get name => {
         TileColors.Default: 'Default',
         TileColors.Red: 'Red',

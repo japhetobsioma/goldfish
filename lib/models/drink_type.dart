@@ -1,4 +1,4 @@
-enum DrinkTypes {
+/* /* enum DrinkTypes {
   Water,
   HotChocolate,
   Coffee,
@@ -12,7 +12,7 @@ enum DrinkTypes {
   Soda,
   Wine,
   Liquor,
-}
+} */
 
 class DrinkType {
   const DrinkType({
@@ -23,3 +23,4 @@ class DrinkType {
   final DrinkTypes drinkTypes;
   final bool isActive;
 }
+ */

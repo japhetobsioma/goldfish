@@ -1,4 +1,4 @@
-enum TileColors {
+/* enum TileColors {
   Default,
   Red,
   Orange,
@@ -22,3 +22,4 @@ class TileColor {
   final TileColors tileColors;
   final bool isActive;
 }
+ */

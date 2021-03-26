@@ -5,6 +5,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../states/total_water.dart';
 import '../states/water_intake.dart';
+import '../common/helpers.dart';
 
 class WaterIntakeScreen extends StatelessWidget {
   const WaterIntakeScreen();
@@ -39,15 +40,13 @@ class WaterIntakeInfo extends HookWidget {
         axes: [
           RadialAxis(
             interval: 10.0,
-            startAngle: 270.0,
-            endAngle: 270.0,
             minimum: 0,
             maximum: 1000.0,
             showTicks: false,
             showLabels: false,
             axisLineStyle: AxisLineStyle(
-              thickness: 15.0,
-              cornerStyle: CornerStyle.bothFlat,
+              thickness: 25.0,
+              cornerStyle: CornerStyle.bothCurve,
             ),
             pointers: [
               RangePointer(
@@ -63,14 +62,18 @@ class WaterIntakeInfo extends HookWidget {
                     return 0;
                   },
                 ),
-                width: 15.0,
+                width: 25.0,
                 color: Theme.of(context).primaryColor,
                 enableAnimation: true,
-                cornerStyle: CornerStyle.bothFlat,
+                cornerStyle: CornerStyle.bothCurve,
+                sizeUnit: GaugeSizeUnit.logicalPixel,
               ),
             ],
             annotations: [
               GaugeAnnotation(
+                angle: 90,
+                axisValue: 5,
+                positionFactor: 0.1,
                 widget: RichText(
                   text: TextSpan(
                     style: TextStyle(
@@ -103,7 +106,6 @@ class WaterIntakeInfo extends HookWidget {
                     ],
                   ),
                 ),
-                positionFactor: 0.1,
               ),
             ],
           ),
@@ -121,21 +123,42 @@ class WaterIntakeTiles extends HookWidget {
     final waterIntake = useProvider(waterIntakeProvider.state);
 
     return waterIntake.when(
-      data: (value) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: value.waterIntake.length,
-            itemBuilder: (context, index) {
-              return Card(
+      data: (value) => Container(
+        child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: value.waterIntake.length,
+          itemBuilder: (context, index) {
+            final String date = value.waterIntake[index]['currentDate'];
+            final dateTime = date.toStringTime;
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+                vertical: 1,
+              ),
+              child: Card(
                 child: ListTile(
-                  title: Text('${value.waterIntake[index]['cupAmount']}'),
+                  leading: Icon(
+                    Icons.local_cafe,
+                    // color: value.waterIntake[index][],
+                  ),
+                  title: Text(
+                    '${value.waterIntake[index]['cupAmount']} '
+                    '${value.waterIntake[index]['cupMeasurement']}',
+                    style: TextStyle(
+                        // color: Colors.white,
+                        ),
+                  ),
+                  subtitle: Text('$dateTime'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {},
+                  ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
       loading: () => const CircularProgressIndicator(),
