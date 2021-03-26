@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../common/helpers.dart';
 import '../states/total_water.dart';
 import '../states/water_intake.dart';
-import '../common/helpers.dart';
 
 class WaterIntakeScreen extends StatelessWidget {
   const WaterIntakeScreen();
@@ -95,12 +95,16 @@ class WaterIntakeInfo extends HookWidget {
                         ),
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28.0,
                         ),
                       ),
                       TextSpan(
                         text: ' / 1000 ml',
                         style: TextStyle(
                           color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28.0,
                         ),
                       )
                     ],
@@ -129,8 +133,15 @@ class WaterIntakeTiles extends HookWidget {
           shrinkWrap: true,
           itemCount: value.waterIntake.length,
           itemBuilder: (context, index) {
-            final String date = value.waterIntake[index]['currentDate'];
-            final dateTime = date.toStringTime;
+            final String getDrinkTypes = value.waterIntake[index]['drinkTypes'];
+            final drinkTypes = getDrinkTypes.toDrinkTypes;
+
+            final String getTileColors = value.waterIntake[index]['tileColors'];
+            final tileColors = getTileColors.toTileColors;
+
+            final String getDate = value.waterIntake[index]['date'];
+            final dateTime = getDate.toDateTime;
+            final timeDifference = getTimeDifference(dateTime);
 
             return Padding(
               padding: const EdgeInsets.symmetric(
@@ -138,22 +149,44 @@ class WaterIntakeTiles extends HookWidget {
                 vertical: 1,
               ),
               child: Card(
+                color: tileColors.color,
                 child: ListTile(
                   leading: Icon(
-                    Icons.local_cafe,
-                    // color: value.waterIntake[index][],
+                    drinkTypes.icon,
+                    color: tileColors.subtitleColor,
+                    size: 35.0,
                   ),
                   title: Text(
-                    '${value.waterIntake[index]['cupAmount']} '
-                    '${value.waterIntake[index]['cupMeasurement']}',
+                    '${value.waterIntake[index]['amount']} '
+                    '${value.waterIntake[index]['measurement']}',
                     style: TextStyle(
-                        // color: Colors.white,
-                        ),
+                      color: tileColors.textIconColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  subtitle: Text('$dateTime'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {},
+                  subtitle: Text(
+                    '${drinkTypes.name} · $timeDifference',
+                    style: TextStyle(
+                      color: tileColors.subtitleColor,
+                    ),
+                  ),
+                  trailing: PopupMenuButton(
+                    onSelected: (value) {},
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                      const PopupMenuItem(
+                        child: Text('Edit'),
+                      ),
+                      const PopupMenuItem(
+                        child: Text('Delete'),
+                      ),
+                    ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.more_vert,
+                        color: tileColors.subtitleColor,
+                      ),
+                    ),
                   ),
                 ),
               ),

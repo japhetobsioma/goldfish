@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:goldfish/models/water_intake.dart';
 import 'package:intl/intl.dart';
 
 import '../models/user_info.dart';
+import '../models/water_intake.dart';
 
 // ignore_for_file: unnecessary_this
 
@@ -31,7 +31,7 @@ extension StringExtension on String {
   /// Return a date in human-readable format.
   ///
   /// e.g. `1997-06-25 00:00:00.000`
-  DateTime get toDate => DateTime.parse(this);
+  DateTime get toDateTime => DateTime.parse(this);
 
   /// Check if the date is in a valid format.
   bool get dateFormatIsValid {
@@ -75,7 +75,7 @@ extension StringExtension on String {
   ///
   /// Output: `25 June 1997`
   String get toStringDate {
-    final dateTime = toDate;
+    final dateTime = toDateTime;
 
     return DateFormat(_datePattern).format(dateTime);
   }
@@ -86,7 +86,7 @@ extension StringExtension on String {
   ///
   /// Output: `8:30 AM`
   String get toStringTime {
-    final dateTime = toDate;
+    final dateTime = toDateTime;
 
     return DateFormat(_timePattern).format(dateTime);
   }
@@ -95,19 +95,34 @@ extension StringExtension on String {
   bool get isZero => this == '0' ? true : false;
 
   DrinkTypes get toDrinkTypes => {
-        'Water': DrinkTypes.Water,
-        'Hot Chocolate': DrinkTypes.HotChocolate,
-        'Coffee': DrinkTypes.Coffee,
-        'Lemonade': DrinkTypes.Lemonade,
-        'Iced Tea': DrinkTypes.IcedTea,
-        'Juice': DrinkTypes.Juice,
-        'Milkshake': DrinkTypes.Milkshake,
-        'Tea': DrinkTypes.Tea,
-        'Milk': DrinkTypes.Milk,
-        'Beer': DrinkTypes.Beer,
-        'Soda': DrinkTypes.Soda,
-        'Wine': DrinkTypes.Wine,
-        'Liquor': DrinkTypes.Liquor,
+        'water': DrinkTypes.Water,
+        'hot chocolate': DrinkTypes.HotChocolate,
+        'coffee': DrinkTypes.Coffee,
+        'lemonade': DrinkTypes.Lemonade,
+        'iced Tea': DrinkTypes.IcedTea,
+        'juice': DrinkTypes.Juice,
+        'milkshake': DrinkTypes.Milkshake,
+        'tea': DrinkTypes.Tea,
+        'milk': DrinkTypes.Milk,
+        'beer': DrinkTypes.Beer,
+        'soda': DrinkTypes.Soda,
+        'wine': DrinkTypes.Wine,
+        'liquor': DrinkTypes.Liquor,
+      }[this];
+
+  TileColors get toTileColors => {
+        'default': TileColors.Default,
+        'red': TileColors.Red,
+        'orange': TileColors.Orange,
+        'yellow': TileColors.Yellow,
+        'green': TileColors.Green,
+        'teal': TileColors.Teal,
+        'blue': TileColors.Blue,
+        'light blue': TileColors.LightBlue,
+        'purple': TileColors.Purple,
+        'pink': TileColors.Pink,
+        'brown': TileColors.Brown,
+        'grey': TileColors.Grey,
       }[this];
 }
 
@@ -294,7 +309,7 @@ int millilitersToFluidOunce(double milliliters) =>
 /// get the whole number.
 int fluidOunceToMilliliters(double fluidOunce) => (fluidOunce * 29.574).round();
 
-extension DrinkExtension on DrinkTypes {
+extension DrinkTypeExtension on DrinkTypes {
   String get name => {
         DrinkTypes.Water: 'Water',
         DrinkTypes.HotChocolate: 'Hot Chocolate',
@@ -358,4 +373,51 @@ extension TileColorExtension on TileColors {
         TileColors.Brown: Colors.brown,
         TileColors.Grey: Colors.grey,
       }[this];
+
+  Color get textIconColor => {
+        TileColors.Default: Colors.black,
+        TileColors.Red: Colors.white,
+        TileColors.Orange: Colors.black,
+        TileColors.Yellow: Colors.black,
+        TileColors.Green: Colors.white,
+        TileColors.Teal: Colors.white,
+        TileColors.Blue: Colors.white,
+        TileColors.LightBlue: Colors.black,
+        TileColors.Purple: Colors.white,
+        TileColors.Pink: Colors.white,
+        TileColors.Brown: Colors.white,
+        TileColors.Grey: Colors.black,
+      }[this];
+
+  Color get subtitleColor => {
+        TileColors.Default: Colors.black54,
+        TileColors.Red: Colors.white70,
+        TileColors.Orange: Colors.black54,
+        TileColors.Yellow: Colors.black54,
+        TileColors.Green: Colors.white70,
+        TileColors.Teal: Colors.white70,
+        TileColors.Blue: Colors.white70,
+        TileColors.LightBlue: Colors.black54,
+        TileColors.Purple: Colors.white70,
+        TileColors.Pink: Colors.white70,
+        TileColors.Brown: Colors.white70,
+        TileColors.Grey: Colors.black54,
+      }[this];
+}
+
+/// Returns a time difference when subtracting `dateTime` from `now`.
+///
+/// Outputs: `Ns` for seconds, `Nm` for minutes, and `Nh` for hours,
+/// where `N` is a number
+String getTimeDifference(DateTime dateTime) {
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+
+  if (difference.inSeconds < 60) {
+    return '${difference.inSeconds.toString()}s';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes.toString()}m';
+  } else {
+    return '${difference.inHours.toString()}h';
+  }
 }

@@ -129,8 +129,8 @@ class DatabaseHelper {
     var db = await instance.database;
     return Sqflite.firstIntValue(
       await db.rawQuery('''
-        SELECT SUM (cupAmount) FROM waterIntake WHERE 
-        strftime('%d-%m-%Y', currentDate) = 
+        SELECT SUM (amount) FROM waterIntake WHERE 
+        strftime('%d-%m-%Y', date) = 
         strftime('%d-%m-%Y', 'now', 'localtime', '-1 day');
       '''),
     );
@@ -139,11 +139,11 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getTodaysWaterIntake() async {
     var db = await instance.database;
     return await db.rawQuery('''
-      SELECT waterIntake.cupAmount, waterIntake.cupMeasurement, drink.name, 
-      color.name, waterIntake.currentDate FROM waterIntake, drink, color 
-      WHERE waterIntake.drinkID = drink.drinkID AND waterIntake.colorID = 
-      color.colorID AND strftime('%d-%m-%Y', currentDate) = 
-      strftime('%d-%m-%Y', 'now', 'localtime', '-1 day');
+      SELECT waterIntake.amount, waterIntake.measurement, drinkType.drinkTypes, 
+      tileColor.tileColors, waterIntake.date FROM waterIntake, drinkType, 
+      tileColor WHERE waterIntake.drinkTypes = drinkType.drinkTypes AND 
+      waterIntake.tileColors = tileColor.tileColors AND strftime('%d-%m-%Y', 
+      waterIntake.date) = strftime('%d-%m-%Y', 'now', 'localtime', '-1 day');
     ''');
   }
 }
