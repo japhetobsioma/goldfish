@@ -99,7 +99,7 @@ extension StringExtension on String {
         'hot chocolate': DrinkTypes.HotChocolate,
         'coffee': DrinkTypes.Coffee,
         'lemonade': DrinkTypes.Lemonade,
-        'iced Tea': DrinkTypes.IcedTea,
+        'iced tea': DrinkTypes.IcedTea,
         'juice': DrinkTypes.Juice,
         'milkshake': DrinkTypes.Milkshake,
         'tea': DrinkTypes.Tea,
@@ -124,6 +124,10 @@ extension StringExtension on String {
         'brown': TileColors.Brown,
         'grey': TileColors.Grey,
       }[this];
+
+  String get toTitleCase {
+    return '${this[0].toUpperCase()}${this.substring(1)}';
+  }
 }
 
 extension TimeOfDayExtension on TimeOfDay {

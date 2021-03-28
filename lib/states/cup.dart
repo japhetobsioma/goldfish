@@ -16,9 +16,8 @@ class CupNotifier extends StateNotifier<AsyncValue<Cup>> {
 
     state = AsyncValue.data(
       Cup(
-        selectedCupID: selectedCup[0]['cupID'],
-        amount: selectedCup[0]['amount'],
-        measurement: selectedCup[0]['measurement'],
+        selectedCupAmount: selectedCup[0]['amount'],
+        selectedCupMeasurement: selectedCup[0]['measurement'],
         allCup: allCup,
       ),
     );
@@ -32,9 +31,8 @@ class CupNotifier extends StateNotifier<AsyncValue<Cup>> {
 
     state = AsyncValue.data(
       Cup(
-        selectedCupID: selectedCup[0]['cupID'],
-        amount: selectedCup[0]['amount'],
-        measurement: selectedCup[0]['measurement'],
+        selectedCupAmount: selectedCup[0]['amount'],
+        selectedCupMeasurement: selectedCup[0]['measurement'],
         allCup: allCup,
       ),
     );

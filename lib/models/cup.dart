@@ -1,13 +1,11 @@
 class Cup {
   const Cup({
-    this.selectedCupID,
-    this.amount,
-    this.measurement,
+    this.selectedCupAmount,
+    this.selectedCupMeasurement,
     this.allCup,
   });
 
-  final int selectedCupID;
-  final int amount;
-  final String measurement;
+  final int selectedCupAmount;
+  final String selectedCupMeasurement;
   final List<Map<String, dynamic>> allCup;
 }

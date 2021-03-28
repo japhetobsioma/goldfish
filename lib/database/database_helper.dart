@@ -64,7 +64,7 @@ class DatabaseHelper {
     ''');
   }
 
-  /// Get all the information of the selected cup on application database
+  /// Get all the information of the selected `cup`
   Future<List<Map<String, dynamic>>> getSelectedCup() async {
     final db = await instance.database;
 
@@ -74,16 +74,16 @@ class DatabaseHelper {
     );
   }
 
-  /// Get all the information of cup table
+  /// Get all the information of `cup` table
   Future<List<Map<String, dynamic>>> getAllCup() async {
     final db = await instance.database;
 
     return await db.rawQuery('SELECT * FROM cup');
   }
 
-  /// Set all the cup `isActive` column to `false`
+  /// Set all the `cup` tables' `isActive` column to `false`
   ///
-  /// This will be called before updating the new selected cup
+  /// This will be called before updating the new selected `cup`
   Future<void> _setAllCupIsActiveFalse() async {
     final db = await instance.database;
 
@@ -93,10 +93,10 @@ class DatabaseHelper {
     );
   }
 
-  /// Set the seleect cup `isActive` column to `true`
+  /// Set the selected `cup` tables' `isActive` column to `true`
   ///
   /// This will call the `setAllCupIsActiveFalse` function, then update the new
-  /// selected cup `isActive` column.
+  /// selected `cup` tables' `isActive` column.
   Future<void> setSelectedCup(int cupID) async {
     final db = await instance.database;
 
@@ -105,6 +105,50 @@ class DatabaseHelper {
     await db.rawUpdate(
       'UPDATE cup SET isActive = ? WHERE cupID = ?',
       ['true', '$cupID'],
+    );
+  }
+
+  /// Get all the information of the selected `drinkType`
+  Future<List<Map<String, dynamic>>> getSelectedDrinkType() async {
+    final db = await instance.database;
+
+    return await db.rawQuery(
+      'SELECT * FROM drinkType WHERE isActive = ?',
+      ['true'],
+    );
+  }
+
+  /// Get all the information of `drinkType` table
+  Future<List<Map<String, dynamic>>> getAllDrinkType() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('SELECT * FROM drinkType');
+  }
+
+  /// Set all the `drinkType` tables' `isActive` column to `false`
+  ///
+  /// This will be called before updating the new selected `drinkType`
+  Future<void> _setAllDrinkTypeIsActiveFalse() async {
+    final db = await instance.database;
+
+    await db.rawUpdate(
+      'UPDATE drinkType SET isActive = ?',
+      ['false'],
+    );
+  }
+
+  /// Set the selected `drinkType` tables' `isActive` column to `true`
+  ///
+  /// This will call the `_setAllDrinkTypeIsActiveFalse` function, then update
+  /// the new selected `drinkType` tables' `isActive` column.
+  Future<void> setSelectedDrinkType(String drinkType) async {
+    final db = await instance.database;
+
+    await _setAllDrinkTypeIsActiveFalse();
+
+    await db.rawUpdate(
+      'UPDATE drinkType SET isActive = ? WHERE drinkTypes = ?',
+      ['true', '$drinkType'],
     );
   }
 }
