@@ -1,13 +1,13 @@
-import 'package:goldfish/models/user_info.dart';
-
 class Cup {
   const Cup({
+    this.selectedCupID,
     this.amount,
     this.measurement,
-    this.isActive,
+    this.allCup,
   });
 
+  final int selectedCupID;
   final int amount;
-  final LiquidMeasurement measurement;
-  final bool isActive;
+  final String measurement;
+  final List<Map<String, dynamic>> allCup;
 }

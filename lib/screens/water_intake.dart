@@ -19,8 +19,8 @@ class WaterIntakeScreen extends StatelessWidget {
           const SizedBox(
             height: 30.0,
           ),
-          const WaterIntakeInfo(),
-          const WaterIntakeTiles(),
+          /* const WaterIntakeInfo(),
+          const WaterIntakeTiles(), */
         ],
       ),
     );
