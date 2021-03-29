@@ -5,17 +5,42 @@ import '../models/water_intake.dart';
 
 class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   WaterIntakeNotifier() : super(const AsyncValue.loading()) {
-    _fetchWaterIntake();
+    fetchWaterIntake();
   }
 
-  Future<void> _fetchWaterIntake() async {
-    final dbHelper = DatabaseHelper.instance;
+  static final dbHelper = DatabaseHelper.instance;
 
-    final waterIntake = await dbHelper.getTodaysWaterIntake();
+  Future<void> fetchWaterIntake() async {
+    final todaysTotalWaterIntake = await dbHelper.getTodaysTotalWaterIntake();
+    final todaysWaterIntake = await dbHelper.getTodaysWaterIntake();
 
     state = AsyncValue.data(
       WaterIntake(
-        waterIntake: waterIntake,
+        todaysTotalWaterIntake: todaysTotalWaterIntake,
+        todaysWaterIntake: todaysWaterIntake,
+      ),
+    );
+  }
+
+  Future<void> insertWaterIntake() async {
+    final selectedCup = await dbHelper.getSelectedCup();
+    final selectedDrinkType = await dbHelper.getSelectedDrinkType();
+    final selectedTileColor = await dbHelper.getSelectedTileColor();
+
+    await dbHelper.insertWaterIntake(
+      selectedCup[0]['amount'],
+      selectedCup[0]['measurement'],
+      selectedDrinkType[0]['drinkTypes'],
+      selectedTileColor[0]['tileColors'],
+    );
+
+    final todaysTotalWaterIntake = await dbHelper.getTodaysTotalWaterIntake();
+    final todaysWaterIntake = await dbHelper.getTodaysWaterIntake();
+
+    state = AsyncValue.data(
+      WaterIntake(
+        todaysTotalWaterIntake: todaysTotalWaterIntake,
+        todaysWaterIntake: todaysWaterIntake,
       ),
     );
   }

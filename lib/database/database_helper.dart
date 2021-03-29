@@ -21,17 +21,17 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    var documentsDirectory = await getApplicationDocumentsDirectory();
-    var path = join(documentsDirectory.path, 'MyDatabase.db');
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentsDirectory.path, 'MyDatabase.db');
 
-    var exists = await databaseExists(path);
+    final exists = await databaseExists(path);
 
     if (!exists) {
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
 
-      var data =
+      final data =
           await rootBundle.load(join('assets', 'database', _databaseAssetName));
       List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
@@ -40,28 +40,6 @@ class DatabaseHelper {
     }
 
     return await openDatabase(path, version: _databaseVersion);
-  }
-
-  Future<int> getTodaysTotalWaterIntake() async {
-    var db = await instance.database;
-    return Sqflite.firstIntValue(
-      await db.rawQuery('''
-        SELECT SUM (amount) FROM waterIntake WHERE 
-        strftime('%d-%m-%Y', date) = 
-        strftime('%d-%m-%Y', 'now', 'localtime', '-2 day');
-      '''),
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> getTodaysWaterIntake() async {
-    var db = await instance.database;
-    return await db.rawQuery('''
-      SELECT waterIntake.amount, waterIntake.measurement, drinkType.drinkTypes, 
-      tileColor.tileColors, waterIntake.date FROM waterIntake, drinkType, 
-      tileColor WHERE waterIntake.drinkTypes = drinkType.drinkTypes AND 
-      waterIntake.tileColors = tileColor.tileColors AND strftime('%d-%m-%Y', 
-      waterIntake.date) = strftime('%d-%m-%Y', 'now', 'localtime', '-2 day');
-    ''');
   }
 
   /// Get all the information of the selected `cup`
@@ -193,6 +171,55 @@ class DatabaseHelper {
     await db.rawUpdate(
       'UPDATE tileColor SET isActive = ? WHERE tileColors = ?',
       ['true', '$tileColor'],
+    );
+  }
+
+  // Get all todays total water intake
+  Future<int> getTodaysTotalWaterIntake() async {
+    var db = await instance.database;
+    return Sqflite.firstIntValue(
+      await db.rawQuery(
+        'SELECT SUM (amount) FROM waterIntake WHERE strftime(?, date) = '
+        'strftime(?, ?, ?)',
+        ['%d-%m-%Y', '%d-%m-%Y', 'now', 'localtime'],
+      ),
+    );
+  }
+
+  /// Get all todays water intake
+  Future<List<Map<String, dynamic>>> getTodaysWaterIntake() async {
+    final db = await instance.database;
+    return await db.rawQuery(
+      'SELECT waterIntake.amount, waterIntake.measurement, '
+      'drinkType.drinkTypes, tileColor.tileColors, waterIntake.date FROM '
+      'waterIntake, drinkType, tileColor WHERE waterIntake.drinkTypes = '
+      'drinkType.drinkTypes AND waterIntake.tileColors = tileColor.tileColors '
+      'AND strftime(?, waterIntake.date) = strftime(?, ?, ?) ORDER BY date '
+      'DESC',
+      ['%d-%m-%Y', '%d-%m-%Y', 'now', 'localtime'],
+    );
+  }
+
+  /// Insert water intake to `waterIntake` table
+  Future<void> insertWaterIntake(
+    int amount,
+    String measurement,
+    String drinkType,
+    String tileColor,
+  ) async {
+    final db = await instance.database;
+
+    return await db.rawQuery(
+      'INSERT INTO waterIntake (amount, measurement, date, drinkTypes, '
+      'tileColors) VALUES (?, ?, datetime(?, ?), ?, ?)',
+      [
+        '$amount',
+        '$measurement',
+        'now',
+        'localtime',
+        '$drinkType',
+        '$tileColor'
+      ],
     );
   }
 }

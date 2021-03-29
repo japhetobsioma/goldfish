@@ -4,7 +4,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../common/helpers.dart';
-import '../states/total_water.dart';
+import '../models/drink_type.dart';
+import '../models/tile_color.dart';
+import '../models/water_intake.dart';
+import '../states/animated_key.dart';
 import '../states/water_intake.dart';
 
 class WaterIntakeScreen extends StatelessWidget {
@@ -12,34 +15,39 @@ class WaterIntakeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: ScrollPhysics(),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 30.0,
-          ),
-          /* const WaterIntakeInfo(),
-          const WaterIntakeTiles(), */
-        ],
+    return RefreshIndicator(
+      onRefresh: () => context.read(waterIntakeProvider).fetchWaterIntake(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 30.0,
+            ),
+            const WaterIntakeGauge(),
+            const WaterIntakeLists(),
+            const SizedBox(
+              height: 30.0,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class WaterIntakeInfo extends HookWidget {
-  const WaterIntakeInfo();
+class WaterIntakeGauge extends HookWidget {
+  const WaterIntakeGauge();
 
   @override
   Widget build(BuildContext context) {
-    final totalWaterIntake = useProvider(totalWaterIntakeProvider.state);
+    final waterIntake = useProvider(waterIntakeProvider.state);
 
     return Container(
       child: SfRadialGauge(
         enableLoadingAnimation: true,
         axes: [
           RadialAxis(
-            interval: 10.0,
             minimum: 0,
             maximum: 1000.0,
             showTicks: false,
@@ -50,14 +58,15 @@ class WaterIntakeInfo extends HookWidget {
             ),
             pointers: [
               RangePointer(
-                value: totalWaterIntake.when(
+                value: waterIntake.when(
                   data: (value) {
-                    return value.totalWaterIntake.toDouble();
+                    final total = value.todaysTotalWaterIntake ?? 0;
+                    return total.toDouble();
                   },
                   loading: () => 0,
                   error: (error, stackTrace) {
-                    print('error $error');
-                    print('stackTrace $stackTrace');
+                    print('error: $error');
+                    print('stackTrace: $stackTrace');
 
                     return 0;
                   },
@@ -81,14 +90,15 @@ class WaterIntakeInfo extends HookWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: totalWaterIntake.when(
+                        text: waterIntake.when(
                           data: (value) {
-                            return value.totalWaterIntake.toString();
+                            final total = value.todaysTotalWaterIntake ?? 0;
+                            return total.toString();
                           },
                           loading: () => '',
                           error: (error, stackTrace) {
-                            print('error $error');
-                            print('stackTrace $stackTrace');
+                            print('error: $error');
+                            print('stackTrace: $stackTrace');
 
                             return '';
                           },
@@ -119,88 +129,161 @@ class WaterIntakeInfo extends HookWidget {
   }
 }
 
-class WaterIntakeTiles extends HookWidget {
-  const WaterIntakeTiles();
+class WaterIntakeLists extends HookWidget {
+  const WaterIntakeLists();
 
   @override
   Widget build(BuildContext context) {
     final waterIntake = useProvider(waterIntakeProvider.state);
+    final animatedList = useProvider(animatedListKeyProvider.state);
 
     return waterIntake.when(
-      data: (value) => Container(
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: value.waterIntake.length,
-          itemBuilder: (context, index) {
-            final String getDrinkTypes = value.waterIntake[index]['drinkTypes'];
-            final drinkTypes = getDrinkTypes.toDrinkTypes;
+      data: (value) {
+        return Container(
+          child: value.todaysWaterIntake.isNotEmpty
+              ? AnimatedList(
+                  key: animatedList.key,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  initialItemCount: value.todaysWaterIntake.length,
+                  itemBuilder: (context, index, animation) {
+                    final String getDrinkTypes =
+                        value.todaysWaterIntake[index]['drinkTypes'];
+                    final drinkTypes = getDrinkTypes.toDrinkTypes;
+                    final String getTileColors =
+                        value.todaysWaterIntake[index]['tileColors'];
+                    final tileColors = getTileColors.toTileColors;
+                    final String getDate =
+                        value.todaysWaterIntake[index]['date'];
+                    final dateTime = getDate.toDateTime;
+                    final timeDifference = getTimeDifference(dateTime);
 
-            final String getTileColors = value.waterIntake[index]['tileColors'];
-            final tileColors = getTileColors.toTileColors;
-
-            final String getDate = value.waterIntake[index]['date'];
-            final dateTime = getDate.toDateTime;
-            final timeDifference = getTimeDifference(dateTime);
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15.0,
-                vertical: 1,
-              ),
-              child: Card(
-                color: tileColors.color,
-                child: ListTile(
-                  leading: Icon(
-                    drinkTypes.icon,
-                    color: tileColors.subtitleColor,
-                    size: 35.0,
+                    return WaterIntakeItem(
+                      tileColors: tileColors,
+                      drinkTypes: drinkTypes,
+                      timeDifference: timeDifference,
+                      animation: animation,
+                      value: value,
+                      index: index,
+                    );
+                  },
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 1.0,
                   ),
-                  title: Text(
-                    '${value.waterIntake[index]['amount']} '
-                    '${value.waterIntake[index]['measurement']}',
-                    style: TextStyle(
-                      color: tileColors.textIconColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    '${drinkTypes.name} · $timeDifference',
-                    style: TextStyle(
-                      color: tileColors.subtitleColor,
-                    ),
-                  ),
-                  trailing: PopupMenuButton(
-                    onSelected: (value) {},
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                      const PopupMenuItem(
-                        child: Text('Edit'),
-                      ),
-                      const PopupMenuItem(
-                        child: Text('Delete'),
-                      ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.more_vert,
-                        color: tileColors.subtitleColor,
+                  child: Card(
+                    child: ListTile(
+                      title: Text(
+                        'Start drinking water',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
                 ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) {
+        print('error: $error');
+        print('stackTrace: $stackTrace');
+
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
+class WaterIntakeItem extends StatelessWidget {
+  const WaterIntakeItem({
+    this.tileColors,
+    this.drinkTypes,
+    this.timeDifference,
+    this.animation,
+    this.value,
+    this.index,
+  });
+
+  final TileColors tileColors;
+  final DrinkTypes drinkTypes;
+  final String timeDifference;
+  final Animation<double> animation;
+  final WaterIntake value;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+        vertical: 1.0,
+      ),
+      child: SizeTransition(
+        sizeFactor: animation,
+        child: Card(
+          color: tileColors.color,
+          child: ListTile(
+            leading: tileColors.color == Colors.white
+                ? Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFe0e0e0),
+                        width: 1.0,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: tileColors.color,
+                      child: Icon(
+                        drinkTypes.icon,
+                        color: const Color(0xFF202124),
+                      ),
+                    ),
+                  )
+                : CircleAvatar(
+                    backgroundColor: const Color(0x14000000),
+                    child: Icon(
+                      drinkTypes.icon,
+                      color: const Color(0xFF202124),
+                    ),
+                  ),
+            title: Text(
+              '${value.todaysWaterIntake[index]['amount']} '
+              '${value.todaysWaterIntake[index]['measurement']}',
+              style: TextStyle(
+                color: const Color(0xFF202124),
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
               ),
-            );
-          },
+            ),
+            subtitle: Text(
+              '${drinkTypes.name} · $timeDifference',
+              style: TextStyle(
+                color: const Color(0xFF202124),
+              ),
+            ),
+            trailing: PopupMenuButton(
+              onSelected: (value) {},
+              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                const PopupMenuItem(
+                  child: Text('Edit'),
+                ),
+                const PopupMenuItem(
+                  child: Text('Delete'),
+                ),
+              ],
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: const Icon(
+                  Icons.more_vert,
+                  color: Color(0xFF202124),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
-      loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) {
-        print('error $error');
-        print('stackTrace $stackTrace');
-
-        return const CircularProgressIndicator();
-      },
     );
   }
 }

@@ -3,16 +3,23 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/helpers.dart';
+import '../models/cup.dart';
+import '../models/drink_type.dart';
+import '../models/tile_color.dart';
+import '../states/animated_key.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/tile_color.dart';
+import '../states/water_intake.dart';
 import 'water_intake.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends HookWidget {
   const HomeScreen();
 
   @override
   Widget build(BuildContext context) {
+    final animatedList = useProvider(animatedListKeyProvider.state);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -45,7 +52,14 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          await context.read(waterIntakeProvider).insertWaterIntake();
+
+          if (animatedList.key.currentState != null) {
+            animatedList.key.currentState
+                .insertItem(0, duration: const Duration(milliseconds: 500));
+          }
+        },
         child: const Icon(Icons.local_drink),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -138,7 +152,7 @@ class MoreBottomSheet extends HookWidget {
           data: (value) => ListTile(
             leading: const Icon(Icons.local_cafe),
             title: const Text('Change drink'),
-            subtitle: Text('${value.selectedDrinkType.toTitleCase}'),
+            subtitle: Text('${value.selectedDrinkType.toSentenceCase}'),
             onTap: () {
               showDialog(
                 context: context,
@@ -158,7 +172,7 @@ class MoreBottomSheet extends HookWidget {
           data: (value) => ListTile(
             leading: const Icon(Icons.palette),
             title: const Text('Change color'),
-            subtitle: Text('${value.selectedTileColor.toTitleCase}'),
+            subtitle: Text('${value.selectedTileColor.toSentenceCase}'),
             onTap: () {
               showDialog(
                 context: context,
@@ -214,33 +228,9 @@ class CupLists extends HookWidget {
         shrinkWrap: true,
         itemCount: value.allCup.length,
         itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: const CircleAvatar(
-                    child: Icon(Icons.local_drink),
-                  ),
-                  title: Text(
-                    '${value.allCup[index]['amount']} '
-                    '${value.allCup[index]['measurement']}',
-                  ),
-                  selected:
-                      value.allCup[index]['isActive'] == 'true' ? true : false,
-                  trailing: value.allCup[index]['isActive'] == 'true'
-                      ? const Icon(Icons.check_circle)
-                      : const SizedBox.shrink(),
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    context
-                        .read(cupProvider)
-                        .setSelectedCup(value.allCup[index]['cupID']);
-                  },
-                ),
-              ),
-            ],
+          return CupItem(
+            value: value,
+            index: index,
           );
         },
       ),
@@ -251,6 +241,47 @@ class CupLists extends HookWidget {
 
         return const SizedBox.shrink();
       },
+    );
+  }
+}
+
+class CupItem extends StatelessWidget {
+  const CupItem({
+    this.value,
+    this.index,
+  });
+
+  final Cup value;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: const CircleAvatar(
+              child: Icon(Icons.local_drink),
+            ),
+            title: Text(
+              '${value.allCup[index]['amount']} '
+              '${value.allCup[index]['measurement']}',
+            ),
+            selected: value.allCup[index]['isActive'] == 'true' ? true : false,
+            trailing: value.allCup[index]['isActive'] == 'true'
+                ? const Icon(Icons.check_circle)
+                : const SizedBox.shrink(),
+            onTap: () {
+              Navigator.pop(context);
+
+              context
+                  .read(cupProvider)
+                  .setSelectedCup(value.allCup[index]['cupID']);
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -290,33 +321,15 @@ class DrinkTypeLists extends HookWidget {
         shrinkWrap: true,
         itemCount: value.allDrinkType.length,
         itemBuilder: (context, index) {
-          final String sDrinkType = value.allDrinkType[index]['drinkTypes'];
-          final drinkTypes = sDrinkType.toDrinkTypes;
+          final String drinkTypeString =
+              value.allDrinkType[index]['drinkTypes'];
+          final drinkTypes = drinkTypeString.toDrinkTypes;
 
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    child: Icon(drinkTypes.icon),
-                  ),
-                  title: Text(sDrinkType.toTitleCase),
-                  selected: value.allDrinkType[index]['isActive'] == 'true'
-                      ? true
-                      : false,
-                  trailing: value.allDrinkType[index]['isActive'] == 'true'
-                      ? const Icon(Icons.check_circle)
-                      : const SizedBox.shrink(),
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    context.read(drinkTypeProvider).setSelectedDrinkType(
-                        value.allDrinkType[index]['drinkTypes']);
-                  },
-                ),
-              ),
-            ],
+          return DrinkTypeItem(
+            drinkTypes: drinkTypes,
+            drinkTypeString: drinkTypeString,
+            value: value,
+            index: index,
           );
         },
       ),
@@ -327,6 +340,44 @@ class DrinkTypeLists extends HookWidget {
 
         return const SizedBox.shrink();
       },
+    );
+  }
+}
+
+class DrinkTypeItem extends StatelessWidget {
+  const DrinkTypeItem(
+      {this.drinkTypes, this.drinkTypeString, this.value, this.index});
+
+  final DrinkTypes drinkTypes;
+  final String drinkTypeString;
+  final DrinkType value;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: CircleAvatar(
+              child: Icon(drinkTypes.icon),
+            ),
+            title: Text(drinkTypeString.toSentenceCase),
+            selected:
+                value.allDrinkType[index]['isActive'] == 'true' ? true : false,
+            trailing: value.allDrinkType[index]['isActive'] == 'true'
+                ? const Icon(Icons.check_circle)
+                : const SizedBox.shrink(),
+            onTap: () {
+              Navigator.pop(context);
+
+              context.read(drinkTypeProvider).setSelectedDrinkType(
+                  value.allDrinkType[index]['drinkTypes']);
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -366,46 +417,15 @@ class TileColorLists extends HookWidget {
         shrinkWrap: true,
         itemCount: value.allTileColor.length,
         itemBuilder: (context, index) {
-          final String sTileColor = value.allTileColor[index]['tileColors'];
-          final tileColor = sTileColor.toTileColors;
+          final String tileColorString =
+              value.allTileColor[index]['tileColors'];
+          final tileColor = tileColorString.toTileColors;
 
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: tileColor.color == Colors.white
-                      ? Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: CircleAvatar(
-                            backgroundColor: tileColor.color,
-                          ),
-                        )
-                      : CircleAvatar(
-                          backgroundColor: tileColor.color,
-                        ),
-                  title: Text(sTileColor.toTitleCase),
-                  selected: value.allTileColor[index]['isActive'] == 'true'
-                      ? true
-                      : false,
-                  trailing: value.allTileColor[index]['isActive'] == 'true'
-                      ? const Icon(Icons.check_circle)
-                      : const SizedBox.shrink(),
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    context.read(tileColorProvider).setSelectedTileColor(
-                        value.allTileColor[index]['tileColors']);
-                  },
-                ),
-              ),
-            ],
+          return TileColorItem(
+            tileColor: tileColor,
+            tileColorString: tileColorString,
+            value: value,
+            index: index,
           );
         },
       ),
@@ -416,6 +436,61 @@ class TileColorLists extends HookWidget {
 
         return const SizedBox.shrink();
       },
+    );
+  }
+}
+
+class TileColorItem extends StatelessWidget {
+  const TileColorItem({
+    this.tileColor,
+    this.tileColorString,
+    this.value,
+    this.index,
+  });
+
+  final TileColors tileColor;
+  final String tileColorString;
+  final TileColor value;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: tileColor.color == Colors.white
+                ? Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFe0e0e0),
+                        width: 1.0,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: tileColor.color,
+                    ),
+                  )
+                : CircleAvatar(
+                    backgroundColor: tileColor.color,
+                  ),
+            title: Text(tileColorString.toSentenceCase),
+            selected:
+                value.allTileColor[index]['isActive'] == 'true' ? true : false,
+            trailing: value.allTileColor[index]['isActive'] == 'true'
+                ? const Icon(Icons.check_circle)
+                : const SizedBox.shrink(),
+            onTap: () {
+              Navigator.pop(context);
+
+              context.read(tileColorProvider).setSelectedTileColor(
+                  value.allTileColor[index]['tileColors']);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,38 +1,9 @@
-enum DrinkTypes {
-  Water,
-  HotChocolate,
-  Coffee,
-  Lemonade,
-  IcedTea,
-  Juice,
-  Milkshake,
-  Tea,
-  Milk,
-  Beer,
-  Soda,
-  Wine,
-  Liquor,
-}
-
-enum TileColors {
-  Default,
-  Red,
-  Orange,
-  Yellow,
-  Green,
-  Teal,
-  Blue,
-  LightBlue,
-  Purple,
-  Pink,
-  Brown,
-  Grey
-}
-
 class WaterIntake {
   const WaterIntake({
-    this.waterIntake,
+    this.todaysTotalWaterIntake,
+    this.todaysWaterIntake,
   });
 
-  final List<Map<String, dynamic>> waterIntake;
+  final int todaysTotalWaterIntake;
+  final List<Map<String, dynamic>> todaysWaterIntake;
 }

@@ -2,8 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/drink_type.dart';
+import '../models/tile_color.dart';
 import '../models/user_info.dart';
-import '../models/water_intake.dart';
 
 // ignore_for_file: unnecessary_this
 
@@ -118,14 +119,14 @@ extension StringExtension on String {
         'green': TileColors.Green,
         'teal': TileColors.Teal,
         'blue': TileColors.Blue,
-        'light blue': TileColors.LightBlue,
+        'dark blue': TileColors.DarkBlue,
         'purple': TileColors.Purple,
         'pink': TileColors.Pink,
         'brown': TileColors.Brown,
         'grey': TileColors.Grey,
       }[this];
 
-  String get toTitleCase {
+  String get toSentenceCase {
     return '${this[0].toUpperCase()}${this.substring(1)}';
   }
 }
@@ -314,6 +315,7 @@ int millilitersToFluidOunce(double milliliters) =>
 int fluidOunceToMilliliters(double fluidOunce) => (fluidOunce * 29.574).round();
 
 extension DrinkTypeExtension on DrinkTypes {
+  /// Return a string representation of this liquid measurement.
   String get name => {
         DrinkTypes.Water: 'Water',
         DrinkTypes.HotChocolate: 'Hot Chocolate',
@@ -330,6 +332,7 @@ extension DrinkTypeExtension on DrinkTypes {
         DrinkTypes.Liquor: 'Liquor',
       }[this];
 
+  /// Return an Icon of this liquid measurement.
   IconData get icon => {
         DrinkTypes.Water: Icons.local_cafe,
         DrinkTypes.HotChocolate: Icons.local_cafe,
@@ -348,6 +351,7 @@ extension DrinkTypeExtension on DrinkTypes {
 }
 
 extension TileColorExtension on TileColors {
+  /// Return a string representation of this liquid measurement.
   String get name => {
         TileColors.Default: 'Default',
         TileColors.Red: 'Red',
@@ -356,56 +360,27 @@ extension TileColorExtension on TileColors {
         TileColors.Green: 'Green',
         TileColors.Teal: 'Teal',
         TileColors.Blue: 'Blue',
-        TileColors.LightBlue: 'Light Blue',
+        TileColors.DarkBlue: 'Dark Blue',
         TileColors.Purple: 'Purple',
         TileColors.Pink: 'Pink',
         TileColors.Brown: 'Brown',
         TileColors.Grey: 'Grey',
       }[this];
 
+  /// Return a Color of this liquid measurement.
   Color get color => {
         TileColors.Default: Colors.white,
-        TileColors.Red: Colors.red,
-        TileColors.Orange: Colors.orange,
-        TileColors.Yellow: Colors.yellow,
-        TileColors.Green: Colors.green,
-        TileColors.Teal: Colors.teal,
-        TileColors.Blue: Colors.blue,
-        TileColors.LightBlue: Colors.lightBlue,
-        TileColors.Purple: Colors.purple,
-        TileColors.Pink: Colors.pink,
-        TileColors.Brown: Colors.brown,
-        TileColors.Grey: Colors.grey,
-      }[this];
-
-  Color get textIconColor => {
-        TileColors.Default: Colors.black,
-        TileColors.Red: Colors.white,
-        TileColors.Orange: Colors.black,
-        TileColors.Yellow: Colors.black,
-        TileColors.Green: Colors.white,
-        TileColors.Teal: Colors.white,
-        TileColors.Blue: Colors.white,
-        TileColors.LightBlue: Colors.black,
-        TileColors.Purple: Colors.white,
-        TileColors.Pink: Colors.white,
-        TileColors.Brown: Colors.white,
-        TileColors.Grey: Colors.black,
-      }[this];
-
-  Color get subtitleColor => {
-        TileColors.Default: Colors.black54,
-        TileColors.Red: Colors.white70,
-        TileColors.Orange: Colors.black54,
-        TileColors.Yellow: Colors.black54,
-        TileColors.Green: Colors.white70,
-        TileColors.Teal: Colors.white70,
-        TileColors.Blue: Colors.white70,
-        TileColors.LightBlue: Colors.black54,
-        TileColors.Purple: Colors.white70,
-        TileColors.Pink: Colors.white70,
-        TileColors.Brown: Colors.white70,
-        TileColors.Grey: Colors.black54,
+        TileColors.Red: const Color(0xFFf28b82),
+        TileColors.Orange: const Color(0xFFfbbc04),
+        TileColors.Yellow: const Color(0xFFfff475),
+        TileColors.Green: const Color(0xFFccff90),
+        TileColors.Teal: const Color(0xFFa7ffeb),
+        TileColors.Blue: const Color(0xFFcbf0f8),
+        TileColors.DarkBlue: const Color(0xFFaecbfa),
+        TileColors.Purple: const Color(0xFFd7aefb),
+        TileColors.Pink: const Color(0xFFfdcfe8),
+        TileColors.Brown: const Color(0xFFe6c9a8),
+        TileColors.Grey: const Color(0xFFe8eaed),
       }[this];
 }
 
@@ -417,7 +392,9 @@ String getTimeDifference(DateTime dateTime) {
   final now = DateTime.now();
   final difference = now.difference(dateTime);
 
-  if (difference.inSeconds < 60) {
+  if (difference.inSeconds == 0) {
+    return 'Now';
+  } else if (difference.inSeconds < 60) {
     return '${difference.inSeconds.toString()}s';
   } else if (difference.inMinutes < 60) {
     return '${difference.inMinutes.toString()}m';
