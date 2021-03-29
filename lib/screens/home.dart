@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../common/helpers.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
+import '../states/tile_color.dart';
 import 'water_intake.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -105,9 +106,9 @@ class MoreBottomSheet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _quickAction = useState(true);
     final cup = useProvider(cupProvider.state);
     final drinkType = useProvider(drinkTypeProvider.state);
+    final tileColor = useProvider(tileColorProvider.state);
 
     return Wrap(
       children: [
@@ -153,18 +154,25 @@ class MoreBottomSheet extends HookWidget {
             return const SizedBox.shrink();
           },
         ),
-        ListTile(
-          leading: const Icon(Icons.palette),
-          title: const Text('Change color'),
-          subtitle: const Text('Blue'),
-          onTap: () => Navigator.pop(context),
-        ),
-        SwitchListTile(
-          title: const Text('Quick add'),
-          subtitle: const Text('Quickly insert new water intake'),
-          secondary: const Icon(Icons.offline_bolt),
-          value: _quickAction.value,
-          onChanged: (bool value) => _quickAction.value = value,
+        tileColor.when(
+          data: (value) => ListTile(
+            leading: const Icon(Icons.palette),
+            title: const Text('Change color'),
+            subtitle: Text('${value.selectedTileColor.toTitleCase}'),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (_) => const TileColorDialog(),
+              );
+            },
+          ),
+          loading: () => const SizedBox.shrink(),
+          error: (error, stackTrace) {
+            print('error: $error');
+            print('stackTrace: $stackTrace');
+
+            return const SizedBox.shrink();
+          },
         ),
       ],
     );
@@ -305,6 +313,95 @@ class DrinkTypeLists extends HookWidget {
 
                     context.read(drinkTypeProvider).setSelectedDrinkType(
                         value.allDrinkType[index]['drinkTypes']);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) {
+        print('error: $error');
+        print('stackTrace: $stackTrace');
+
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
+class TileColorDialog extends StatelessWidget {
+  const TileColorDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      title: const Text('Select a color'),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Container(
+            width: double.maxFinite,
+            height: 250.0,
+            child: const Scrollbar(
+              child: TileColorLists(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class TileColorLists extends HookWidget {
+  const TileColorLists();
+
+  @override
+  Widget build(BuildContext context) {
+    final tileColor = useProvider(tileColorProvider.state);
+
+    return tileColor.when(
+      data: (value) => ListView.builder(
+        shrinkWrap: true,
+        itemCount: value.allTileColor.length,
+        itemBuilder: (context, index) {
+          final String sTileColor = value.allTileColor[index]['tileColors'];
+          final tileColor = sTileColor.toTileColors;
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: tileColor.color == Colors.white
+                      ? Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: tileColor.color,
+                          ),
+                        )
+                      : CircleAvatar(
+                          backgroundColor: tileColor.color,
+                        ),
+                  title: Text(sTileColor.toTitleCase),
+                  selected: value.allTileColor[index]['isActive'] == 'true'
+                      ? true
+                      : false,
+                  trailing: value.allTileColor[index]['isActive'] == 'true'
+                      ? const Icon(Icons.check_circle)
+                      : const SizedBox.shrink(),
+                  onTap: () {
+                    Navigator.pop(context);
+
+                    context.read(tileColorProvider).setSelectedTileColor(
+                        value.allTileColor[index]['tileColors']);
                   },
                 ),
               ),

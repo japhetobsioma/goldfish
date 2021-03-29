@@ -151,4 +151,48 @@ class DatabaseHelper {
       ['true', '$drinkType'],
     );
   }
+
+  /// Get all the information of the selected `tileColor`
+  Future<List<Map<String, dynamic>>> getSelectedTileColor() async {
+    final db = await instance.database;
+
+    return await db.rawQuery(
+      'SELECT * FROM tileColor WHERE isActive = ?',
+      ['true'],
+    );
+  }
+
+  /// Get all the information of `tileColor` table
+  Future<List<Map<String, dynamic>>> getAllTileColor() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('SELECT * FROM tileColor');
+  }
+
+  /// Set all the `tileColor` tables' `isActive` column to `false`
+  ///
+  /// This will be called before updating the new selected `tileColor`
+  Future<void> _setAllTileColorIsActiveFalse() async {
+    final db = await instance.database;
+
+    await db.rawUpdate(
+      'UPDATE tileColor SET isActive = ?',
+      ['false'],
+    );
+  }
+
+  /// Set the selected `tileColor` tables' `isActive` column to `true`
+  ///
+  /// This will call the `_setAllTileColorIsActiveFalse` function, then update
+  /// the new selected `tileColor` tables' `isActive` column.
+  Future<void> setSelectedTileColor(String tileColor) async {
+    final db = await instance.database;
+
+    await _setAllTileColorIsActiveFalse();
+
+    await db.rawUpdate(
+      'UPDATE tileColor SET isActive = ? WHERE tileColors = ?',
+      ['true', '$tileColor'],
+    );
+  }
 }
