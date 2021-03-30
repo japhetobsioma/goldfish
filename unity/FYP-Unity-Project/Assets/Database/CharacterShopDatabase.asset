@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27df4a963af425b49b31bd88ac3bc610, type: 3}
+  m_Name: CharacterShopDatabase
+  m_EditorClassIdentifier: 
+  characters:
+  - image: {fileID: 21300000, guid: 232c7272f3782bb4eadf4cb0863a3624, type: 3}
+    name: Goldfish
+    price: 1000
+    fish: {fileID: 8028230511657301690, guid: 361ec0e4f835f9e4d939ce3bf5f30311, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: 6e68696756d1316459b800afef854e55, type: 3}
+    name: Trout
+    price: 2000
+    fish: {fileID: 6731673351056244311, guid: 253cede3c07da914da96d24292e0fe77, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: 34a72b3d4f720904bb71c65a29dc1664, type: 3}
+    name: Seahorse
+    price: 3000
+    fish: {fileID: 5556485978956027254, guid: 9ea5f494c172874459cd2174f8dbcc27, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: 095a2067a88a97a429a1221e527a6e9a, type: 3}
+    name: Piranha
+    price: 4000
+    fish: {fileID: 2745011694923717505, guid: 9952aba639620874b835f3ccfcf61bbd, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: 59468cc24eb52c143886684020583b7f, type: 3}
+    name: Dolphin
+    price: 5000
+    fish: {fileID: 2338737229331501493, guid: 6edf8d55dee48fd448ab1d8373fe4db9, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: f9f1e515c23c8b1409afd688c9838d16, type: 3}
+    name: Manatee
+    price: 6000
+    fish: {fileID: 2031478143925105150, guid: 509b5e80d54cbc24195b969bd9d09d5e, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: 9a61d73ce77a2174787f233ba3b00588, type: 3}
+    name: Narwhal
+    price: 7000
+    fish: {fileID: 8602911710281557860, guid: 0f9a673f7254d0247b108d1f43a30e67, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: 1dd58876341f96b4390cd9b2a3fb8b21, type: 3}
+    name: Shark
+    price: 8000
+    fish: {fileID: 1648469764724650914, guid: 402e98b7f6b14b54586b0f960ea2fa55, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: b407be705bdba3b4ca75cc6a7707ff0c, type: 3}
+    name: Orca
+    price: 9000
+    fish: {fileID: 2937731969354021335, guid: 72551c2dc31dc4e4bbaa9a591bd306f8, type: 3}
+    isPurchased: 0
+  - image: {fileID: 21300000, guid: def20bfbb4a91ed4da6a878de610fdbd, type: 3}
+    name: Whale
+    price: 10000
+    fish: {fileID: 7745970209203881077, guid: cb801c9a2e875044c8dc4ff2d5ad3aa5, type: 3}
+    isPurchased: 0
