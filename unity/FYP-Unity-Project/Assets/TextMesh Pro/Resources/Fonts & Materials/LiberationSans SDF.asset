@@ -56,7 +56,7 @@ Material:
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!114 &11400000
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hashCode: 231247347
   material: {fileID: 2180264}
-  materialHashCode: -1183942120
+  materialHashCode: 198912371
   m_Version: 1.1.0
   m_SourceFontFileGUID: e3265ab4bf004d28a9537516768c1c75
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75,
@@ -4605,6 +4605,7 @@ MonoBehaviour:
   m_AtlasTextures:
   - {fileID: 28684132378477856}
   m_AtlasTextureIndex: 0
+  m_IsMultiAtlasTexturesEnabled: 0
   m_UsedGlyphRects:
   - m_X: 0
     m_Y: 0
