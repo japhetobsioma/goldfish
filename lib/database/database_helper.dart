@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -190,12 +191,12 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getTodaysWaterIntake() async {
     final db = await instance.database;
     return await db.rawQuery(
-      'SELECT waterIntake.amount, waterIntake.measurement, '
-      'drinkType.drinkTypes, tileColor.tileColors, waterIntake.date FROM '
-      'waterIntake, drinkType, tileColor WHERE waterIntake.drinkTypes = '
-      'drinkType.drinkTypes AND waterIntake.tileColors = tileColor.tileColors '
-      'AND strftime(?, waterIntake.date) = strftime(?, ?, ?) ORDER BY date '
-      'DESC',
+      'SELECT waterIntake.amount, waterIntake.measurement,'
+      'waterIntake.waterIntakeID, drinkType.drinkTypes, tileColor.tileColors, '
+      'waterIntake.date FROM waterIntake, drinkType, tileColor WHERE '
+      'waterIntake.drinkTypes = drinkType.drinkTypes AND '
+      'waterIntake.tileColors = tileColor.tileColors AND '
+      'strftime(?, waterIntake.date) = strftime(?, ?, ?) ORDER BY date DESC',
       ['%d-%m-%Y', '%d-%m-%Y', 'now', 'localtime'],
     );
   }
@@ -209,7 +210,7 @@ class DatabaseHelper {
   ) async {
     final db = await instance.database;
 
-    return await db.rawQuery(
+    await db.rawInsert(
       'INSERT INTO waterIntake (amount, measurement, date, drinkTypes, '
       'tileColors) VALUES (?, ?, datetime(?, ?), ?, ?)',
       [
@@ -221,5 +222,114 @@ class DatabaseHelper {
         '$tileColor'
       ],
     );
+  }
+
+  Future<void> updateWaterIntakeCup({
+    @required int amount,
+    @required String measurement,
+    @required int waterIntakeID,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE 
+        waterIntake 
+      SET 
+        amount = ?, 
+        measurement = ?
+      WHERE 
+        waterIntakeID = ?
+    ''', [
+      '$amount',
+      '$measurement',
+      '$waterIntakeID',
+    ]);
+  }
+
+  Future<void> updateWaterIntakeMeasurement({
+    @required String measurement,
+    @required int waterIntakeID,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE 
+        waterIntake 
+      SET 
+        measurement = ?
+      WHERE 
+        waterIntakeID = ?
+    ''', [
+      '$measurement',
+      '$waterIntakeID',
+    ]);
+  }
+
+  Future<void> updateWaterIntakeDate({
+    @required String date,
+    @required int waterIntakeID,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE 
+        waterIntake 
+      SET 
+        date = ?
+      WHERE 
+        waterIntakeID = ?
+    ''', [
+      '$date',
+      '$waterIntakeID',
+    ]);
+  }
+
+  Future<void> updateWaterIntakeDrinkTypes({
+    @required String drinkTypes,
+    @required int waterIntakeID,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE 
+        waterIntake 
+      SET 
+        drinkTypes = ? 
+      WHERE 
+        waterIntakeID = ?
+    ''', [
+      '$drinkTypes',
+      '$waterIntakeID',
+    ]);
+  }
+
+  Future<void> updateWaterIntakeTileColors({
+    @required String tileColors,
+    @required int waterIntakeID,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE 
+        waterIntake 
+      SET 
+        tileColors = ? 
+      WHERE 
+        waterIntakeID = ?
+    ''', [
+      '$tileColors',
+      '$waterIntakeID',
+    ]);
+  }
+
+  Future<void> deleteWaterIntake({@required int waterIntakeID}) async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM 
+        waterIntake 
+      WHERE 
+        waterIntakeID = ?
+    ''', ['$waterIntakeID']);
   }
 }

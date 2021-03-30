@@ -19,6 +19,8 @@ extension DateTimeExtension on DateTime {
   ///
   /// Output: `25 June 1997`
   String get toFormattedString => DateFormat(_datePattern).format(this);
+
+  TimeOfDay get toTimeOfDay => TimeOfDay.fromDateTime(this);
 }
 
 extension StringExtension on String {
@@ -126,9 +128,20 @@ extension StringExtension on String {
         'grey': TileColors.Grey,
       }[this];
 
+  /// Return a string in sentence case.
+  ///
+  /// ```dart
+  /// 'alphabet'.toSentenceCase; // 'Alphabet'
+  /// ```
   String get toSentenceCase {
     return '${this[0].toUpperCase()}${this.substring(1)}';
   }
+
+  /// Convert a String to LiquidMeasurement
+  LiquidMeasurement get toLiquidMeasurement => {
+        'ml': LiquidMeasurement.Milliliter,
+        'fl oz': LiquidMeasurement.FluidOunce,
+      }[this];
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -137,7 +150,7 @@ extension TimeOfDayExtension on TimeOfDay {
   /// The default date pattern is `jm`.
   ///
   /// Output: `8:30 AM`
-  String get toFormattedString {
+  String get toFormattedTypeString {
     final dateNow = DateTime.now();
     final dateTime = DateTime(
       dateNow.year,
@@ -153,7 +166,7 @@ extension TimeOfDayExtension on TimeOfDay {
   /// Return a date in human-readable format.
   ///
   /// e.g. `1997-06-25 00:00:00.000`
-  String get toDate {
+  String get toDateTimeTypeString {
     final dateNow = DateTime.now();
     final dateTime = DateTime(
       dateNow.year,
@@ -164,6 +177,19 @@ extension TimeOfDayExtension on TimeOfDay {
     );
 
     return dateTime.toString();
+  }
+
+  /// Convert TimeOfDay to DateTime
+  DateTime get toDateTime {
+    final dateNow = DateTime.now();
+
+    return DateTime(
+      dateNow.year,
+      dateNow.month,
+      dateNow.day,
+      hour,
+      minute,
+    );
   }
 }
 
@@ -183,9 +209,15 @@ extension LiquidMeasurementExtension on LiquidMeasurement {
   String get name => describeEnum(this);
 
   /// Return a string description of this liquid measurement.
-  String get description => {
+  String get descriptionPerDay => {
         LiquidMeasurement.Milliliter: 'ml/per day',
         LiquidMeasurement.FluidOunce: 'fl oz/per day'
+      }[this];
+
+  /// Return a String short description of this LiquidMeasurement
+  String get description => {
+        LiquidMeasurement.Milliliter: 'ml',
+        LiquidMeasurement.FluidOunce: 'fl oz'
       }[this];
 }
 
@@ -318,10 +350,10 @@ extension DrinkTypeExtension on DrinkTypes {
   /// Return a string representation of this liquid measurement.
   String get name => {
         DrinkTypes.Water: 'Water',
-        DrinkTypes.HotChocolate: 'Hot Chocolate',
+        DrinkTypes.HotChocolate: 'Hot chocolate',
         DrinkTypes.Coffee: 'Coffee',
         DrinkTypes.Lemonade: 'Lemonade',
-        DrinkTypes.IcedTea: 'Iced Tea',
+        DrinkTypes.IcedTea: 'Iced tea',
         DrinkTypes.Juice: 'Juice',
         DrinkTypes.Milkshake: 'Milkshake',
         DrinkTypes.Tea: 'Tea',
@@ -360,7 +392,7 @@ extension TileColorExtension on TileColors {
         TileColors.Green: 'Green',
         TileColors.Teal: 'Teal',
         TileColors.Blue: 'Blue',
-        TileColors.DarkBlue: 'Dark Blue',
+        TileColors.DarkBlue: 'Dark blue',
         TileColors.Purple: 'Purple',
         TileColors.Pink: 'Pink',
         TileColors.Brown: 'Brown',
@@ -392,7 +424,9 @@ String getTimeDifference(DateTime dateTime) {
   final now = DateTime.now();
   final difference = now.difference(dateTime);
 
-  if (difference.inSeconds == 0) {
+  if (difference.inSeconds < 0) {
+    return dateTime.toTimeOfDay.toFormattedTypeString;
+  } else if (difference.inSeconds == 0) {
     return 'Now';
   } else if (difference.inSeconds < 60) {
     return '${difference.inSeconds.toString()}s';

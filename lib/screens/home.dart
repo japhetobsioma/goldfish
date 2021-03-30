@@ -56,8 +56,10 @@ class HomeScreen extends HookWidget {
           await context.read(waterIntakeProvider).insertWaterIntake();
 
           if (animatedList.key.currentState != null) {
-            animatedList.key.currentState
-                .insertItem(0, duration: const Duration(milliseconds: 500));
+            animatedList.key.currentState.insertItem(
+              0,
+              duration: const Duration(milliseconds: 500),
+            );
           }
         },
         child: const Icon(Icons.local_drink),
@@ -314,9 +316,9 @@ class DrinkTypeLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cup = useProvider(drinkTypeProvider.state);
+    final drinkType = useProvider(drinkTypeProvider.state);
 
-    return cup.when(
+    return drinkType.when(
       data: (value) => ListView.builder(
         shrinkWrap: true,
         itemCount: value.allDrinkType.length,
@@ -345,8 +347,12 @@ class DrinkTypeLists extends HookWidget {
 }
 
 class DrinkTypeItem extends StatelessWidget {
-  const DrinkTypeItem(
-      {this.drinkTypes, this.drinkTypeString, this.value, this.index});
+  const DrinkTypeItem({
+    this.drinkTypes,
+    this.drinkTypeString,
+    this.value,
+    this.index,
+  });
 
   final DrinkTypes drinkTypes;
   final String drinkTypeString;

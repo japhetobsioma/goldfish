@@ -292,7 +292,7 @@ class WakeupTimeField extends HookWidget {
 
                   if (selectedTime != null) {
                     wakeupTimeTextController.text =
-                        selectedTime.toFormattedString;
+                        selectedTime.toFormattedTypeString;
                   }
                 },
               ),
@@ -355,7 +355,8 @@ class BedtimeField extends HookWidget {
                   );
 
                   if (selectedTime != null) {
-                    bedtimeTextController.text = selectedTime.toFormattedString;
+                    bedtimeTextController.text =
+                        selectedTime.toFormattedTypeString;
                   }
                 },
               ),
@@ -454,7 +455,7 @@ class DailyGoal extends HookWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        selectedLiquidMeasurement.description,
+                        selectedLiquidMeasurement.descriptionPerDay,
                         style: TextStyle(color: goldfishBlack),
                       ),
                     ),
