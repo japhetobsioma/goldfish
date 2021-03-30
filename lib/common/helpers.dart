@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/drink_type.dart';
+import '../models/tile_color.dart';
 import '../models/user_info.dart';
 
 // ignore_for_file: unnecessary_this
@@ -17,6 +19,8 @@ extension DateTimeExtension on DateTime {
   ///
   /// Output: `25 June 1997`
   String get toFormattedString => DateFormat(_datePattern).format(this);
+
+  TimeOfDay get toTimeOfDay => TimeOfDay.fromDateTime(this);
 }
 
 extension StringExtension on String {
@@ -30,7 +34,7 @@ extension StringExtension on String {
   /// Return a date in human-readable format.
   ///
   /// e.g. `1997-06-25 00:00:00.000`
-  DateTime get toDate => DateTime.parse(this);
+  DateTime get toDateTime => DateTime.parse(this);
 
   /// Check if the date is in a valid format.
   bool get dateFormatIsValid {
@@ -74,7 +78,7 @@ extension StringExtension on String {
   ///
   /// Output: `25 June 1997`
   String get toStringDate {
-    final dateTime = toDate;
+    final dateTime = toDateTime;
 
     return DateFormat(_datePattern).format(dateTime);
   }
@@ -85,13 +89,59 @@ extension StringExtension on String {
   ///
   /// Output: `8:30 AM`
   String get toStringTime {
-    final dateTime = toDate;
+    final dateTime = toDateTime;
 
     return DateFormat(_timePattern).format(dateTime);
   }
 
   /// Check if the string is equal to `0`.
   bool get isZero => this == '0' ? true : false;
+
+  DrinkTypes get toDrinkTypes => {
+        'water': DrinkTypes.Water,
+        'hot chocolate': DrinkTypes.HotChocolate,
+        'coffee': DrinkTypes.Coffee,
+        'lemonade': DrinkTypes.Lemonade,
+        'iced tea': DrinkTypes.IcedTea,
+        'juice': DrinkTypes.Juice,
+        'milkshake': DrinkTypes.Milkshake,
+        'tea': DrinkTypes.Tea,
+        'milk': DrinkTypes.Milk,
+        'beer': DrinkTypes.Beer,
+        'soda': DrinkTypes.Soda,
+        'wine': DrinkTypes.Wine,
+        'liquor': DrinkTypes.Liquor,
+      }[this];
+
+  TileColors get toTileColors => {
+        'default': TileColors.Default,
+        'red': TileColors.Red,
+        'orange': TileColors.Orange,
+        'yellow': TileColors.Yellow,
+        'green': TileColors.Green,
+        'teal': TileColors.Teal,
+        'blue': TileColors.Blue,
+        'dark blue': TileColors.DarkBlue,
+        'purple': TileColors.Purple,
+        'pink': TileColors.Pink,
+        'brown': TileColors.Brown,
+        'grey': TileColors.Grey,
+      }[this];
+
+  /// Return a string in sentence case.
+  ///
+  /// ```dart
+  /// 'alphabet'.toSentenceCase; // 'Alphabet'
+  /// ```
+  String get toSentenceCase {
+    return '${this[0].toUpperCase()}${this.substring(1)}';
+  }
+
+  /// Convert a String to LiquidMeasurement
+  LiquidMeasurement get toLiquidMeasurement => {
+        'ml': LiquidMeasurement.Milliliter,
+        'fl oz': LiquidMeasurement.FluidOunce,
+      }[this];
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -100,7 +150,7 @@ extension TimeOfDayExtension on TimeOfDay {
   /// The default date pattern is `jm`.
   ///
   /// Output: `8:30 AM`
-  String get toFormattedString {
+  String get toFormattedTypeString {
     final dateNow = DateTime.now();
     final dateTime = DateTime(
       dateNow.year,
@@ -116,7 +166,7 @@ extension TimeOfDayExtension on TimeOfDay {
   /// Return a date in human-readable format.
   ///
   /// e.g. `1997-06-25 00:00:00.000`
-  String get toDate {
+  String get toDateTimeTypeString {
     final dateNow = DateTime.now();
     final dateTime = DateTime(
       dateNow.year,
@@ -127,6 +177,19 @@ extension TimeOfDayExtension on TimeOfDay {
     );
 
     return dateTime.toString();
+  }
+
+  /// Convert TimeOfDay to DateTime
+  DateTime get toDateTime {
+    final dateNow = DateTime.now();
+
+    return DateTime(
+      dateNow.year,
+      dateNow.month,
+      dateNow.day,
+      hour,
+      minute,
+    );
   }
 }
 
@@ -146,9 +209,15 @@ extension LiquidMeasurementExtension on LiquidMeasurement {
   String get name => describeEnum(this);
 
   /// Return a string description of this liquid measurement.
-  String get description => {
+  String get descriptionPerDay => {
         LiquidMeasurement.Milliliter: 'ml/per day',
         LiquidMeasurement.FluidOunce: 'fl oz/per day'
+      }[this];
+
+  /// Return a String short description of this LiquidMeasurement
+  String get description => {
+        LiquidMeasurement.Milliliter: 'ml',
+        LiquidMeasurement.FluidOunce: 'fl oz'
       }[this];
 }
 
@@ -276,3 +345,94 @@ int millilitersToFluidOunce(double milliliters) =>
 /// This use the formula `fluid ounce / 29.574`. This round off the result to
 /// get the whole number.
 int fluidOunceToMilliliters(double fluidOunce) => (fluidOunce * 29.574).round();
+
+extension DrinkTypeExtension on DrinkTypes {
+  /// Return a string representation of this liquid measurement.
+  String get name => {
+        DrinkTypes.Water: 'Water',
+        DrinkTypes.HotChocolate: 'Hot chocolate',
+        DrinkTypes.Coffee: 'Coffee',
+        DrinkTypes.Lemonade: 'Lemonade',
+        DrinkTypes.IcedTea: 'Iced tea',
+        DrinkTypes.Juice: 'Juice',
+        DrinkTypes.Milkshake: 'Milkshake',
+        DrinkTypes.Tea: 'Tea',
+        DrinkTypes.Milk: 'Milk',
+        DrinkTypes.Beer: 'Beer',
+        DrinkTypes.Soda: 'Soda',
+        DrinkTypes.Wine: 'Wine',
+        DrinkTypes.Liquor: 'Liquor',
+      }[this];
+
+  /// Return an Icon of this liquid measurement.
+  IconData get icon => {
+        DrinkTypes.Water: Icons.local_cafe,
+        DrinkTypes.HotChocolate: Icons.local_cafe,
+        DrinkTypes.Coffee: Icons.local_cafe,
+        DrinkTypes.Lemonade: Icons.local_cafe,
+        DrinkTypes.IcedTea: Icons.local_cafe,
+        DrinkTypes.Juice: Icons.local_cafe,
+        DrinkTypes.Milkshake: Icons.local_cafe,
+        DrinkTypes.Tea: Icons.emoji_food_beverage,
+        DrinkTypes.Milk: Icons.local_cafe,
+        DrinkTypes.Beer: Icons.sports_bar,
+        DrinkTypes.Soda: Icons.fastfood,
+        DrinkTypes.Wine: Icons.wine_bar,
+        DrinkTypes.Liquor: Icons.liquor,
+      }[this];
+}
+
+extension TileColorExtension on TileColors {
+  /// Return a string representation of this liquid measurement.
+  String get name => {
+        TileColors.Default: 'Default',
+        TileColors.Red: 'Red',
+        TileColors.Orange: 'Orange',
+        TileColors.Yellow: 'Yellow',
+        TileColors.Green: 'Green',
+        TileColors.Teal: 'Teal',
+        TileColors.Blue: 'Blue',
+        TileColors.DarkBlue: 'Dark blue',
+        TileColors.Purple: 'Purple',
+        TileColors.Pink: 'Pink',
+        TileColors.Brown: 'Brown',
+        TileColors.Grey: 'Grey',
+      }[this];
+
+  /// Return a Color of this liquid measurement.
+  Color get color => {
+        TileColors.Default: Colors.white,
+        TileColors.Red: const Color(0xFFf28b82),
+        TileColors.Orange: const Color(0xFFfbbc04),
+        TileColors.Yellow: const Color(0xFFfff475),
+        TileColors.Green: const Color(0xFFccff90),
+        TileColors.Teal: const Color(0xFFa7ffeb),
+        TileColors.Blue: const Color(0xFFcbf0f8),
+        TileColors.DarkBlue: const Color(0xFFaecbfa),
+        TileColors.Purple: const Color(0xFFd7aefb),
+        TileColors.Pink: const Color(0xFFfdcfe8),
+        TileColors.Brown: const Color(0xFFe6c9a8),
+        TileColors.Grey: const Color(0xFFe8eaed),
+      }[this];
+}
+
+/// Returns a time difference when subtracting `dateTime` from `now`.
+///
+/// Outputs: `Ns` for seconds, `Nm` for minutes, and `Nh` for hours,
+/// where `N` is a number
+String getTimeDifference(DateTime dateTime) {
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+
+  if (difference.inSeconds < 0) {
+    return dateTime.toTimeOfDay.toFormattedTypeString;
+  } else if (difference.inSeconds == 0) {
+    return 'Now';
+  } else if (difference.inSeconds < 60) {
+    return '${difference.inSeconds.toString()}s';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes.toString()}m';
+  } else {
+    return '${difference.inHours.toString()}h';
+  }
+}

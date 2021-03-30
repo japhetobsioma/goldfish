@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'common/theme.dart';
+import 'screens/aquarium.dart';
 import 'screens/create_plan.dart';
+import 'screens/history.dart';
+import 'screens/home.dart';
+import 'screens/settings.dart';
 
 void main() {
   runApp(
@@ -19,9 +23,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Project goldfish',
       theme: goldfishTheme(),
-      initialRoute: '/',
+      initialRoute: '/home',
       routes: {
-        '/': (context) => const CreatePlanScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/create-plan': (context) => const CreatePlanScreen(),
+        '/aquarium': (context) => const Aquarium(),
+        '/history': (context) => const HistoryScreen(),
+        '/settings': (context) => const SettingsScreen(),
       },
     );
   }

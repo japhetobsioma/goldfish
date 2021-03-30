@@ -54,8 +54,8 @@ class UserInfoNotifier extends StateNotifier<UserInfo> {
     await read(appDatabaseProvider.state).createHydrationPlan(
       state.gender.name,
       state.birthday.toString(),
-      state.wakeupTime.toDate,
-      state.bedtime.toDate,
+      state.wakeupTime.toDateTimeTypeString,
+      state.bedtime.toDateTimeTypeString,
       state.dailyGoal,
       state.liquidMeasurement.name,
       state.isUsingRecommendedDailyGoal.toInt,
