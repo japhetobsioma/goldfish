@@ -122,7 +122,7 @@ class FeaturesList extends HookWidget {
 }
 
 class Features extends StatelessWidget {
-  const Features({this.customCard});
+  const Features({@required this.customCard}) : assert(customCard != null);
 
   final CustomCard customCard;
 
@@ -136,18 +136,6 @@ class Features extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: customCard.background,
             borderRadius: BorderRadius.circular(41.0),
-            boxShadow: [
-              BoxShadow(
-                color: customCard.background.colors[0].withOpacity(0.30),
-                offset: Offset(0, 20),
-                blurRadius: 30.0,
-              ),
-              BoxShadow(
-                color: customCard.background.colors[1].withOpacity(0.30),
-                offset: Offset(0, 20),
-                blurRadius: 30.0,
-              ),
-            ],
           ),
           child: Column(
             children: [
@@ -193,7 +181,7 @@ class Features extends StatelessWidget {
               ),
               const SizedBox(
                 height: 32.0,
-              )
+              ),
             ],
           ),
         ),
@@ -291,7 +279,9 @@ class GetStarted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, '/create-plan');
+      },
       child: const Text('Get started'),
     );
   }

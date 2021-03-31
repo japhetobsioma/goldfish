@@ -29,7 +29,8 @@ extension StringExtension on String {
   /// The default date pattern is `d MMMM y`.
   ///
   /// Output: `25 June 1997`
-  DateTime get toFormattedDate => DateFormat(_datePattern).parseStrict(this);
+  DateTime get toDateTimeFormatted =>
+      DateFormat(_datePattern).parseStrict(this);
 
   /// Return a date in human-readable format.
   ///
@@ -50,12 +51,11 @@ extension StringExtension on String {
   /// Check if the date is not in a valid format.
   bool get dateFormatIsNotValid => !this.dateFormatIsValid;
 
-  /// Return a formatted time.
-  ///
-  /// The default time pattern is `jm`.
-  ///
-  /// Output: `8:30 AM`
-  TimeOfDay get toTime =>
+  /// From String `8:30 AM` to TimeOfDay `TimeOfDay(08:30)`
+  TimeOfDay get toTimeOfDay => TimeOfDay.fromDateTime(DateTime.parse(this));
+
+  /// From String `8:30 AM` to TimeOfDay `8:30 AM`
+  TimeOfDay get toTimeOfDayFormatted =>
       TimeOfDay.fromDateTime(DateFormat(_timePattern).parse(this));
 
   /// Check if the time is in a valid format.
@@ -142,6 +142,16 @@ extension StringExtension on String {
         'ml': LiquidMeasurement.Milliliter,
         'fl oz': LiquidMeasurement.FluidOunce,
       }[this];
+
+  Gender get toGender => {
+        'male': Gender.Male,
+        'female': Gender.Female,
+      }[this];
+
+  bool get toBool => {
+        'true': true,
+        'false': false,
+      }[this];
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -197,6 +207,8 @@ extension GenderExtension on Gender {
   /// Return a string representation of this gender.
   String get name => describeEnum(this);
 
+  String get nameLowerCase => describeEnum(this).toLowerCase();
+
   /// Check if the string is equal to `None`.
   bool get isNone => this.name == 'None' ? true : false;
 
@@ -245,7 +257,7 @@ int getAge(DateTime birthday) {
 ///
 /// Minimum age default value is `6`.
 bool isBelowMinimumAge(String birthday) {
-  final age = getAge(birthday.toFormattedDate);
+  final age = getAge(birthday.toDateTimeFormatted);
 
   if (age >= _minimumAge) {
     return false;
@@ -347,8 +359,11 @@ int millilitersToFluidOunce(double milliliters) =>
 int fluidOunceToMilliliters(double fluidOunce) => (fluidOunce * 29.574).round();
 
 extension DrinkTypeExtension on DrinkTypes {
-  /// Return a string representation of this liquid measurement.
-  String get name => {
+  /// Return a string representation of this drink type.
+  String get name => describeEnum(this);
+
+  /// Return a string description of this drink type.
+  String get description => {
         DrinkTypes.Water: 'Water',
         DrinkTypes.HotChocolate: 'Hot chocolate',
         DrinkTypes.Coffee: 'Coffee',
@@ -364,7 +379,7 @@ extension DrinkTypeExtension on DrinkTypes {
         DrinkTypes.Liquor: 'Liquor',
       }[this];
 
-  /// Return an Icon of this liquid measurement.
+  /// Return an Icon of this drink type.
   IconData get icon => {
         DrinkTypes.Water: Icons.local_cafe,
         DrinkTypes.HotChocolate: Icons.local_cafe,
@@ -384,7 +399,10 @@ extension DrinkTypeExtension on DrinkTypes {
 
 extension TileColorExtension on TileColors {
   /// Return a string representation of this liquid measurement.
-  String get name => {
+  String get name => describeEnum(this);
+
+  /// Return a string description of this tile color.
+  String get description => {
         TileColors.Default: 'Default',
         TileColors.Red: 'Red',
         TileColors.Orange: 'Orange',
@@ -399,7 +417,7 @@ extension TileColorExtension on TileColors {
         TileColors.Grey: 'Grey',
       }[this];
 
-  /// Return a Color of this liquid measurement.
+  /// Return a Color of this tile color.
   Color get color => {
         TileColors.Default: Colors.white,
         TileColors.Red: const Color(0xFFf28b82),

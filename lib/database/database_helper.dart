@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../models/user_info.dart';
+import '../common/helpers.dart';
 
 class DatabaseHelper {
   static final _databaseAssetName = 'goldfish.db';
@@ -331,5 +335,76 @@ class DatabaseHelper {
       WHERE 
         waterIntakeID = ?
     ''', ['$waterIntakeID']);
+  }
+
+  Future<void> createHydrationPlan({
+    @required Gender gender,
+    @required DateTime birthday,
+    @required TimeOfDay wakeupTime,
+    @required TimeOfDay bedtime,
+    @required int dailyGoal,
+    @required LiquidMeasurement liquidMeasurement,
+    @required bool isUsingRecommendedDailyGoal,
+    @required DateTime joinedDate,
+  }) async {
+    assert(gender != null);
+    assert(birthday != null);
+    assert(wakeupTime != null);
+    assert(bedtime != null);
+    assert(dailyGoal != null);
+    assert(isUsingRecommendedDailyGoal != null);
+    assert(liquidMeasurement != null);
+
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO hydrationPlan (
+        gender, birthday, wakeupTime, bedtime, 
+        dailyGoal, liquidMeasurement, isUsingRecommendedDailyGoal, 
+        joinedDate
+      ) 
+      VALUES 
+        (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', [
+      '${gender.nameLowerCase}',
+      '${birthday.toString()}',
+      '${wakeupTime.toDateTimeTypeString}',
+      '${bedtime.toDateTimeTypeString}',
+      '$dailyGoal',
+      '${liquidMeasurement.description}',
+      '${isUsingRecommendedDailyGoal.toString()}',
+      '${joinedDate.toString()}',
+    ]);
+  }
+
+  Future<List<Map<String, dynamic>>> readHydrationPlan() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        gender, 
+        birthday, 
+        wakeupTime, 
+        bedtime, 
+        dailyGoal, 
+        liquidMeasurement, 
+        isUsingRecommendedDailyGoal, 
+        joinedDate 
+      FROM 
+        hydrationPlan 
+      ORDER BY 
+        id DESC 
+      LIMIT 
+        1
+    ''');
+  }
+
+  Future<void> deleteHydrationPlan() async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM 
+        hydrationPlan
+    ''');
   }
 }

@@ -74,7 +74,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   }) async {
     await dbHelper.updateWaterIntakeDrinkTypes(
       waterIntakeID: waterIntakeID,
-      drinkTypes: drinkTypes.name.toLowerCase(),
+      drinkTypes: drinkTypes.description.toLowerCase(),
     );
 
     await fetchWaterIntake();
@@ -86,7 +86,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   }) async {
     await dbHelper.updateWaterIntakeTileColors(
       waterIntakeID: waterIntakeID,
-      tileColors: tileColors.name.toLowerCase(),
+      tileColors: tileColors.description.toLowerCase(),
     );
 
     await fetchWaterIntake();
