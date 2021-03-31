@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 
-enum Gender { Male, Female, None }
-enum LiquidMeasurement { Milliliter, FluidOunce }
+enum Gender {
+  Male,
+  Female,
+  None,
+}
+enum LiquidMeasurement {
+  Milliliter,
+  FluidOunce,
+}
 
 class UserInfo {
   const UserInfo({
-    this.gender,
-    this.birthday,
-    this.wakeupTime,
-    this.bedtime,
-    this.dailyGoal,
-    this.liquidMeasurement,
-    this.isUsingRecommendedDailyGoal,
-    this.joinedDate,
+    @required this.gender,
+    @required this.birthday,
+    @required this.wakeupTime,
+    @required this.bedtime,
+    @required this.dailyGoal,
+    @required this.liquidMeasurement,
+    @required this.isUsingRecommendedDailyGoal,
+    @required this.joinedDate,
   });
 
   final Gender gender;

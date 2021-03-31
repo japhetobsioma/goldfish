@@ -3,9 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'common/theme.dart';
 import 'screens/aquarium.dart';
-import 'screens/create_plan.dart';
 import 'screens/history.dart';
 import 'screens/home.dart';
+import 'screens/onboarding.dart';
 import 'screens/settings.dart';
 
 void main() {
@@ -23,10 +23,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Project goldfish',
       theme: goldfishTheme(),
-      initialRoute: '/home',
+      initialRoute: '/onboarding',
       routes: {
+        '/onboarding': (context) => const OnboardingScreen(),
         '/home': (context) => const HomeScreen(),
-        '/create-plan': (context) => const CreatePlanScreen(),
         '/aquarium': (context) => const Aquarium(),
         '/history': (context) => const HistoryScreen(),
         '/settings': (context) => const SettingsScreen(),
