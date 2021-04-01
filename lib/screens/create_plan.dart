@@ -349,7 +349,7 @@ class BedtimeField extends HookWidget {
                 onPressed: () async {
                   final selectedTime = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: 22, minute: 00),
+                    initialTime: TimeOfDay(hour: 22, minute: 30),
                   );
 
                   if (selectedTime != null) {
@@ -544,7 +544,7 @@ class BottomButtons extends HookWidget {
                 bedtimeFormKey.currentState.validate();
                 dailyGoalFormKey.currentState.validate();
 
-                context.read(createPlanFormProvider).setUserInfo();
+                await context.read(createPlanFormProvider).setUserInfo();
 
                 final sharedPreferences = await SharedPreferences.getInstance();
                 await sharedPreferences.setBool('isUserSignedUp', true);

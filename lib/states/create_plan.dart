@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/helpers.dart';
+import '../database/database_helper.dart';
 import '../models/create_plan.dart';
 import '../models/user_info.dart';
-import 'user_info.dart';
 
 class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
-  CreatePlanFormNotifier(this.read) : super(_initialValue);
+  CreatePlanFormNotifier() : super(_initialValue);
 
-  final Reader read;
+  static final dbHelper = DatabaseHelper.instance;
 
   static final _initialValue = CreatePlanForm(
     selectedGender: Gender.None,
@@ -203,24 +203,23 @@ class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
     );
   }
 
-  // static final dbHelper = DatabaseHelper.instance;
-
   /// Get all the date from create plan form then set it to user info.
-  void setUserInfo() async {
-    await read(userInfoProvider).createHydrationPlan(
+  Future<void> setUserInfo() async {
+    await dbHelper.createHydrationPlan(
       gender: state.selectedGender,
-      birthday: state.birthdayTextController.text,
-      wakeupTime: state.wakeupTimeTextController.text,
-      bedtime: state.bedtimeTextController.text,
-      dailyGoal: state.dailyGoalTextController.text,
+      birthday: state.birthdayTextController.text.toDateTimeFormatted,
+      wakeupTime: state.wakeupTimeTextController.text.toTimeOfDayFormatted,
+      bedtime: state.bedtimeTextController.text.toTimeOfDayFormatted,
+      dailyGoal: int.tryParse(state.dailyGoalTextController.text),
       liquidMeasurement: state.selectedLiquidMeasurement,
       isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
+      joinedDate: DateTime.now(),
     );
   }
 }
 
 final createPlanFormProvider = StateNotifierProvider<CreatePlanFormNotifier>(
-    (ref) => CreatePlanFormNotifier(ref.read));
+    (ref) => CreatePlanFormNotifier());
 
 final _selectedGenderState = Provider<Gender>(
     (ref) => ref.watch(createPlanFormProvider.state).selectedGender);

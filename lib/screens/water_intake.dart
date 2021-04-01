@@ -58,7 +58,7 @@ class WaterIntakeGauge extends HookWidget {
             minimum: 0,
             maximum: userInfo.when(
               data: (value) {
-                final maximum = value.dailyGoal ?? 100;
+                final maximum = value.userInfo[0]['dailyGoal'] ?? 100;
                 return maximum.toDouble();
               },
               loading: () => 100,
@@ -128,9 +128,9 @@ class WaterIntakeGauge extends HookWidget {
                       TextSpan(
                         text: userInfo.when(
                           data: (value) {
-                            final amount = value.dailyGoal ?? 0;
+                            final amount = value.userInfo[0]['dailyGoal'] ?? 0;
                             final measurement =
-                                value.liquidMeasurement.description ?? 'ml';
+                                value.userInfo[0]['liquidMeasurement'] ?? 'ml';
                             return ' / $amount $measurement';
                           },
                           loading: () => '/ 0 ml',

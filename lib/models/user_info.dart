@@ -12,22 +12,8 @@ enum LiquidMeasurement {
 
 class UserInfo {
   const UserInfo({
-    @required this.gender,
-    @required this.birthday,
-    @required this.wakeupTime,
-    @required this.bedtime,
-    @required this.dailyGoal,
-    @required this.liquidMeasurement,
-    @required this.isUsingRecommendedDailyGoal,
-    @required this.joinedDate,
+    @required this.userInfo,
   });
 
-  final Gender gender;
-  final DateTime birthday;
-  final TimeOfDay wakeupTime;
-  final TimeOfDay bedtime;
-  final int dailyGoal;
-  final LiquidMeasurement liquidMeasurement;
-  final bool isUsingRecommendedDailyGoal;
-  final DateTime joinedDate;
+  final List<Map<String, dynamic>> userInfo;
 }
