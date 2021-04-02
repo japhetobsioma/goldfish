@@ -1,9 +1,11 @@
-﻿//player data holder
+﻿using System;
+
+//player data holder
 
 [System.Serializable]
 public class PlayerData
 {
-    public int coins = 0;
+    public int water = 0;
 }
 
 public static class GameDataManager
@@ -16,25 +18,34 @@ public static class GameDataManager
     }
 
     //PlayerData Method ------------------------
-    public static int GetCoins()
+    public static int GetWater()
     {
-        return playerData.coins;
+        return playerData.water;
     }
 
-    public static void AddCoins(int amount)
+    /**
+    // this method is called from flutter
+    public static void AddWater(String message)
     {
-        playerData.coins += amount;
+        int value = Int32.Parse(message);
+    }
+    **/
+
+    public static void AddWater(String amount)
+    {
+        int value = Int32.Parse(amount);
+        playerData.water += value;
         SavePlayerData();
     }
 
-    public static bool CanSpendCoins(int amount)
+    public static bool CanSpendWater(int amount)
     {
-        return (playerData.coins >= amount);
+        return (playerData.water >= amount);
     }
 
-    public static void SpendCoins(int amount)
+    public static void SpendWater(int amount)
     {
-        playerData.coins -= amount;
+        playerData.water -= amount;
         SavePlayerData();
     }
 

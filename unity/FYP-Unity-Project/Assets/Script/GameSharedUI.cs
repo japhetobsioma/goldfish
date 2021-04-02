@@ -30,7 +30,7 @@ public class GameSharedUI : MonoBehaviour
     {
         for (int i = 0; i < coinsUIText.Length; i++)
         {
-            SetCoinsText(coinsUIText[i], GameDataManager.GetCoins());
+            SetCoinsText(coinsUIText[i], GameDataManager.GetWater());
         }
     }
 
