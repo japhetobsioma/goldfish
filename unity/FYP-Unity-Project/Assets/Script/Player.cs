@@ -13,19 +13,21 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AddWater();
+        //AddWaterLevel();
 
     }
 
-    void AddWater()
+    /**
+    void AddWaterLevel()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GameDataManager.AddCoins(100);
+            GameDataManager.AddWater(100);
         }
 
 
         GameSharedUI.Instance.UpdateCoinsUIText();
     }
+    **/
 
 }
