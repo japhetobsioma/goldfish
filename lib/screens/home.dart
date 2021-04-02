@@ -80,7 +80,7 @@ class MenuBottomSheet extends StatelessWidget {
           leading: const Icon(Icons.home),
           title: const Text('Home'),
           subtitle: const Text('Add water intake'),
-          selected: true,
+          // selected: true,
           onTap: () {
             Navigator.pop(context);
           },

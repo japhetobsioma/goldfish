@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/streaks.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
@@ -77,7 +78,7 @@ extension StringExtension on String {
   /// The default date pattern is `d MMMM y`.
   ///
   /// Output: `25 June 1997`
-  String get toStringDate {
+  String get toDateTimeFormattedTypeString {
     final dateTime = toDateTime;
 
     return DateFormat(_datePattern).format(dateTime);
@@ -453,4 +454,49 @@ String getTimeDifference(DateTime dateTime) {
   } else {
     return '${difference.inHours.toString()}h';
   }
+}
+
+/// Return a Streaks object of this [completionList].
+Streaks getStreaks(List<Map<String, dynamic>> completionList) {
+  var currentStreaks = 0;
+  var lastStreaks = 0;
+
+  /// If the list has only 1 item, check the completion, then return the
+  /// streaks result.
+  if (completionList.length == 1) {
+    /// 1 - true
+    /// 0 - false
+    if (completionList[0]['isCompleted'] == 1) {
+      currentStreaks = 1;
+    }
+  } else {
+    for (var index = 0; index < completionList.length; index++) {
+      /// Check if the first item in the list. On the next loop, this item will
+      /// be compared to the current item.
+      if (index == 0) {
+        if (completionList[index]['isCompleted'] == 1) {
+          currentStreaks = 1;
+        }
+      } else {
+        /// Check the previous item and the current item. We compare them like
+        /// this current item is today, and previous item is yesterday.
+        if (completionList[index - 1]['isCompleted'] == 0 &&
+            completionList[index]['isCompleted'] == 1) {
+          currentStreaks += 1;
+        } else if (completionList[index - 1]['isCompleted'] == 1 &&
+            completionList[index]['isCompleted'] == 1) {
+          currentStreaks += 1;
+        } else if (completionList[index - 1]['isCompleted'] == 1 &&
+            completionList[index]['isCompleted'] == 0) {
+          lastStreaks = currentStreaks;
+          currentStreaks = 0;
+        }
+      }
+    }
+  }
+
+  return Streaks(
+    currentStreaks: currentStreaks,
+    lastStreaks: lastStreaks,
+  );
 }

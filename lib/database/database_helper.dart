@@ -407,4 +407,16 @@ class DatabaseHelper {
         hydrationPlan
     ''');
   }
+
+  Future<List<Map<String, dynamic>>> getCompletionData() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        currentDate, 
+        isCompleted 
+      FROM 
+        Completion
+    ''');
+  }
 }

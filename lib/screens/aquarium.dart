@@ -15,11 +15,11 @@ class _AquariumState extends State<Aquarium> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      // extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Aquarium'),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        // backgroundColor: Colors.transparent,
+        // elevation: 0.0,
       ),
       body: UnityWidget(
         onUnityCreated: onUnityCreated,
