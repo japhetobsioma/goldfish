@@ -5,12 +5,12 @@ import '../models/user_info.dart';
 
 class UserInfoNotifier extends StateNotifier<AsyncValue<UserInfo>> {
   UserInfoNotifier() : super(const AsyncValue.loading()) {
-    _readUserInfo();
+    fetchUserInfo();
   }
 
   static final dbHelper = DatabaseHelper.instance;
 
-  Future<void> _readUserInfo() async {
+  Future<void> fetchUserInfo() async {
     final hydrationPlan = await dbHelper.readHydrationPlan();
 
     state = AsyncValue.data(
@@ -20,7 +20,6 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<UserInfo>> {
     );
   }
 
-  /// Delete hydration plan from the database.
   Future<void> deleteHydrationPlan() async {
     await dbHelper.deleteHydrationPlan();
   }

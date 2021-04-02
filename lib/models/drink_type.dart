@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum DrinkTypes {
   Water,
   HotChocolate,
@@ -16,10 +18,14 @@ enum DrinkTypes {
 
 class DrinkType {
   const DrinkType({
-    this.selectedDrinkType,
-    this.allDrinkType,
-  });
+    @required this.selectedDrinkType,
+    @required this.allDrinkTypes,
+    @required this.mostDrinkTypes,
+  })  : assert(selectedDrinkType != null),
+        assert(allDrinkTypes != null),
+        assert(mostDrinkTypes != null);
 
   final String selectedDrinkType;
-  final List<Map<String, dynamic>> allDrinkType;
+  final List<Map<String, dynamic>> allDrinkTypes;
+  final List<Map<String, dynamic>> mostDrinkTypes;
 }

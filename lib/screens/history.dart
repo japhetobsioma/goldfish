@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../states/user_info.dart';
 import '../common/helpers.dart';
+import '../states/drink_type.dart';
+import '../states/user_info.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen();
@@ -79,43 +80,41 @@ class JoinedDate extends HookWidget {
   }
 }
 
-class MostDrinkTypes extends StatelessWidget {
+class MostDrinkTypes extends HookWidget {
   const MostDrinkTypes();
 
   @override
   Widget build(BuildContext context) {
-    final drinkTypes = [
-      'water',
-      'hot chocolate',
-      'coffee',
-      'lemonade',
-      'iced tea',
-      'juice',
-      'milkshake',
-      'tea',
-      'milk',
-      'beer',
-      'soda',
-      'wine',
-      'liquor',
-    ];
+    final drinkTypes = useProvider(drinkTypeProvider.state);
+
+    useEffect(() {
+      context.read(drinkTypeProvider).fetchDrinkType();
+      return () {};
+    }, []);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10.0,
-        vertical: 20.0,
-      ),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 10.0,
-        children: drinkTypes.map((e) {
-          return ActionChip(
-            avatar: Icon(e.toDrinkTypes.icon),
-            label: Text(e.toSentenceCase),
-            onPressed: () {},
-          );
-        }).toList(),
-      ),
-    );
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10.0,
+          vertical: 20.0,
+        ),
+        child: drinkTypes.when(
+          data: (value) {
+            final mostDrinkTypes = value.mostDrinkTypes;
+
+            return Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 10.0,
+              children: mostDrinkTypes.map((e) {
+                return ActionChip(
+                  avatar: Icon((e['drinkTypes'] as String).toDrinkTypes.icon),
+                  label: Text((e['drinkTypes'] as String).toSentenceCase),
+                  onPressed: () {},
+                );
+              }).toList(),
+            );
+          },
+          loading: () => SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ));
   }
 }

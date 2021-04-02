@@ -50,6 +50,12 @@ class WaterIntakeGauge extends HookWidget {
     final waterIntake = useProvider(waterIntakeProvider.state);
     final userInfo = useProvider(userInfoProvider.state);
 
+    useEffect(() {
+      context.read(waterIntakeProvider).fetchWaterIntake();
+      context.read(userInfoProvider).fetchUserInfo();
+      return () {};
+    }, []);
+
     return Container(
       child: SfRadialGauge(
         enableLoadingAnimation: true,
@@ -166,6 +172,11 @@ class WaterIntakeLists extends HookWidget {
   Widget build(BuildContext context) {
     final waterIntake = useProvider(waterIntakeProvider.state);
     final animatedList = useProvider(animatedListKeyProvider.state);
+
+    useEffect(() {
+      context.read(waterIntakeProvider).fetchWaterIntake();
+      return () {};
+    }, []);
 
     return waterIntake.when(
       data: (value) {
@@ -631,7 +642,7 @@ class EditDrinkTypeLists extends HookWidget {
     return drinkType.when(
       data: (value) => ListView.builder(
         shrinkWrap: true,
-        itemCount: value.allDrinkType.length,
+        itemCount: value.allDrinkTypes.length,
         itemBuilder: (context, index) {
           return EditDrinkTypeItem(
             value: value,
@@ -669,17 +680,17 @@ class EditDrinkTypeItem extends HookWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
             leading: CircleAvatar(
-              child: Icon((value.allDrinkType[index]['drinkTypes'] as String)
+              child: Icon((value.allDrinkTypes[index]['drinkTypes'] as String)
                   .toDrinkTypes
                   .icon),
             ),
-            title: Text((value.allDrinkType[index]['drinkTypes'] as String)
+            title: Text((value.allDrinkTypes[index]['drinkTypes'] as String)
                 .toSentenceCase),
-            selected: value.allDrinkType[index]['drinkTypes'] ==
+            selected: value.allDrinkTypes[index]['drinkTypes'] ==
                     drinkTypes.description.toLowerCase()
                 ? true
                 : false,
-            trailing: value.allDrinkType[index]['drinkTypes'] ==
+            trailing: value.allDrinkTypes[index]['drinkTypes'] ==
                     drinkTypes.description.toLowerCase()
                 ? const Icon(Icons.check_circle)
                 : const SizedBox.shrink(),
@@ -688,7 +699,7 @@ class EditDrinkTypeItem extends HookWidget {
 
               context.read(editIntakeProvider).setSelectedDrinkTypes(
                     drinkTypes:
-                        (value.allDrinkType[index]['drinkTypes'] as String)
+                        (value.allDrinkTypes[index]['drinkTypes'] as String)
                             .toDrinkTypes,
                   );
             },

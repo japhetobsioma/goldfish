@@ -80,7 +80,6 @@ class MenuBottomSheet extends StatelessWidget {
           leading: const Icon(Icons.home),
           title: const Text('Home'),
           subtitle: const Text('Add water intake'),
-          // selected: true,
           onTap: () {
             Navigator.pop(context);
           },
@@ -321,10 +320,10 @@ class DrinkTypeLists extends HookWidget {
     return drinkType.when(
       data: (value) => ListView.builder(
         shrinkWrap: true,
-        itemCount: value.allDrinkType.length,
+        itemCount: value.allDrinkTypes.length,
         itemBuilder: (context, index) {
           final String drinkTypeString =
-              value.allDrinkType[index]['drinkTypes'];
+              value.allDrinkTypes[index]['drinkTypes'];
           final drinkTypes = drinkTypeString.toDrinkTypes;
 
           return DrinkTypeItem(
@@ -371,15 +370,15 @@ class DrinkTypeItem extends StatelessWidget {
             ),
             title: Text(drinkTypeString.toSentenceCase),
             selected:
-                value.allDrinkType[index]['isActive'] == 'true' ? true : false,
-            trailing: value.allDrinkType[index]['isActive'] == 'true'
+                value.allDrinkTypes[index]['isActive'] == 'true' ? true : false,
+            trailing: value.allDrinkTypes[index]['isActive'] == 'true'
                 ? const Icon(Icons.check_circle)
                 : const SizedBox.shrink(),
             onTap: () {
               Navigator.pop(context);
 
               context.read(drinkTypeProvider).setSelectedDrinkType(
-                  value.allDrinkType[index]['drinkTypes']);
+                  value.allDrinkTypes[index]['drinkTypes']);
             },
           ),
         ),

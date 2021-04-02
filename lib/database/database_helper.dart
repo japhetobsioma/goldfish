@@ -419,4 +419,19 @@ class DatabaseHelper {
         Completion
     ''');
   }
+
+  Future<List<Map<String, dynamic>>> getMostDrinkTypes() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        drinkTypes 
+      FROM 
+        waterIntake 
+      GROUP BY 
+        drinkTypes 
+      ORDER BY 
+        COUNT(drinkTypes) DESC
+    ''');
+  }
 }
