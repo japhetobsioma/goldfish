@@ -1,34 +1,27 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../common/helpers.dart';
 import '../database/database_helper.dart';
 import '../models/completion.dart';
+import '../common/helpers.dart';
 
 class CompletionNotifier extends StateNotifier<AsyncValue<Completion>> {
   CompletionNotifier() : super(const AsyncValue.loading()) {
-    _fetchCompletion();
+    fetchCompletion();
   }
 
   static final dbHelper = DatabaseHelper.instance;
 
-  Future<void> _fetchCompletion() async {
-    final completionData = await dbHelper.getCompletionData();
+  Future<void> fetchCompletion() async {
+    final isCompletedList = await dbHelper.getCompletionIsCompleted();
+    final allTimeRatio = getCompletionAllTimeRatio(isCompletedList);
+    final totalCompletion = getTotalCompletion(isCompletedList);
 
     state = AsyncValue.data(
       Completion(
-        completionData: completionData,
+        allTimeRatio: allTimeRatio,
+        totalCompletion: totalCompletion,
       ),
     );
-  }
-
-  Future<void> getStreaksInfo() async {
-    final completionData = await dbHelper.getCompletionData();
-
-    print(completionData);
-
-    final streaks = getStreaks(completionData);
-
-    print(streaks);
   }
 }
 

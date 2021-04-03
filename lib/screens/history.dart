@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/helpers.dart';
+import '../states/completion.dart';
 import '../states/drink_type.dart';
 import '../states/streaks.dart';
 import '../states/user_info.dart';
@@ -29,6 +30,9 @@ class HistoryScreen extends StatelessWidget {
             const Divider(
               indent: 30.0,
               endIndent: 30.0,
+            ),
+            const SizedBox(
+              height: 30.0,
             ),
           ],
         ),
@@ -99,9 +103,11 @@ class MostDrinkTypes extends HookWidget {
     }, []);
 
     return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10.0,
-          vertical: 20.0,
+        padding: const EdgeInsets.only(
+          left: 10.0,
+          top: 20.0,
+          right: 10.0,
+          bottom: 20.0,
         ),
         child: drinkTypes.when(
           data: (value) {
@@ -160,43 +166,60 @@ class BestStreaks extends HookWidget {
     useEffect(() {
       context.read(streaksProvider).fetchStreaks();
       return () {};
-    });
+    }, []);
 
-    return streaks.when(
-      data: (value) {
-        return Column(
-          children: [
-            Text(
-              '17',
-              style: TextStyle(
-                fontSize: 28.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              'BEST STREAK',
-              style: TextStyle(
-                fontSize: 10.0,
-              ),
-            ),
-          ],
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+    return Column(
+      children: [
+        Text(
+          streaks.when(
+            data: (value) {
+              final streaks = value.lastStreaks;
+
+              return streaks.toString();
+            },
+            loading: () => '',
+            error: (_, __) => '',
+          ),
+          style: TextStyle(
+            fontSize: 28.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Text(
+          'BEST STREAK',
+          style: TextStyle(
+            fontSize: 10.0,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class AllTime extends StatelessWidget {
+class AllTime extends HookWidget {
   const AllTime();
 
   @override
   Widget build(BuildContext context) {
+    final completion = useProvider(completionProvider.state);
+
+    useEffect(() {
+      context.read(completionProvider).fetchCompletion();
+      return () {};
+    }, []);
+
     return Column(
       children: [
-        const Text(
-          '79.5%',
+        Text(
+          completion.when(
+            data: (value) {
+              final allTimeRatio = value.allTimeRatio;
+
+              return '${allTimeRatio.toString()}%';
+            },
+            loading: () => '',
+            error: (_, __) => '',
+          ),
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
@@ -213,15 +236,30 @@ class AllTime extends StatelessWidget {
   }
 }
 
-class Completions extends StatelessWidget {
+class Completions extends HookWidget {
   const Completions();
 
   @override
   Widget build(BuildContext context) {
+    final completion = useProvider(completionProvider.state);
+
+    useEffect(() {
+      context.read(completionProvider).fetchCompletion();
+      return () {};
+    }, []);
+
     return Column(
       children: [
-        const Text(
-          '213',
+        Text(
+          completion.when(
+            data: (value) {
+              final totalCompletion = value.totalCompletion;
+
+              return '${totalCompletion.toString()}';
+            },
+            loading: () => '',
+            error: (_, __) => '',
+          ),
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,

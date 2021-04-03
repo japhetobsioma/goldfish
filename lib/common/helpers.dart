@@ -456,38 +456,38 @@ String getTimeDifference(DateTime dateTime) {
   }
 }
 
-/// Return a Streaks object of this [completionList].
-Streaks getStreaks(List<Map<String, dynamic>> completionList) {
+/// Return a Streaks object of this [completionData].
+Streaks getStreaks(List<Map<String, dynamic>> completionData) {
   var currentStreaks = 0;
   var lastStreaks = 0;
 
   /// If the list has only 1 item, check the completion, then return the
   /// streaks result.
-  if (completionList.length == 1) {
+  if (completionData.length == 1) {
     /// 1 - true
     /// 0 - false
-    if (completionList[0]['isCompleted'] == 1) {
+    if (completionData[0]['isCompleted'] == 1) {
       currentStreaks = 1;
     }
   } else {
-    for (var index = 0; index < completionList.length; index++) {
+    for (var index = 0; index < completionData.length; index++) {
       /// Check if the first item in the list. On the next loop, this item will
       /// be compared to the current item.
       if (index == 0) {
-        if (completionList[index]['isCompleted'] == 1) {
+        if (completionData[index]['isCompleted'] == 1) {
           currentStreaks = 1;
         }
       } else {
         /// Check the previous item and the current item. We compare them like
         /// this current item is today, and previous item is yesterday.
-        if (completionList[index - 1]['isCompleted'] == 0 &&
-            completionList[index]['isCompleted'] == 1) {
+        if (completionData[index - 1]['isCompleted'] == 0 &&
+            completionData[index]['isCompleted'] == 1) {
           currentStreaks += 1;
-        } else if (completionList[index - 1]['isCompleted'] == 1 &&
-            completionList[index]['isCompleted'] == 1) {
+        } else if (completionData[index - 1]['isCompleted'] == 1 &&
+            completionData[index]['isCompleted'] == 1) {
           currentStreaks += 1;
-        } else if (completionList[index - 1]['isCompleted'] == 1 &&
-            completionList[index]['isCompleted'] == 0) {
+        } else if (completionData[index - 1]['isCompleted'] == 1 &&
+            completionData[index]['isCompleted'] == 0) {
           lastStreaks = currentStreaks;
           currentStreaks = 0;
         }
@@ -499,4 +499,33 @@ Streaks getStreaks(List<Map<String, dynamic>> completionList) {
     currentStreaks: currentStreaks,
     lastStreaks: lastStreaks,
   );
+}
+
+/// Return the all time ratio of completed day since the joined date.
+///
+/// Completed day is when the user achieve the daily goal.
+double getCompletionAllTimeRatio(List<Map<String, dynamic>> completionData) {
+  var totalCompleted = 0.0;
+
+  completionData.forEach((element) {
+    /// 1 is true and 0 is false.
+    if (element['isCompleted'] == 1) {
+      totalCompleted += 1;
+    }
+  });
+
+  return (totalCompleted / completionData.length) * 100;
+}
+
+int getTotalCompletion(List<Map<String, dynamic>> completionData) {
+  var totalCompletion = 0;
+
+  completionData.forEach((element) {
+    /// 1 is true and 0 is false.
+    if (element['isCompleted'] == 1) {
+      totalCompletion += 1;
+    }
+  });
+
+  return totalCompletion;
 }

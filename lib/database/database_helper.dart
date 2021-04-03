@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -432,6 +431,18 @@ class DatabaseHelper {
         drinkTypes 
       ORDER BY 
         COUNT(drinkTypes) DESC
+    ''');
+  }
+
+  /// Return a list of completion tables `isCompleted` column.
+  Future<List<Map<String, dynamic>>> getCompletionIsCompleted() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        isCompleted 
+      FROM 
+        Completion
     ''');
   }
 }
