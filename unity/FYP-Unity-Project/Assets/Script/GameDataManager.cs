@@ -31,10 +31,10 @@ public static class GameDataManager
     }
     **/
 
-    public static void AddWater(String amount)
+    public static void AddWater(int amount)
     {
-        int value = Int32.Parse(amount);
-        playerData.water += value;
+        playerData.water += amount;
+        GameSharedUI.Instance.UpdateWaterUIText();
         SavePlayerData();
     }
 
