@@ -19,18 +19,18 @@ public class GameSharedUI : MonoBehaviour
 
     #endregion
 
-    [SerializeField] TMP_Text[] coinsUIText;
+    [SerializeField] TMP_Text[] waterUIText;
 
     void Start()
     {
-        UpdateCoinsUIText();
+        UpdateWaterUIText();
     }
 
-    public void UpdateCoinsUIText()
+    public void UpdateWaterUIText()
     {
-        for (int i = 0; i < coinsUIText.Length; i++)
+        for (int i = 0; i < waterUIText.Length; i++)
         {
-            SetCoinsText(coinsUIText[i], GameDataManager.GetWater());
+            SetCoinsText(waterUIText[i], GameDataManager.GetWater());
         }
     }
 
@@ -39,7 +39,7 @@ public class GameSharedUI : MonoBehaviour
         //if value >= 10000000.......
 
         if (value >= 1000)
-            textMesh.text = string.Format("{0}K.{1}", (value / 1000), GetFirstDigitFromNumber(value % 1000));
+            textMesh.text = string.Format("{0}.{1}K", (value / 1000), GetFirstDigitFromNumber(value % 1000));
         else
             textMesh.text = value.ToString();
     }
