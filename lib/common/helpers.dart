@@ -529,3 +529,20 @@ int getTotalCompletion(List<Map<String, dynamic>> completionData) {
 
   return totalCompletion;
 }
+
+/// Return the total numbers of late dates from [completionDates].
+///
+/// Return 0 if the list is updated.
+int getCompletionDayDifference(List<Map<String, dynamic>> completionDates) {
+  final today = DateTime.now();
+  final lastDate = (completionDates.last['currentDate'] as String).toDateTime;
+  var dayDifference = 0;
+
+  // Check if the last date of the list is not the same as today's date.
+  if (lastDate != today) {
+    final difference = today.difference(lastDate);
+    dayDifference = difference.inDays;
+  }
+
+  return dayDifference;
+}

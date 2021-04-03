@@ -445,4 +445,35 @@ class DatabaseHelper {
         Completion
     ''');
   }
+
+  Future<void> setTodaysCompletionDate() async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO Completion (currentDate, isCompleted) 
+      VALUES 
+        (date('now', 'localtime'), 0)
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> getCompletionDates() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        currentDate
+      FROM 
+        Completion
+    ''');
+  }
+
+  Future<void> setCompletionDates(String query) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO Completion (currentDate, isCompleted) 
+      VALUES 
+        $query
+    ''');
+  }
 }

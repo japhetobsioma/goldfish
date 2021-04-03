@@ -7,6 +7,7 @@ import '../models/cup.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
 import '../states/animated_key.dart';
+import '../states/completion.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/tile_color.dart';
@@ -19,6 +20,11 @@ class HomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final animatedList = useProvider(animatedListKeyProvider.state);
+
+    useEffect(() {
+      context.read(completionProvider).checkCompletionDates();
+      return () {};
+    }, []);
 
     return Scaffold(
       appBar: AppBar(

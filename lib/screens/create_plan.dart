@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/colors.dart';
 import '../common/helpers.dart';
 import '../models/user_info.dart';
+import '../states/completion.dart';
 import '../states/create_plan.dart';
 
 class CreatePlanScreen extends StatelessWidget {
@@ -548,6 +549,10 @@ class BottomButtons extends HookWidget {
 
                 final sharedPreferences = await SharedPreferences.getInstance();
                 await sharedPreferences.setBool('isUserSignedUp', true);
+
+                await context
+                    .read(completionProvider)
+                    .initializeCompletionDates();
 
                 await Navigator.pushNamedAndRemoveUntil(
                   context,

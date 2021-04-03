@@ -23,6 +23,31 @@ class CompletionNotifier extends StateNotifier<AsyncValue<Completion>> {
       ),
     );
   }
+
+  Future<void> checkCompletionDates() async {
+    final completionDates = await dbHelper.getCompletionDates();
+    var dayDifference = getCompletionDayDifference(completionDates);
+
+    if (dayDifference > 0) {
+      var query = '';
+      dayDifference -= 1;
+
+      for (; dayDifference >= 0; dayDifference--) {
+        if (dayDifference != 0) {
+          query +=
+              ' (datetime("now", "localtime", "-$dayDifference day"), 0), ';
+        } else {
+          query += ' (datetime("now", "localtime"), 0)';
+        }
+      }
+
+      await dbHelper.setCompletionDates(query);
+    }
+  }
+
+  Future<void> initializeCompletionDates() async {
+    await dbHelper.setTodaysCompletionDate();
+  }
 }
 
 final completionProvider =
