@@ -50,12 +50,6 @@ class WaterIntakeGauge extends HookWidget {
     final waterIntake = useProvider(waterIntakeProvider.state);
     final userInfo = useProvider(userInfoProvider.state);
 
-    useEffect(() {
-      context.read(waterIntakeProvider).fetchWaterIntake();
-      context.read(userInfoProvider).fetchUserInfo();
-      return () {};
-    }, []);
-
     return Container(
       child: SfRadialGauge(
         enableLoadingAnimation: true,
@@ -172,11 +166,6 @@ class WaterIntakeLists extends HookWidget {
   Widget build(BuildContext context) {
     final waterIntake = useProvider(waterIntakeProvider.state);
     final animatedList = useProvider(animatedListKeyProvider.state);
-
-    useEffect(() {
-      context.read(waterIntakeProvider).fetchWaterIntake();
-      return () {};
-    }, []);
 
     return waterIntake.when(
       data: (value) {

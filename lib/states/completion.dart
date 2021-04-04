@@ -1,8 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../common/helpers.dart';
 import '../database/database_helper.dart';
 import '../models/completion.dart';
-import '../common/helpers.dart';
 
 class CompletionNotifier extends StateNotifier<AsyncValue<Completion>> {
   CompletionNotifier() : super(const AsyncValue.loading()) {

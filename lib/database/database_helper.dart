@@ -6,8 +6,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../models/user_info.dart';
 import '../common/helpers.dart';
+import '../models/user_info.dart';
 
 class DatabaseHelper {
   static final _databaseAssetName = 'goldfish.db';
@@ -430,7 +430,8 @@ class DatabaseHelper {
       GROUP BY 
         drinkTypes 
       ORDER BY 
-        COUNT(drinkTypes) DESC
+        COUNT(drinkTypes) DESC,
+        date ASC
     ''');
   }
 
@@ -474,6 +475,22 @@ class DatabaseHelper {
       INSERT INTO Completion (currentDate, isCompleted) 
       VALUES 
         $query
+    ''');
+  }
+
+  Future<void> updateCompletionStatus(bool completionStatus) async {
+    final db = await instance.database;
+
+    final isCompleted = completionStatus.toInt;
+
+    await db.rawUpdate('''
+      UPDATE 
+        Completion 
+      SET 
+        isCompleted = $isCompleted 
+      WHERE 
+        strftime('%d-%m-%Y', currentDate) = 
+        strftime('%d-%m-%Y', 'now', 'localtime')
     ''');
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/streaks.dart';
 import '../models/drink_type.dart';
+import '../models/streaks.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
 
@@ -468,14 +468,16 @@ Streaks getStreaks(List<Map<String, dynamic>> completionData) {
     /// 0 - false
     if (completionData[0]['isCompleted'] == 1) {
       currentStreaks = 1;
+      lastStreaks = currentStreaks;
     }
   } else {
     for (var index = 0; index < completionData.length; index++) {
-      /// Check if the first item in the list. On the next loop, this item will
+      /// Check if this is the first item. On the next loop, this item will
       /// be compared to the current item.
       if (index == 0) {
         if (completionData[index]['isCompleted'] == 1) {
           currentStreaks = 1;
+          lastStreaks = currentStreaks;
         }
       } else {
         /// Check the previous item and the current item. We compare them like
@@ -483,9 +485,11 @@ Streaks getStreaks(List<Map<String, dynamic>> completionData) {
         if (completionData[index - 1]['isCompleted'] == 0 &&
             completionData[index]['isCompleted'] == 1) {
           currentStreaks += 1;
+          lastStreaks = currentStreaks;
         } else if (completionData[index - 1]['isCompleted'] == 1 &&
             completionData[index]['isCompleted'] == 1) {
           currentStreaks += 1;
+          lastStreaks = currentStreaks;
         } else if (completionData[index - 1]['isCompleted'] == 1 &&
             completionData[index]['isCompleted'] == 0) {
           lastStreaks = currentStreaks;

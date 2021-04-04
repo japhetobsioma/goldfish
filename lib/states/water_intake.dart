@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../common/helpers.dart';
 import '../database/database_helper.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
 import '../models/water_intake.dart';
-import '../common/helpers.dart';
 
 class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   WaterIntakeNotifier() : super(const AsyncValue.loading()) {
@@ -18,6 +18,8 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   Future<void> fetchWaterIntake() async {
     final todaysTotalWaterIntake = await dbHelper.getTodaysTotalWaterIntake();
     final todaysWaterIntake = await dbHelper.getTodaysWaterIntake();
+
+    await hasUserAchievedGoal();
 
     state = AsyncValue.data(
       WaterIntake(
@@ -96,6 +98,17 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     await dbHelper.deleteWaterIntake(waterIntakeID: waterIntakeID);
 
     await fetchWaterIntake();
+  }
+
+  Future<void> hasUserAchievedGoal() async {
+    final todaysTotalWaterIntake =
+        await dbHelper.getTodaysTotalWaterIntake() ?? 0;
+    final hydrationPlan = await dbHelper.readHydrationPlan();
+    final dailyGoal = hydrationPlan[0]['dailyGoal'] as int;
+
+    todaysTotalWaterIntake >= dailyGoal
+        ? await dbHelper.updateCompletionStatus(true)
+        : await dbHelper.updateCompletionStatus(false);
   }
 }
 
