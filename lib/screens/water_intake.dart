@@ -13,6 +13,7 @@ import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/edit_intake.dart';
 import '../states/tile_color.dart';
+import '../states/user_info.dart';
 import '../states/water_intake.dart';
 
 class WaterIntakeScreen extends StatelessWidget {
@@ -47,6 +48,7 @@ class WaterIntakeGauge extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final waterIntake = useProvider(waterIntakeProvider.state);
+    final userInfo = useProvider(userInfoProvider.state);
 
     return Container(
       child: SfRadialGauge(
@@ -54,12 +56,23 @@ class WaterIntakeGauge extends HookWidget {
         axes: [
           RadialAxis(
             minimum: 0,
-            maximum: 1000.0,
+            maximum: userInfo.when(
+              data: (value) {
+                final maximum = value.userInfo[0]['dailyGoal'] ?? 100;
+                return maximum.toDouble();
+              },
+              loading: () => 100,
+              error: (error, stackTrace) {
+                print('error: $error');
+                print('stackTrace: $stackTrace');
+
+                return 100;
+              },
+            ),
             showTicks: false,
             showLabels: false,
             axisLineStyle: AxisLineStyle(
               thickness: 25.0,
-              cornerStyle: CornerStyle.bothCurve,
             ),
             pointers: [
               RangePointer(
@@ -79,8 +92,6 @@ class WaterIntakeGauge extends HookWidget {
                 width: 25.0,
                 color: Theme.of(context).primaryColor,
                 enableAnimation: true,
-                cornerStyle: CornerStyle.bothCurve,
-                sizeUnit: GaugeSizeUnit.logicalPixel,
               ),
             ],
             annotations: [
@@ -115,7 +126,21 @@ class WaterIntakeGauge extends HookWidget {
                         ),
                       ),
                       TextSpan(
-                        text: ' / 1000 ml',
+                        text: userInfo.when(
+                          data: (value) {
+                            final amount = value.userInfo[0]['dailyGoal'] ?? 0;
+                            final measurement =
+                                value.userInfo[0]['liquidMeasurement'] ?? 'ml';
+                            return ' / $amount $measurement';
+                          },
+                          loading: () => '/ 0 ml',
+                          error: (error, stackTrace) {
+                            print('error: $error');
+                            print('stackTrace: $stackTrace');
+
+                            return '/ 0 ml';
+                          },
+                        ),
                         style: TextStyle(
                           color: Colors.black54,
                           fontWeight: FontWeight.bold,
@@ -266,7 +291,7 @@ class WaterIntakeItem extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              '${drinkTypes.name} · $timeDifference',
+              '${drinkTypes.description} · $timeDifference',
               style: TextStyle(
                 color: const Color(0xFF202124),
               ),
@@ -357,7 +382,7 @@ class WaterIntakeDialog extends HookWidget {
             ListTile(
               leading: const Icon(Icons.local_cafe),
               title: const Text('Change drink'),
-              subtitle: Text(drinkTypes.name),
+              subtitle: Text(drinkTypes.description),
               onTap: () {
                 showDialog(
                   context: context,
@@ -368,7 +393,7 @@ class WaterIntakeDialog extends HookWidget {
             ListTile(
               leading: const Icon(Icons.palette),
               title: const Text('Change color'),
-              subtitle: Text(tileColors.name.toSentenceCase),
+              subtitle: Text(tileColors.description.toSentenceCase),
               onTap: () {
                 showDialog(
                   context: context,
@@ -424,8 +449,6 @@ class DeleteWaterIntakeDialog extends HookWidget {
           onPressed: () async {
             await context.read(editIntakeProvider).deleteWaterIntake();
 
-            Navigator.of(context).popUntil((route) => route.isFirst);
-
             final builder = (context, animation) {
               return waterIntake.when(
                 data: (value) {
@@ -464,6 +487,8 @@ class DeleteWaterIntakeDialog extends HookWidget {
               builder,
               duration: const Duration(milliseconds: 500),
             );
+
+            Navigator.popUntil(context, ModalRoute.withName('/home'));
           },
           child: Text('DELETE'),
         ),
@@ -608,7 +633,7 @@ class EditDrinkTypeLists extends HookWidget {
         shrinkWrap: true,
         itemCount: value.allDrinkType.length,
         itemBuilder: (context, index) {
-          return DrinkTypeItem(
+          return EditDrinkTypeItem(
             value: value,
             index: index,
           );
@@ -625,8 +650,8 @@ class EditDrinkTypeLists extends HookWidget {
   }
 }
 
-class DrinkTypeItem extends HookWidget {
-  const DrinkTypeItem({
+class EditDrinkTypeItem extends HookWidget {
+  const EditDrinkTypeItem({
     @required this.value,
     @required this.index,
   });
@@ -651,11 +676,11 @@ class DrinkTypeItem extends HookWidget {
             title: Text((value.allDrinkType[index]['drinkTypes'] as String)
                 .toSentenceCase),
             selected: value.allDrinkType[index]['drinkTypes'] ==
-                    drinkTypes.name.toLowerCase()
+                    drinkTypes.description.toLowerCase()
                 ? true
                 : false,
             trailing: value.allDrinkType[index]['drinkTypes'] ==
-                    drinkTypes.name.toLowerCase()
+                    drinkTypes.description.toLowerCase()
                 ? const Icon(Icons.check_circle)
                 : const SizedBox.shrink(),
             onTap: () {
@@ -774,11 +799,11 @@ class EditTileColorItem extends HookWidget {
                   .toSentenceCase,
             ),
             selected: value.allTileColor[index]['tileColors'] ==
-                    tileColors.name.toLowerCase()
+                    tileColors.description.toLowerCase()
                 ? true
                 : false,
             trailing: value.allTileColor[index]['tileColors'] ==
-                    tileColors.name.toLowerCase()
+                    tileColors.description.toLowerCase()
                 ? const Icon(Icons.check_circle)
                 : const SizedBox.shrink(),
             onTap: () {

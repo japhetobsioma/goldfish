@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/colors.dart';
 import '../common/helpers.dart';
-import '../database/app_database.dart';
 import '../models/user_info.dart';
-import '../states/app_database.dart';
 import '../states/create_plan.dart';
-import '../states/user_info.dart';
 
 class CreatePlanScreen extends StatelessWidget {
   const CreatePlanScreen();
@@ -351,7 +349,7 @@ class BedtimeField extends HookWidget {
                 onPressed: () async {
                   final selectedTime = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: 22, minute: 00),
+                    initialTime: TimeOfDay(hour: 22, minute: 30),
                   );
 
                   if (selectedTime != null) {
@@ -517,7 +515,7 @@ class BottomButtons extends HookWidget {
             child: const Text('Clear'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               // Validate all the fields.
               if (selectedGender.isNone) {
                 // Show an error message if the gender is none.
@@ -539,16 +537,22 @@ class BottomButtons extends HookWidget {
                   wakeupTimeFormKey.currentState.validate() &&
                   bedtimeFormKey.currentState.validate() &&
                   dailyGoalFormKey.currentState.validate()) {
-                context.read(createPlanFormProvider).setUserInfo();
-                context.read(userInfoProvider).deleteHydrationPlan();
-                context.read(userInfoProvider).createHydrationPlan();
+                // Call validate again to remove the red lines if the user have
+                // inputted wrong format then correct format.
+                birthdayFormKey.currentState.validate();
+                wakeupTimeFormKey.currentState.validate();
+                bedtimeFormKey.currentState.validate();
+                dailyGoalFormKey.currentState.validate();
 
-                Navigator.push(
+                await context.read(createPlanFormProvider).setUserInfo();
+
+                final sharedPreferences = await SharedPreferences.getInstance();
+                await sharedPreferences.setBool('isUserSignedUp', true);
+
+                await Navigator.pushNamedAndRemoveUntil(
                   context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => FullScreenDialog(),
-                    fullscreenDialog: true,
-                  ),
+                  '/home',
+                  (route) => false,
                 );
               }
             },
@@ -558,43 +562,4 @@ class BottomButtons extends HookWidget {
       ),
     );
   }
-}
-
-/// For testing only
-class FullScreenDialog extends HookWidget {
-  const FullScreenDialog();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Database Output'),
-      ),
-      body: Center(
-        child: FutureBuilder(
-            future: getHydrationPlan(context),
-            builder: (context, AsyncSnapshot<List<HydrationPlan>> snapshot) {
-              final _hydrationPlan = snapshot.data ?? [];
-
-              if (snapshot.hasData) {
-                return Text(
-                  'gender: ${_hydrationPlan[0].gender}\n'
-                  'birthday: ${_hydrationPlan[0].birthday.toStringDate}\n'
-                  'wakeupTime: ${_hydrationPlan[0].wakeupTime.toStringTime}\n'
-                  'bedtime: ${_hydrationPlan[0].bedtime.toStringTime}\n'
-                  'dailyGoal: ${_hydrationPlan[0].dailyGoal}\n'
-                  'liquidMeasurement: ${_hydrationPlan[0].liquidMeasurement}\n'
-                  'isUsingRecommendedDailyGoal: ${_hydrationPlan[0].isUsingRecommendedDailyGoal.toBool}\n'
-                  'joinedDate: ${_hydrationPlan[0].joinedDate.toStringDate}\n',
-                );
-              } else {
-                return CircularProgressIndicator();
-              }
-            }),
-      ),
-    );
-  }
-
-  Future<List<HydrationPlan>> getHydrationPlan(BuildContext context) async =>
-      await context.read(appDatabaseProvider.state).readHydrationPlan().get();
 }

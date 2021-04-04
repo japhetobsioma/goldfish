@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/helpers.dart';
+import '../database/database_helper.dart';
 import '../models/create_plan.dart';
 import '../models/user_info.dart';
-import 'user_info.dart';
 
 class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
-  CreatePlanFormNotifier(this.read) : super(_initialValue);
+  CreatePlanFormNotifier() : super(_initialValue);
 
-  final Reader read;
+  static final dbHelper = DatabaseHelper.instance;
 
   static final _initialValue = CreatePlanForm(
     selectedGender: Gender.None,
@@ -82,7 +82,8 @@ class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
 
   /// Calculate the daily goal based on gender and age.
   ///
-  /// Reference: https://www.who.int/water_sanitation_health/dwq/nutwaterrequir.pdf
+  /// Reference:
+  /// https://www.who.int/water_sanitation_health/dwq/nutwaterrequir.pdf
   ///
   /// This validate the gender and birthday first before calculating.
   void calculateDailyGoal() {
@@ -92,10 +93,8 @@ class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
     int dailyGoal;
 
     if (gender.isNotNone && birthday.isNotEmpty) {
-      print('gender and birthday is okay');
       if (birthday.dateFormatIsValid && isNotBelowMinimumAge(birthday)) {
-        print('calculating the daily goal');
-        final age = getAge(birthday.toFormattedDate);
+        final age = getAge(birthday.toDateTimeFormatted);
         dailyGoal = getDailyGoal(gender, age, liquidMeasurement);
 
         state = CreatePlanForm(
@@ -205,21 +204,22 @@ class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
   }
 
   /// Get all the date from create plan form then set it to user info.
-  void setUserInfo() {
-    read(userInfoProvider).setUserInfo(
-      state.selectedGender,
-      state.birthdayTextController.text,
-      state.wakeupTimeTextController.text,
-      state.bedtimeTextController.text,
-      state.dailyGoalTextController.text,
-      state.selectedLiquidMeasurement,
-      state.isUsingRecommendedDailyGoal,
+  Future<void> setUserInfo() async {
+    await dbHelper.createHydrationPlan(
+      gender: state.selectedGender,
+      birthday: state.birthdayTextController.text.toDateTimeFormatted,
+      wakeupTime: state.wakeupTimeTextController.text.toTimeOfDayFormatted,
+      bedtime: state.bedtimeTextController.text.toTimeOfDayFormatted,
+      dailyGoal: int.tryParse(state.dailyGoalTextController.text),
+      liquidMeasurement: state.selectedLiquidMeasurement,
+      isUsingRecommendedDailyGoal: state.isUsingRecommendedDailyGoal,
+      joinedDate: DateTime.now(),
     );
   }
 }
 
 final createPlanFormProvider = StateNotifierProvider<CreatePlanFormNotifier>(
-    (ref) => CreatePlanFormNotifier(ref.read));
+    (ref) => CreatePlanFormNotifier());
 
 final _selectedGenderState = Provider<Gender>(
     (ref) => ref.watch(createPlanFormProvider.state).selectedGender);
