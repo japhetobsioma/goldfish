@@ -493,4 +493,18 @@ class DatabaseHelper {
         strftime('%d-%m-%Y', 'now', 'localtime')
     ''');
   }
+
+  Future<List<Map<String, dynamic>>> getAllWaterIntakes() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        SUM(amount), 
+        date 
+      FROM 
+        waterIntake 
+      GROUP BY 
+        date
+    ''');
+  }
 }

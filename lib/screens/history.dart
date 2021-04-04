@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../common/helpers.dart';
 import '../states/completion.dart';
@@ -31,9 +32,8 @@ class HistoryScreen extends StatelessWidget {
               indent: 30.0,
               endIndent: 30.0,
             ),
-            const SizedBox(
-              height: 30.0,
-            ),
+            const ChartDays(),
+            const ChartDaysBottomTexts(),
           ],
         ),
       ),
@@ -272,6 +272,133 @@ class Completions extends HookWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SplineAreaData {
+  _SplineAreaData(this.year, this.intake);
+  final double year;
+  final double intake;
+}
+
+class ChartDays extends HookWidget {
+  const ChartDays();
+
+  @override
+  Widget build(BuildContext context) {
+    List<ChartSeries<_SplineAreaData, double>> _getSplieAreaSeries() {
+      final chartData = <_SplineAreaData>[
+        _SplineAreaData(012021, 5),
+        _SplineAreaData(022021, 6),
+        _SplineAreaData(032021, 3),
+        _SplineAreaData(042021, 6),
+        _SplineAreaData(052021, 8),
+        _SplineAreaData(062021, 5),
+        _SplineAreaData(072021, 6),
+        _SplineAreaData(082021, 6),
+        _SplineAreaData(092021, 6),
+        _SplineAreaData(102021, 9),
+        _SplineAreaData(112021, 9),
+        _SplineAreaData(122021, 5),
+      ];
+
+      return <ChartSeries<_SplineAreaData, double>>[
+        SplineAreaSeries<_SplineAreaData, double>(
+          dataSource: chartData,
+          color: const Color.fromRGBO(75, 135, 185, 0.15),
+          borderColor: const Color.fromRGBO(75, 135, 185, 1),
+          borderWidth: 8,
+          xValueMapper: (_SplineAreaData data, _) => data.year,
+          yValueMapper: (_SplineAreaData data, _) => data.intake,
+        ),
+      ];
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+      ),
+      child: Container(
+        width: double.maxFinite,
+        child: SfCartesianChart(
+          plotAreaBorderWidth: 0,
+          primaryXAxis: NumericAxis(
+            isVisible: false,
+          ),
+          primaryYAxis: NumericAxis(
+            isVisible: false,
+          ),
+          series: _getSplieAreaSeries(),
+        ),
+      ),
+    );
+  }
+}
+
+class ChartDaysBottomTexts extends StatelessWidget {
+  const ChartDaysBottomTexts();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 25.0,
+        right: 25.0,
+        bottom: 30.0,
+      ),
+      child: Container(
+        width: double.maxFinite,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 100.0,
+              height: 15.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '22 MAY 2019',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 100.0,
+              height: 15.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  '101 DAYS',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 100.0,
+              height: 15.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'TODAY',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
