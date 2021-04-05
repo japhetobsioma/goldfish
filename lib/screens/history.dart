@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../common/helpers.dart';
 import '../states/completion.dart';
@@ -62,6 +63,14 @@ class HistoryScreen extends HookWidget {
               },
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
+            ),
+            const IntakeWeek(),
+            const Divider(
+              indent: 30.0,
+              endIndent: 30.0,
+            ),
+            const SizedBox(
+              height: 30.0,
             ),
           ],
         ),
@@ -132,11 +141,23 @@ class MostDrinkTypes extends HookWidget {
     }, []);
 
     return Padding(
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           left: 10.0,
           top: 20.0,
           right: 10.0,
-          bottom: 20.0,
+          bottom: drinkTypes.when(
+            data: (value) {
+              final mostDrinkTypes = value.mostDrinkTypes;
+
+              if (mostDrinkTypes.isEmpty) {
+                return 0;
+              }
+
+              return 20.0;
+            },
+            loading: () => 0,
+            error: (_, __) => 0,
+          ),
         ),
         child: drinkTypes.when(
           data: (value) {
@@ -414,6 +435,111 @@ class ChartDaysBottomTexts extends HookWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class IntakeWeek extends StatelessWidget {
+  const IntakeWeek();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+      ),
+      child: Container(
+        width: double.maxFinite,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const LineGaugeDay(
+              intake: 8,
+              dayName: 'Sunday',
+            ),
+            const LineGaugeDay(
+              intake: 3,
+              dayName: 'Monday',
+            ),
+            const LineGaugeDay(
+              intake: 5,
+              dayName: 'Tuesday',
+            ),
+            const LineGaugeDay(
+              intake: 10,
+              dayName: 'Wednesday',
+            ),
+            const LineGaugeDay(
+              intake: 3,
+              dayName: 'Thursday',
+            ),
+            const LineGaugeDay(
+              intake: 12,
+              dayName: 'Friday',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LineGaugeDay extends StatelessWidget {
+  const LineGaugeDay({
+    @required this.intake,
+    @required this.dayName,
+  });
+
+  final int intake;
+  final String dayName;
+
+  @override
+  Widget build(BuildContext context) {
+    final highestIntake = 12;
+    final newIntakeValue = (intake / highestIntake) * 100;
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 30.0,
+      ),
+      child: Column(
+        children: [
+          Container(
+            height: 150.0,
+            child: SfLinearGauge(
+              orientation: LinearGaugeOrientation.vertical,
+              interval: 20.0,
+              showTicks: false,
+              showLabels: false,
+              minorTicksPerInterval: 0,
+              axisTrackStyle: LinearAxisTrackStyle(
+                thickness: 20,
+                edgeStyle: LinearEdgeStyle.bothCurve,
+                borderWidth: 0,
+                borderColor: const Color.fromRGBO(75, 135, 185, 1),
+                color: const Color.fromRGBO(75, 135, 185, 0.15),
+              ),
+              barPointers: [
+                LinearBarPointer(
+                  value: newIntakeValue,
+                  thickness: 20,
+                  edgeStyle: LinearEdgeStyle.bothCurve,
+                  color: Colors.blueAccent,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            '${dayName[0]}',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
