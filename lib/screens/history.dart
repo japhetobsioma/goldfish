@@ -8,12 +8,15 @@ import '../states/completion.dart';
 import '../states/drink_type.dart';
 import '../states/streaks.dart';
 import '../states/user_info.dart';
+import '../states/water_intake.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends HookWidget {
   const HistoryScreen();
 
   @override
   Widget build(BuildContext context) {
+    final userInfo = useProvider(userInfoProvider.state);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
@@ -32,8 +35,34 @@ class HistoryScreen extends StatelessWidget {
               indent: 30.0,
               endIndent: 30.0,
             ),
-            const ChartDays(),
-            const ChartDaysBottomTexts(),
+            userInfo.when(
+              data: (value) {
+                final joinedDate =
+                    (value.userInfo[0]['joinedDate'] as String).toDateTime;
+
+                if (joinedDate == DateTime.now()) {
+                  return Column(
+                    children: [
+                      const ChartDays(),
+                      const ChartDaysBottomTexts(),
+                      const Divider(
+                        indent: 30.0,
+                        endIndent: 30.0,
+                      ),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                    ],
+                  );
+                }
+
+                return const SizedBox(
+                  height: 30.0,
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
           ],
         ),
       ),
@@ -277,9 +306,9 @@ class Completions extends HookWidget {
 }
 
 class _SplineAreaData {
-  _SplineAreaData(this.year, this.intake);
+  _SplineAreaData({this.year, this.amount});
   final double year;
-  final double intake;
+  final double amount;
 }
 
 class ChartDays extends HookWidget {
@@ -287,30 +316,38 @@ class ChartDays extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final waterIntake = useProvider(waterIntakeProvider.state);
+
     List<ChartSeries<_SplineAreaData, double>> _getSplieAreaSeries() {
-      final chartData = <_SplineAreaData>[
-        _SplineAreaData(012021, 5),
-        _SplineAreaData(022021, 6),
-        _SplineAreaData(032021, 3),
-        _SplineAreaData(042021, 6),
-        _SplineAreaData(052021, 8),
-        _SplineAreaData(062021, 5),
-        _SplineAreaData(072021, 6),
-        _SplineAreaData(082021, 6),
-        _SplineAreaData(092021, 6),
-        _SplineAreaData(102021, 9),
-        _SplineAreaData(112021, 9),
-        _SplineAreaData(122021, 5),
-      ];
+      final chartData = <_SplineAreaData>[];
 
       return <ChartSeries<_SplineAreaData, double>>[
         SplineAreaSeries<_SplineAreaData, double>(
-          dataSource: chartData,
+          dataSource: waterIntake.when(
+            data: (value) {
+              value.allWaterIntake.forEach((element) {
+                final year = double.tryParse(
+                    element["strftime('%d%m%Y', date)"] as String);
+                final amount = (element['COUNT(amount)'] as int).toDouble();
+
+                chartData.add(
+                  _SplineAreaData(
+                    year: year,
+                    amount: amount,
+                  ),
+                );
+              });
+
+              return chartData;
+            },
+            loading: () => chartData,
+            error: (_, __) => chartData,
+          ),
           color: const Color.fromRGBO(75, 135, 185, 0.15),
           borderColor: const Color.fromRGBO(75, 135, 185, 1),
           borderWidth: 8,
           xValueMapper: (_SplineAreaData data, _) => data.year,
-          yValueMapper: (_SplineAreaData data, _) => data.intake,
+          yValueMapper: (_SplineAreaData data, _) => data.amount,
         ),
       ];
     }
@@ -336,11 +373,13 @@ class ChartDays extends HookWidget {
   }
 }
 
-class ChartDaysBottomTexts extends StatelessWidget {
+class ChartDaysBottomTexts extends HookWidget {
   const ChartDaysBottomTexts();
 
   @override
   Widget build(BuildContext context) {
+    final userInfo = useProvider(userInfoProvider.state);
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 25.0,
@@ -352,48 +391,25 @@ class ChartDaysBottomTexts extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 100.0,
-              height: 15.0,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '22 MAY 2019',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
+            Text(
+              userInfo.when(
+                data: (value) {
+                  final joinedDate = (value.userInfo[0]['joinedDate'] as String)
+                      .toDateTimeFormattedTypeString;
+
+                  return joinedDate.toUpperCase();
+                },
+                loading: () => '',
+                error: (_, __) => '',
+              ),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Container(
-              width: 100.0,
-              height: 15.0,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Text(
-                  '101 DAYS',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: 100.0,
-              height: 15.0,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'TODAY',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
+            Text(
+              'TODAY',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],

@@ -498,13 +498,13 @@ class DatabaseHelper {
     final db = await instance.database;
 
     return await db.rawQuery('''
-      SELECT 
-        SUM(amount), 
-        date 
+      SELECT
+        strftime('%d%m%Y', date),
+        COUNT(amount)
       FROM 
         waterIntake 
       GROUP BY 
-        date
+        strftime('%d%m%Y', date)
     ''');
   }
 }
