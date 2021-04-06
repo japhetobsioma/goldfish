@@ -186,7 +186,7 @@ class BirthdayField extends HookWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Birthday',
-                  hintText: 'e.g. ${DateTime.now().toFormattedString}',
+                  hintText: 'e.g. ${DateTime.now().format}',
                 ),
                 onChanged: (_) {
                   isUsingRecommendedDailyGoal
@@ -224,8 +224,7 @@ class BirthdayField extends HookWidget {
                   );
 
                   if (selectedDate != null) {
-                    birthdayTextController.text =
-                        selectedDate.toFormattedString;
+                    birthdayTextController.text = selectedDate.format;
                     context.read(createPlanFormProvider).calculateDailyGoal();
                   }
                 },

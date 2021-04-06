@@ -20,7 +20,7 @@ extension DateTimeExtension on DateTime {
   /// The default date pattern is `d MMMM y`.
   ///
   /// Output: `25 June 1997`
-  String get toFormattedString => DateFormat(_datePattern).format(this);
+  String get format => DateFormat(_datePattern).format(this);
 
   TimeOfDay get toTimeOfDay => TimeOfDay.fromDateTime(this);
 }
@@ -73,17 +73,6 @@ extension StringExtension on String {
 
   /// Check if the time is not in a valid format.
   bool get timeFormatIsNotValid => !this.timeFormatIsValid;
-
-  /// Return a formatted date in type of string.
-  ///
-  /// The default date pattern is `d MMMM y`.
-  ///
-  /// Output: `25 June 1997`
-  String get toDateTimeFormattedTypeString {
-    final dateTime = toDateTime;
-
-    return DateFormat(_datePattern).format(dateTime);
-  }
 
   /// Return a formatted time in type of string.
   ///
@@ -154,6 +143,8 @@ extension StringExtension on String {
         'true': true,
         'false': false,
       }[this];
+
+  String get onlyNumbers => this.replaceAll(RegExp(r'[^0-9]+'), '');
 }
 
 extension TimeOfDayExtension on TimeOfDay {

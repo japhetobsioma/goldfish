@@ -18,17 +18,13 @@ void main() async {
 
   runApp(
     ProviderScope(
-      child: MyApp(
-        isUserSignedUp: isUserSignedUp,
-      ),
+      child: MyApp(isUserSignedUp: isUserSignedUp),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    @required this.isUserSignedUp,
-  }) : assert(isUserSignedUp != null);
+  const MyApp({@required this.isUserSignedUp}) : assert(isUserSignedUp != null);
 
   final bool isUserSignedUp;
 

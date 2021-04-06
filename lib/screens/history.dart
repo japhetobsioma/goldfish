@@ -18,7 +18,7 @@ class HistoryScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = useProvider(userInfoProvider.state);
+    final waterIntake = useProvider(waterIntakeProvider.state);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,23 +38,22 @@ class HistoryScreen extends HookWidget {
               indent: 30.0,
               endIndent: 30.0,
             ),
-            userInfo.when(
+            waterIntake.when(
               data: (value) {
-                final joinedDate =
-                    (value.userInfo[0]['joinedDate'] as String).toDateTime;
+                final thisMonthIntakes = value.thisMonthIntakes;
 
-                if (joinedDate == DateTime.now()) {
+                if (thisMonthIntakes.isNotEmpty &&
+                    thisMonthIntakes.length > 1) {
                   return Column(
                     children: [
-                      const ChartDays(),
-                      const ChartDaysBottomTexts(),
+                      const ThisMonthTitle(),
+                      const ThisMonthChart(),
+                      const ThisMonthDates(),
                       const Divider(
                         indent: 30.0,
                         endIndent: 30.0,
                       ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
+                      const SizedBox(height: 30.0),
                     ],
                   );
                 }
@@ -66,9 +65,6 @@ class HistoryScreen extends HookWidget {
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             ),
-            const ChartHourlyTitle(),
-            const ChartHourly(),
-            const ChartHourlyBottomTexts(),
           ],
         ),
       ),
@@ -105,8 +101,8 @@ class JoinedDate extends HookWidget {
 
     return userInfo.when(
       data: (value) {
-        final joinedDate = (value.userInfo[0]['joinedDate'] as String)
-            .toDateTimeFormattedTypeString;
+        final joinedDate =
+            (value.userInfo[0]['joinedDate'] as String).toDateTime.format;
 
         return Padding(
           padding: const EdgeInsets.only(top: 30.0),
@@ -323,34 +319,60 @@ class Completions extends HookWidget {
   }
 }
 
-class _SplineAreaData {
-  _SplineAreaData({this.year, this.amount});
-  final double year;
+class ThisMonthTitle extends StatelessWidget {
+  const ThisMonthTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0),
+          child: Text(
+            'This Month'.toUpperCase(),
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ThisMonthData {
+  ThisMonthData({
+    @required this.date,
+    @required this.amount,
+  });
+  final double date;
   final double amount;
 }
 
-class ChartDays extends HookWidget {
-  const ChartDays();
+class ThisMonthChart extends HookWidget {
+  const ThisMonthChart();
 
   @override
   Widget build(BuildContext context) {
     final waterIntake = useProvider(waterIntakeProvider.state);
 
-    List<ChartSeries<_SplineAreaData, double>> _getSplieAreaSeries() {
-      final chartData = <_SplineAreaData>[];
+    List<ChartSeries<ThisMonthData, double>> getThisMonthDataSeries() {
+      final chartData = <ThisMonthData>[];
 
-      return <ChartSeries<_SplineAreaData, double>>[
-        SplineAreaSeries<_SplineAreaData, double>(
+      return <ChartSeries<ThisMonthData, double>>[
+        SplineAreaSeries<ThisMonthData, double>(
           dataSource: waterIntake.when(
             data: (value) {
-              value.allWaterIntake.forEach((element) {
-                final year = double.tryParse(
-                    element["strftime('%d%m%Y', date)"] as String);
-                final amount = (element['COUNT(amount)'] as int).toDouble();
+              value.thisMonthIntakes.forEach((element) {
+                final date =
+                    double.tryParse((element['date'] as String).onlyNumbers);
+                final amount = (element['sum(amount)'] as int).toDouble();
 
                 chartData.add(
-                  _SplineAreaData(
-                    year: year,
+                  ThisMonthData(
+                    date: date,
                     amount: amount,
                   ),
                 );
@@ -364,8 +386,8 @@ class ChartDays extends HookWidget {
           color: const Color.fromRGBO(75, 135, 185, 0.15),
           borderColor: const Color.fromRGBO(75, 135, 185, 1),
           borderWidth: 8,
-          xValueMapper: (_SplineAreaData data, _) => data.year,
-          yValueMapper: (_SplineAreaData data, _) => data.amount,
+          xValueMapper: (ThisMonthData data, _) => data.date,
+          yValueMapper: (ThisMonthData data, _) => data.amount,
         ),
       ];
     }
@@ -378,25 +400,21 @@ class ChartDays extends HookWidget {
         width: double.maxFinite,
         child: SfCartesianChart(
           plotAreaBorderWidth: 0,
-          primaryXAxis: NumericAxis(
-            isVisible: false,
-          ),
-          primaryYAxis: NumericAxis(
-            isVisible: false,
-          ),
-          series: _getSplieAreaSeries(),
+          primaryXAxis: NumericAxis(isVisible: false),
+          primaryYAxis: NumericAxis(isVisible: false),
+          series: getThisMonthDataSeries(),
         ),
       ),
     );
   }
 }
 
-class ChartDaysBottomTexts extends HookWidget {
-  const ChartDaysBottomTexts();
+class ThisMonthDates extends HookWidget {
+  const ThisMonthDates();
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = useProvider(userInfoProvider.state);
+    final waterIntake = useProvider(waterIntakeProvider.state);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -410,12 +428,12 @@ class ChartDaysBottomTexts extends HookWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              userInfo.when(
+              waterIntake.when(
                 data: (value) {
-                  final joinedDate = (value.userInfo[0]['joinedDate'] as String)
-                      .toDateTimeFormattedTypeString;
+                  final firstMonth =
+                      (value.thisMonthIntakes.first['date'] as String);
 
-                  return joinedDate.toUpperCase();
+                  return firstMonth.toDateTime.format.toUpperCase();
                 },
                 loading: () => '',
                 error: (_, __) => '',
@@ -425,7 +443,20 @@ class ChartDaysBottomTexts extends HookWidget {
               ),
             ),
             Text(
-              'TODAY',
+              waterIntake.when(
+                data: (value) {
+                  final lastMonth =
+                      (value.thisMonthIntakes.last['date'] as String);
+
+                  if (lastMonth.toDateTime == DateTime.now()) {
+                    return 'Today'.toUpperCase();
+                  }
+
+                  return lastMonth.toDateTime.format.toUpperCase();
+                },
+                loading: () => '',
+                error: (_, __) => '',
+              ),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

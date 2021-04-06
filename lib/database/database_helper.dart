@@ -180,7 +180,7 @@ class DatabaseHelper {
   }
 
   // Get all todays total water intake
-  Future<int> getTodaysTotalWaterIntake() async {
+  Future<int> fetchTodaysTotalWaterIntake() async {
     var db = await instance.database;
     return Sqflite.firstIntValue(
       await db.rawQuery(
@@ -192,7 +192,7 @@ class DatabaseHelper {
   }
 
   /// Get all todays water intake
-  Future<List<Map<String, dynamic>>> getTodaysWaterIntake() async {
+  Future<List<Map<String, dynamic>>> fetchTodaysWaterIntake() async {
     final db = await instance.database;
     return await db.rawQuery(
       'SELECT waterIntake.amount, waterIntake.measurement,'
@@ -495,15 +495,17 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<List<Map<String, dynamic>>> getAllWaterIntakes() async {
+  Future<List<Map<String, dynamic>>> fetchThisMonthIntakes() async {
     final db = await instance.database;
 
     return await db.rawQuery('''
-      SELECT
-        strftime('%d%m%Y', date),
-        sum(amount)
+      SELECT 
+        date, 
+        sum(amount) 
       FROM 
         waterIntake 
+      WHERE 
+        strftime('%m', date) = strftime('%m', 'now', 'localtime') 
       GROUP BY 
         strftime('%d%m%Y', date)
     ''');
@@ -529,7 +531,7 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getHourlyWaterIntake() async {
+  Future<List<Map<String, dynamic>>> fetchHourlyWaterIntake() async {
     final db = await instance.database;
 
     return await db.rawQuery('''
