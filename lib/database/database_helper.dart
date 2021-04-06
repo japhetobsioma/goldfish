@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../common/helpers.dart';
+import '../models/daily_total.dart';
 import '../models/user_info.dart';
 
 class DatabaseHelper {
@@ -500,11 +501,55 @@ class DatabaseHelper {
     return await db.rawQuery('''
       SELECT
         strftime('%d%m%Y', date),
-        COUNT(amount)
+        sum(amount)
       FROM 
         waterIntake 
       GROUP BY 
         strftime('%d%m%Y', date)
     ''');
+  }
+
+  Future<int> getThisDayIntakeTotal(WeekDays weekDay) async {
+    final db = await instance.database;
+
+    return Sqflite.firstIntValue(
+      await db.rawQuery('''
+        SELECT
+          sum(amount) 
+        FROM 
+          waterIntake 
+        WHERE 
+          strftime('%d%m%Y', date) = strftime(
+            '%d%m%Y', 'now', 'localtime', 'weekday 0', 
+            '${weekDay.queryValue}'
+          ) 
+        GROUP BY 
+          strftime('%d%m%Y', date)
+      '''),
+    );
+  }
+
+  Future<int> getThisWeeksHighestIntakeTotal() async {
+    final db = await instance.database;
+
+    return Sqflite.firstIntValue(
+      await db.rawQuery('''
+        SELECT 
+          sum(amount) 
+        FROM 
+          waterIntake 
+        WHERE 
+          strftime('%d%m%Y', date) >= strftime(
+            '%d%m%Y', 'now', 'localtime', 'weekday 0', 
+            '-7 days'
+          ) 
+        GROUP BY 
+          strftime('%d%m%Y', date) 
+        ORDER BY 
+          count(amount) DESC 
+        LIMIT 
+          1
+    '''),
+    );
   }
 }

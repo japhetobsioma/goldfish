@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/daily_total.dart';
 import '../models/drink_type.dart';
 import '../models/streaks.dart';
 import '../models/tile_color.dart';
@@ -549,4 +550,18 @@ int getCompletionDayDifference(List<Map<String, dynamic>> completionDates) {
   }
 
   return dayDifference;
+}
+
+extension WeekDaysExtension on WeekDays {
+  String get name => describeEnum(this);
+
+  String get queryValue => {
+        WeekDays.Sunday: '-7 days',
+        WeekDays.Monday: '-6 days',
+        WeekDays.Tuesday: '-5 days',
+        WeekDays.Wednesday: '-4 days',
+        WeekDays.Thursday: '-3 days',
+        WeekDays.Friday: '-2 days',
+        WeekDays.Saturday: '-1 days',
+      }[this];
 }

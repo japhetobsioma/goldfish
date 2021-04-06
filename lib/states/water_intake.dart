@@ -7,11 +7,14 @@ import '../models/drink_type.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
 import '../models/water_intake.dart';
+import 'daily_total.dart';
 
 class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
-  WaterIntakeNotifier() : super(const AsyncValue.loading()) {
+  WaterIntakeNotifier(this.read) : super(const AsyncValue.loading()) {
     fetchWaterIntake();
   }
+
+  final Reader read;
 
   static final dbHelper = DatabaseHelper.instance;
 
@@ -21,6 +24,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     final allWaterIntake = await dbHelper.getAllWaterIntakes();
 
     await hasUserAchievedGoal();
+    await read(dailyTotalProvider).fetchDailyTotal();
 
     state = AsyncValue.data(
       WaterIntake(
@@ -114,5 +118,5 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   }
 }
 
-final waterIntakeProvider =
-    StateNotifierProvider<WaterIntakeNotifier>((ref) => WaterIntakeNotifier());
+final waterIntakeProvider = StateNotifierProvider<WaterIntakeNotifier>(
+    (ref) => WaterIntakeNotifier(ref.read));

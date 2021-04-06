@@ -5,7 +5,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../common/helpers.dart';
+import '../models/daily_total.dart';
 import '../states/completion.dart';
+import '../states/daily_total.dart';
 import '../states/drink_type.dart';
 import '../states/streaks.dart';
 import '../states/user_info.dart';
@@ -440,11 +442,13 @@ class ChartDaysBottomTexts extends HookWidget {
   }
 }
 
-class IntakeWeek extends StatelessWidget {
+class IntakeWeek extends HookWidget {
   const IntakeWeek();
 
   @override
   Widget build(BuildContext context) {
+    final dailyTotal = useProvider(dailyTotalProvider.state);
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 30.0,
@@ -453,51 +457,46 @@ class IntakeWeek extends StatelessWidget {
         width: double.maxFinite,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const LineGaugeDay(
-              intake: 8,
-              dayName: 'Sunday',
-            ),
-            const LineGaugeDay(
-              intake: 3,
-              dayName: 'Monday',
-            ),
-            const LineGaugeDay(
-              intake: 5,
-              dayName: 'Tuesday',
-            ),
-            const LineGaugeDay(
-              intake: 10,
-              dayName: 'Wednesday',
-            ),
-            const LineGaugeDay(
-              intake: 3,
-              dayName: 'Thursday',
-            ),
-            const LineGaugeDay(
-              intake: 12,
-              dayName: 'Friday',
-            ),
-          ],
+          children: dailyTotal.when(
+            data: (value) {
+              final days = {
+                WeekDays.Sunday: value.sundayTotal,
+                WeekDays.Monday: value.mondayTotal,
+                WeekDays.Tuesday: value.tuesdayTotal,
+                WeekDays.Wednesday: value.wednesdayTotal,
+                WeekDays.Thursday: value.thursdayTotal,
+                WeekDays.Friday: value.fridayTotal,
+                WeekDays.Saturday: value.saturdayTotal,
+              };
+
+              return days.entries.map((e) {
+                return LineGaugeDay(
+                  totalIntake: e.value,
+                  dayName: e.key.name,
+                );
+              }).toList();
+            },
+            loading: () => const [SizedBox.shrink()],
+            error: (_, __) => const [SizedBox.shrink()],
+          ),
         ),
       ),
     );
   }
 }
 
-class LineGaugeDay extends StatelessWidget {
+class LineGaugeDay extends HookWidget {
   const LineGaugeDay({
-    @required this.intake,
+    @required this.totalIntake,
     @required this.dayName,
   });
 
-  final int intake;
+  final int totalIntake;
   final String dayName;
 
   @override
   Widget build(BuildContext context) {
-    final highestIntake = 12;
-    final newIntakeValue = (intake / highestIntake) * 100;
+    final userInfo = useProvider(userInfoProvider.state);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -507,27 +506,40 @@ class LineGaugeDay extends StatelessWidget {
         children: [
           Container(
             height: 150.0,
-            child: SfLinearGauge(
-              orientation: LinearGaugeOrientation.vertical,
-              interval: 20.0,
-              showTicks: false,
-              showLabels: false,
-              minorTicksPerInterval: 0,
-              axisTrackStyle: LinearAxisTrackStyle(
-                thickness: 20,
-                edgeStyle: LinearEdgeStyle.bothCurve,
-                borderWidth: 0,
-                borderColor: const Color.fromRGBO(75, 135, 185, 1),
-                color: const Color.fromRGBO(75, 135, 185, 0.15),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
               ),
-              barPointers: [
-                LinearBarPointer(
-                  value: newIntakeValue,
+              child: SfLinearGauge(
+                maximum: userInfo.when(
+                  data: (value) {
+                    final maximum = value.userInfo[0]['dailyGoal'] ?? 100;
+                    return maximum.toDouble();
+                  },
+                  loading: () => 100,
+                  error: (_, __) => 100,
+                ),
+                orientation: LinearGaugeOrientation.vertical,
+                interval: 20.0,
+                showTicks: false,
+                showLabels: false,
+                minorTicksPerInterval: 0,
+                axisTrackStyle: LinearAxisTrackStyle(
                   thickness: 20,
                   edgeStyle: LinearEdgeStyle.bothCurve,
-                  color: Colors.blueAccent,
+                  borderWidth: 0,
+                  borderColor: const Color.fromRGBO(75, 135, 185, 1),
+                  color: const Color.fromRGBO(75, 135, 185, 0.15),
                 ),
-              ],
+                barPointers: [
+                  LinearBarPointer(
+                    value: totalIntake.toDouble(),
+                    thickness: 20,
+                    edgeStyle: LinearEdgeStyle.startCurve,
+                    color: Colors.blueAccent,
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(
