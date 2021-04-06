@@ -21,7 +21,6 @@ class DailyTotalNotifier extends StateNotifier<AsyncValue<DailyTotal>> {
     final fridayTotal = await dbHelper.getThisDayIntakeTotal(WeekDays.Friday);
     final saturdayTotal =
         await dbHelper.getThisDayIntakeTotal(WeekDays.Saturday);
-    final highesDayTotal = await dbHelper.getThisWeeksHighestIntakeTotal();
 
     state = AsyncValue.data(
       DailyTotal(
@@ -32,7 +31,6 @@ class DailyTotalNotifier extends StateNotifier<AsyncValue<DailyTotal>> {
         thursdayTotal: thursdayTotal ?? 0,
         fridayTotal: fridayTotal ?? 0,
         saturdayTotal: saturdayTotal ?? 0,
-        highestDayTotal: highesDayTotal ?? 0,
       ),
     );
   }

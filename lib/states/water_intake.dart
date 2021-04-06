@@ -22,6 +22,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     final todaysTotalWaterIntake = await dbHelper.getTodaysTotalWaterIntake();
     final todaysWaterIntake = await dbHelper.getTodaysWaterIntake();
     final allWaterIntake = await dbHelper.getAllWaterIntakes();
+    final hourlyWaterIntake = await dbHelper.getHourlyWaterIntake();
 
     await hasUserAchievedGoal();
     await read(dailyTotalProvider).fetchDailyTotal();
@@ -31,6 +32,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
         todaysTotalWaterIntake: todaysTotalWaterIntake,
         todaysWaterIntake: todaysWaterIntake,
         allWaterIntake: allWaterIntake,
+        hourlyWaterIntake: hourlyWaterIntake,
       ),
     );
   }

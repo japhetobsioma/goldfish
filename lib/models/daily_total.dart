@@ -19,7 +19,6 @@ class DailyTotal {
     @required this.thursdayTotal,
     @required this.fridayTotal,
     @required this.saturdayTotal,
-    @required this.highestDayTotal,
   });
 
   final int sundayTotal;
@@ -29,5 +28,4 @@ class DailyTotal {
   final int thursdayTotal;
   final int fridayTotal;
   final int saturdayTotal;
-  final int highestDayTotal;
 }

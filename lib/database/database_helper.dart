@@ -529,27 +529,19 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> getThisWeeksHighestIntakeTotal() async {
+  Future<List<Map<String, dynamic>>> getHourlyWaterIntake() async {
     final db = await instance.database;
 
-    return Sqflite.firstIntValue(
-      await db.rawQuery('''
-        SELECT 
-          sum(amount) 
-        FROM 
-          waterIntake 
-        WHERE 
-          strftime('%d%m%Y', date) >= strftime(
-            '%d%m%Y', 'now', 'localtime', 'weekday 0', 
-            '-7 days'
-          ) 
-        GROUP BY 
-          strftime('%d%m%Y', date) 
-        ORDER BY 
-          count(amount) DESC 
-        LIMIT 
-          1
-    '''),
-    );
+    return await db.rawQuery('''
+      SELECT 
+        strftime('%H:%M', date), 
+        amount 
+      FROM 
+        waterIntake 
+      WHERE 
+        strftime('%d%m%Y', date) = strftime('%d%m%Y', 'now', 'localtime') 
+      GROUP BY 
+        waterIntakeID
+    ''');
   }
 }

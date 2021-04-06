@@ -60,20 +60,15 @@ class HistoryScreen extends HookWidget {
                 }
 
                 return const SizedBox(
-                  height: 30.0,
+                  height: 0.0,
                 );
               },
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             ),
-            const IntakeWeek(),
-            const Divider(
-              indent: 30.0,
-              endIndent: 30.0,
-            ),
-            const SizedBox(
-              height: 30.0,
-            ),
+            const ChartHourlyTitle(),
+            const ChartHourly(),
+            const ChartHourlyBottomTexts(),
           ],
         ),
       ),
@@ -552,6 +547,175 @@ class LineGaugeDay extends HookWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ChartHourlyTitle extends StatelessWidget {
+  const ChartHourlyTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 30.0,
+          ),
+          child: Text(
+            'Today'.toUpperCase(),
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HourlyData {
+  _HourlyData({
+    @required this.hour,
+    @required this.amount,
+  });
+  final double hour;
+  final double amount;
+}
+
+class ChartHourly extends HookWidget {
+  const ChartHourly();
+
+  @override
+  Widget build(BuildContext context) {
+    List<ChartSeries<_HourlyData, double>> _getSplieAreaSeries() {
+      final chartData = <_HourlyData>[
+        _HourlyData(hour: 0000, amount: (500.0 + 0)),
+        _HourlyData(hour: 0100, amount: (500.0 + 0)),
+        _HourlyData(hour: 0200, amount: (500.0 + 0)),
+        _HourlyData(hour: 0300, amount: (500.0 + 0)),
+        _HourlyData(hour: 0400, amount: (500.0 + 0)),
+        _HourlyData(hour: 0500, amount: (500.0 + 0)),
+        _HourlyData(hour: 0600, amount: (500.0 + 0)),
+        _HourlyData(hour: 0700, amount: (500.0 + 0)),
+        _HourlyData(hour: 0800, amount: (500.0 + 500)),
+        _HourlyData(hour: 0900, amount: (500.0 + 200)),
+        _HourlyData(hour: 1000, amount: (500.0 + 0)),
+        _HourlyData(hour: 1100, amount: (500.0 + 400)),
+        _HourlyData(hour: 1200, amount: (500.0 + 500)),
+        _HourlyData(hour: 1300, amount: (500.0 + 0)),
+        _HourlyData(hour: 1400, amount: (500.0 + 200)),
+        _HourlyData(hour: 1500, amount: (500.0 + 200)),
+        _HourlyData(hour: 1600, amount: (500.0 + 0)),
+        _HourlyData(hour: 1700, amount: (500.0 + 0)),
+        _HourlyData(hour: 1800, amount: (500.0 + 0)),
+        _HourlyData(hour: 1900, amount: (500.0 + 500)),
+        _HourlyData(hour: 2000, amount: (500.0 + 500)),
+        _HourlyData(hour: 2100, amount: (500.0 + 0)),
+        _HourlyData(hour: 2200, amount: (500.0 + 200)),
+        _HourlyData(hour: 2300, amount: (500.0 + 0)),
+        _HourlyData(hour: 2400, amount: (500.0 + 0)),
+      ];
+
+      return <ChartSeries<_HourlyData, double>>[
+        SplineAreaSeries<_HourlyData, double>(
+          dataSource: chartData,
+          color: const Color.fromRGBO(75, 135, 185, 0.15),
+          borderColor: const Color.fromRGBO(75, 135, 185, 1),
+          borderWidth: 8,
+          xValueMapper: (_HourlyData data, _) => data.hour,
+          yValueMapper: (_HourlyData data, _) => data.amount,
+        ),
+      ];
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+      ),
+      child: Container(
+        width: double.maxFinite,
+        child: SfCartesianChart(
+          plotAreaBorderWidth: 0,
+          primaryXAxis: NumericAxis(
+            isVisible: false,
+          ),
+          primaryYAxis: NumericAxis(
+            isVisible: false,
+          ),
+          series: _getSplieAreaSeries(),
+        ),
+      ),
+    );
+  }
+}
+
+class ChartHourlyBottomTexts extends HookWidget {
+  const ChartHourlyBottomTexts();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 25.0,
+        right: 25.0,
+        bottom: 30.0,
+      ),
+      child: Container(
+        width: double.maxFinite,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 100.0,
+              height: 15.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Start of day',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 100.0,
+              height: 15.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+                child: Text(
+                  'Noon',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 100.0,
+              height: 15.0,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'End of day',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
