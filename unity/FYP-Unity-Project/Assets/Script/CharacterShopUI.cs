@@ -103,13 +103,13 @@ public class CharacterShopUI : MonoBehaviour
         Character character = characterDB.GetCharacter(index);
         CharacterItemUI uiItem = GetItemUI(index);
 
-        if (GameDataManager.CanSpendCoins(character.price))
+        if (GameDataManager.CanSpendWater(character.price))
         {
             //proceed with purchase operation
-            GameDataManager.SpendCoins(character.price);
+            GameDataManager.SpendWater(character.price);
 
             //Update Coin UI text
-            GameSharedUI.Instance.UpdateCoinsUIText();
+            GameSharedUI.Instance.UpdateWaterUIText();
 
             Instantiate(character.fish, new Vector3(0, 20, 0), transform.rotation);
 

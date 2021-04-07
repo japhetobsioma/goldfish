@@ -96,7 +96,13 @@ class MenuBottomSheet extends StatelessWidget {
           subtitle: const Text('Interact with your fishes'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, '/aquarium');
+            Navigator.pushNamed(
+              context,
+              '/aquarium',
+              arguments: {
+                'water': '1000000',
+              },
+            );
           },
         ),
         ListTile(
