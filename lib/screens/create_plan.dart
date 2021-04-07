@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/colors.dart';
 import '../common/helpers.dart';
 import '../models/user_info.dart';
+import '../states/completion.dart';
 import '../states/create_plan.dart';
 
 class CreatePlanScreen extends StatelessWidget {
@@ -185,7 +186,7 @@ class BirthdayField extends HookWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Birthday',
-                  hintText: 'e.g. ${DateTime.now().toFormattedString}',
+                  hintText: 'e.g. ${DateTime.now().format}',
                 ),
                 onChanged: (_) {
                   isUsingRecommendedDailyGoal
@@ -223,8 +224,7 @@ class BirthdayField extends HookWidget {
                   );
 
                   if (selectedDate != null) {
-                    birthdayTextController.text =
-                        selectedDate.toFormattedString;
+                    birthdayTextController.text = selectedDate.format;
                     context.read(createPlanFormProvider).calculateDailyGoal();
                   }
                 },
@@ -548,6 +548,10 @@ class BottomButtons extends HookWidget {
 
                 final sharedPreferences = await SharedPreferences.getInstance();
                 await sharedPreferences.setBool('isUserSignedUp', true);
+
+                await context
+                    .read(completionProvider)
+                    .initializeCompletionDates();
 
                 await Navigator.pushNamedAndRemoveUntil(
                   context,

@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../common/helpers.dart';
 import '../database/database_helper.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
 import '../models/water_intake.dart';
-import '../common/helpers.dart';
+import 'daily_total.dart';
 
 class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
-  WaterIntakeNotifier() : super(const AsyncValue.loading()) {
+  WaterIntakeNotifier(this.read) : super(const AsyncValue.loading()) {
     fetchWaterIntake();
   }
+
+  final Reader read;
 
   static final dbHelper = DatabaseHelper.instance;
 
   Future<void> fetchWaterIntake() async {
-    final todaysTotalWaterIntake = await dbHelper.getTodaysTotalWaterIntake();
-    final todaysWaterIntake = await dbHelper.getTodaysWaterIntake();
+    final todaysTotalIntakes = await dbHelper.fetchTodaysTotalIntakes();
+    final todaysIntakes = await dbHelper.fetchTodaysIntakes();
+
+    await hasUserAchievedGoal();
+    await read(dailyTotalProvider).fetchDailyTotal();
 
     state = AsyncValue.data(
       WaterIntake(
-        todaysTotalWaterIntake: todaysTotalWaterIntake,
-        todaysWaterIntake: todaysWaterIntake,
+        todaysTotalIntakes: todaysTotalIntakes,
+        todaysIntakes: todaysIntakes,
       ),
     );
   }
@@ -97,7 +103,18 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
 
     await fetchWaterIntake();
   }
+
+  Future<void> hasUserAchievedGoal() async {
+    final todaysTotalWaterIntake =
+        await dbHelper.fetchTodaysTotalIntakes() ?? 0;
+    final hydrationPlan = await dbHelper.readHydrationPlan();
+    final dailyGoal = hydrationPlan[0]['dailyGoal'] as int;
+
+    todaysTotalWaterIntake >= dailyGoal
+        ? await dbHelper.updateCompletionStatus(true)
+        : await dbHelper.updateCompletionStatus(false);
+  }
 }
 
-final waterIntakeProvider =
-    StateNotifierProvider<WaterIntakeNotifier>((ref) => WaterIntakeNotifier());
+final waterIntakeProvider = StateNotifierProvider<WaterIntakeNotifier>(
+    (ref) => WaterIntakeNotifier(ref.read));

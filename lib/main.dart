@@ -18,9 +18,7 @@ void main() async {
 
   runApp(
     ProviderScope(
-      child: MyApp(
-        isUserSignedUp: isUserSignedUp,
-      ),
+      child: MyApp(isUserSignedUp: isUserSignedUp),
     ),
   );
 }
@@ -30,20 +28,27 @@ class MyApp extends StatelessWidget {
 
   final bool isUserSignedUp;
 
+  static const onboardingRoute = '/onboarding';
+  static const createPlanRoute = '/create-plan';
+  static const homeRoute = '/home';
+  static const aquariumRoute = '/aquarium';
+  static const historyRoute = '/history';
+  static const settingsRoute = '/settings';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Project goldfish',
       theme: goldfishTheme(),
-      initialRoute: isUserSignedUp ? '/home' : '/onboarding',
+      initialRoute: isUserSignedUp ? homeRoute : onboardingRoute,
       routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/create-plan': (context) => const CreatePlanScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/aquarium': (context) => const Aquarium(),
-        '/history': (context) => const HistoryScreen(),
-        '/settings': (context) => const SettingsScreen(),
+        onboardingRoute: (context) => const OnboardingScreen(),
+        createPlanRoute: (context) => const CreatePlanScreen(),
+        homeRoute: (context) => const HomeScreen(),
+        aquariumRoute: (context) => const Aquarium(),
+        historyRoute: (context) => const HistoryScreen(),
+        settingsRoute: (context) => const SettingsScreen(),
       },
     );
   }

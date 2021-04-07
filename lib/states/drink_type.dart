@@ -5,19 +5,21 @@ import '../models/drink_type.dart';
 
 class DrinkTypeNotifier extends StateNotifier<AsyncValue<DrinkType>> {
   DrinkTypeNotifier() : super(const AsyncValue.loading()) {
-    _fetchDrinkType();
+    fetchDrinkType();
   }
 
   static final dbHelper = DatabaseHelper.instance;
 
-  Future<void> _fetchDrinkType() async {
+  Future<void> fetchDrinkType() async {
     final selectedDrinkType = await dbHelper.getSelectedDrinkType();
     final allDrinkType = await dbHelper.getAllDrinkType();
+    final mostDrinkTypes = await dbHelper.getMostDrinkTypes();
 
     state = AsyncValue.data(
       DrinkType(
         selectedDrinkType: selectedDrinkType[0]['drinkTypes'],
-        allDrinkType: allDrinkType,
+        allDrinkTypes: allDrinkType,
+        mostDrinkTypes: mostDrinkTypes,
       ),
     );
   }
@@ -27,11 +29,13 @@ class DrinkTypeNotifier extends StateNotifier<AsyncValue<DrinkType>> {
 
     final selectedDrinkType = await dbHelper.getSelectedDrinkType();
     final allDrinkType = await dbHelper.getAllDrinkType();
+    final mostDrinkTypes = await dbHelper.getMostDrinkTypes();
 
     state = AsyncValue.data(
       DrinkType(
         selectedDrinkType: selectedDrinkType[0]['drinkTypes'],
-        allDrinkType: allDrinkType,
+        allDrinkTypes: allDrinkType,
+        mostDrinkTypes: mostDrinkTypes,
       ),
     );
   }

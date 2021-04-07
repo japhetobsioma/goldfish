@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../models/daily_total.dart';
 import '../models/drink_type.dart';
+import '../models/streaks.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
 
@@ -18,7 +20,7 @@ extension DateTimeExtension on DateTime {
   /// The default date pattern is `d MMMM y`.
   ///
   /// Output: `25 June 1997`
-  String get toFormattedString => DateFormat(_datePattern).format(this);
+  String get format => DateFormat(_datePattern).format(this);
 
   TimeOfDay get toTimeOfDay => TimeOfDay.fromDateTime(this);
 }
@@ -71,17 +73,6 @@ extension StringExtension on String {
 
   /// Check if the time is not in a valid format.
   bool get timeFormatIsNotValid => !this.timeFormatIsValid;
-
-  /// Return a formatted date in type of string.
-  ///
-  /// The default date pattern is `d MMMM y`.
-  ///
-  /// Output: `25 June 1997`
-  String get toStringDate {
-    final dateTime = toDateTime;
-
-    return DateFormat(_datePattern).format(dateTime);
-  }
 
   /// Return a formatted time in type of string.
   ///
@@ -152,6 +143,8 @@ extension StringExtension on String {
         'true': true,
         'false': false,
       }[this];
+
+  String get onlyNumbers => this.replaceAll(RegExp(r'[^0-9]+'), '');
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -200,6 +193,14 @@ extension TimeOfDayExtension on TimeOfDay {
       hour,
       minute,
     );
+  }
+
+  String get toText {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, this.hour, this.minute);
+    final format = DateFormat.jm();
+
+    return format.format(dt);
   }
 }
 
@@ -453,4 +454,113 @@ String getTimeDifference(DateTime dateTime) {
   } else {
     return '${difference.inHours.toString()}h';
   }
+}
+
+/// Return a Streaks object of this [completionData].
+Streaks getStreaks(List<Map<String, dynamic>> completionData) {
+  var currentStreaks = 0;
+  var lastStreaks = 0;
+
+  /// If the list has only 1 item, check the completion, then return the
+  /// streaks result.
+  if (completionData.length == 1) {
+    /// 1 - true
+    /// 0 - false
+    if (completionData[0]['isCompleted'] == 1) {
+      currentStreaks = 1;
+      lastStreaks = currentStreaks;
+    }
+  } else {
+    for (var index = 0; index < completionData.length; index++) {
+      /// Check if this is the first item. On the next loop, this item will
+      /// be compared to the current item.
+      if (index == 0) {
+        if (completionData[index]['isCompleted'] == 1) {
+          currentStreaks = 1;
+          lastStreaks = currentStreaks;
+        }
+      } else {
+        /// Check the previous item and the current item. We compare them like
+        /// this current item is today, and previous item is yesterday.
+        if (completionData[index - 1]['isCompleted'] == 0 &&
+            completionData[index]['isCompleted'] == 1) {
+          currentStreaks += 1;
+          lastStreaks = currentStreaks;
+        } else if (completionData[index - 1]['isCompleted'] == 1 &&
+            completionData[index]['isCompleted'] == 1) {
+          currentStreaks += 1;
+          lastStreaks = currentStreaks;
+        } else if (completionData[index - 1]['isCompleted'] == 1 &&
+            completionData[index]['isCompleted'] == 0) {
+          lastStreaks = currentStreaks;
+          currentStreaks = 0;
+        }
+      }
+    }
+  }
+
+  return Streaks(
+    currentStreaks: currentStreaks,
+    lastStreaks: lastStreaks,
+  );
+}
+
+/// Return the all time ratio of completed day since the joined date.
+///
+/// Completed day is when the user achieve the daily goal.
+double getCompletionAllTimeRatio(List<Map<String, dynamic>> completionData) {
+  var totalCompleted = 0.0;
+
+  completionData.forEach((element) {
+    /// 1 is true and 0 is false.
+    if (element['isCompleted'] == 1) {
+      totalCompleted += 1;
+    }
+  });
+
+  return (totalCompleted / completionData.length) * 100;
+}
+
+int getTotalCompletion(List<Map<String, dynamic>> completionData) {
+  var totalCompletion = 0;
+
+  completionData.forEach((element) {
+    /// 1 is true and 0 is false.
+    if (element['isCompleted'] == 1) {
+      totalCompletion += 1;
+    }
+  });
+
+  return totalCompletion;
+}
+
+/// Return the total numbers of late dates from [completionDates].
+///
+/// Return 0 if the list is updated.
+int getCompletionDayDifference(List<Map<String, dynamic>> completionDates) {
+  final today = DateTime.now();
+  final lastDate = (completionDates.last['currentDate'] as String).toDateTime;
+  var dayDifference = 0;
+
+  // Check if the last date of the list is not the same as today's date.
+  if (lastDate != today) {
+    final difference = today.difference(lastDate);
+    dayDifference = difference.inDays;
+  }
+
+  return dayDifference;
+}
+
+extension WeekDaysExtension on WeekDays {
+  String get name => describeEnum(this);
+
+  String get queryValue => {
+        WeekDays.Sunday: '-7 days',
+        WeekDays.Monday: '-6 days',
+        WeekDays.Tuesday: '-5 days',
+        WeekDays.Wednesday: '-4 days',
+        WeekDays.Thursday: '-3 days',
+        WeekDays.Friday: '-2 days',
+        WeekDays.Saturday: '-1 days',
+      }[this];
 }

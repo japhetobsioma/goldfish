@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../models/user_info.dart';
 import '../common/helpers.dart';
+import '../models/daily_total.dart';
+import '../models/user_info.dart';
 
 class DatabaseHelper {
   static final _databaseAssetName = 'goldfish.db';
@@ -180,7 +180,7 @@ class DatabaseHelper {
   }
 
   // Get all todays total water intake
-  Future<int> getTodaysTotalWaterIntake() async {
+  Future<int> fetchTodaysTotalIntakes() async {
     var db = await instance.database;
     return Sqflite.firstIntValue(
       await db.rawQuery(
@@ -192,7 +192,7 @@ class DatabaseHelper {
   }
 
   /// Get all todays water intake
-  Future<List<Map<String, dynamic>>> getTodaysWaterIntake() async {
+  Future<List<Map<String, dynamic>>> fetchTodaysIntakes() async {
     final db = await instance.database;
     return await db.rawQuery(
       'SELECT waterIntake.amount, waterIntake.measurement,'
@@ -406,5 +406,126 @@ class DatabaseHelper {
       DELETE FROM 
         hydrationPlan
     ''');
+  }
+
+  Future<List<Map<String, dynamic>>> getCompletionData() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        currentDate, 
+        isCompleted 
+      FROM 
+        Completion
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> getMostDrinkTypes() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        drinkTypes 
+      FROM 
+        waterIntake 
+      GROUP BY 
+        drinkTypes 
+      ORDER BY 
+        COUNT(drinkTypes) DESC,
+        date ASC
+    ''');
+  }
+
+  /// Return a list of completion tables `isCompleted` column.
+  Future<List<Map<String, dynamic>>> getCompletionIsCompleted() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        isCompleted 
+      FROM 
+        Completion
+    ''');
+  }
+
+  Future<void> setTodaysCompletionDate() async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO Completion (currentDate, isCompleted) 
+      VALUES 
+        (date('now', 'localtime'), 0)
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> getCompletionDates() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        currentDate
+      FROM 
+        Completion
+    ''');
+  }
+
+  Future<void> setCompletionDates(String query) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO Completion (currentDate, isCompleted) 
+      VALUES 
+        $query
+    ''');
+  }
+
+  Future<void> updateCompletionStatus(bool completionStatus) async {
+    final db = await instance.database;
+
+    final isCompleted = completionStatus.toInt;
+
+    await db.rawUpdate('''
+      UPDATE 
+        Completion 
+      SET 
+        isCompleted = $isCompleted 
+      WHERE 
+        strftime('%d-%m-%Y', currentDate) = 
+        strftime('%d-%m-%Y', 'now', 'localtime')
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> fetchTodayIntakes() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        date, 
+        amount 
+      FROM 
+        waterIntake 
+      WHERE 
+        strftime('%d', date) = strftime('%d', 'now', 'localtime')
+    ''');
+  }
+
+  Future<int> getThisDayIntakeTotal(WeekDays weekDay) async {
+    final db = await instance.database;
+
+    return Sqflite.firstIntValue(
+      await db.rawQuery('''
+        SELECT
+          sum(amount) 
+        FROM 
+          waterIntake 
+        WHERE 
+          strftime('%d%m%Y', date) = strftime(
+            '%d%m%Y', 'now', 'localtime', 'weekday 0', 
+            '${weekDay.queryValue}'
+          ) 
+        GROUP BY 
+          strftime('%d%m%Y', date)
+      '''),
+    );
   }
 }

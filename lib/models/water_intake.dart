@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
 class WaterIntake {
   const WaterIntake({
-    this.todaysTotalWaterIntake,
-    this.todaysWaterIntake,
+    @required this.todaysTotalIntakes,
+    @required this.todaysIntakes,
   });
 
-  final int todaysTotalWaterIntake;
-  final List<Map<String, dynamic>> todaysWaterIntake;
+  final int todaysTotalIntakes;
+  final List<Map<String, dynamic>> todaysIntakes;
 }

@@ -78,7 +78,7 @@ class WaterIntakeGauge extends HookWidget {
               RangePointer(
                 value: waterIntake.when(
                   data: (value) {
-                    final total = value.todaysTotalWaterIntake ?? 0;
+                    final total = value.todaysTotalIntakes ?? 0;
                     return total.toDouble();
                   },
                   loading: () => 0,
@@ -108,7 +108,7 @@ class WaterIntakeGauge extends HookWidget {
                       TextSpan(
                         text: waterIntake.when(
                           data: (value) {
-                            final total = value.todaysTotalWaterIntake ?? 0;
+                            final total = value.todaysTotalIntakes ?? 0;
                             return total.toString();
                           },
                           loading: () => '',
@@ -170,21 +170,20 @@ class WaterIntakeLists extends HookWidget {
     return waterIntake.when(
       data: (value) {
         return Container(
-          child: value.todaysWaterIntake.isNotEmpty
+          child: value.todaysIntakes.isNotEmpty
               ? AnimatedList(
                   key: animatedList.key,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  initialItemCount: value.todaysWaterIntake.length,
+                  initialItemCount: value.todaysIntakes.length,
                   itemBuilder: (context, index, animation) {
                     final String getDrinkTypes =
-                        value.todaysWaterIntake[index]['drinkTypes'];
+                        value.todaysIntakes[index]['drinkTypes'];
                     final drinkTypes = getDrinkTypes.toDrinkTypes;
                     final String getTileColors =
-                        value.todaysWaterIntake[index]['tileColors'];
+                        value.todaysIntakes[index]['tileColors'];
                     final tileColors = getTileColors.toTileColors;
-                    final String getDate =
-                        value.todaysWaterIntake[index]['date'];
+                    final String getDate = value.todaysIntakes[index]['date'];
                     final date = getDate.toDateTime;
                     final timeDifference = getTimeDifference(date);
 
@@ -282,8 +281,8 @@ class WaterIntakeItem extends StatelessWidget {
                     ),
                   ),
             title: Text(
-              '${value.todaysWaterIntake[index]['amount']} '
-              '${value.todaysWaterIntake[index]['measurement']} ',
+              '${value.todaysIntakes[index]['amount']} '
+              '${value.todaysIntakes[index]['measurement']} ',
               style: TextStyle(
                 color: const Color(0xFF202124),
                 fontWeight: FontWeight.bold,
@@ -298,13 +297,12 @@ class WaterIntakeItem extends StatelessWidget {
             ),
             onTap: () {
               final String measurementString =
-                  value.todaysWaterIntake[index]['measurement'];
+                  value.todaysIntakes[index]['measurement'];
               final measurement = measurementString.toLiquidMeasurement;
 
               context.read(editIntakeProvider).setEditIntake(
-                    waterIntakeID: value.todaysWaterIntake[index]
-                        ['waterIntakeID'],
-                    amount: value.todaysWaterIntake[index]['amount'],
+                    waterIntakeID: value.todaysIntakes[index]['waterIntakeID'],
+                    amount: value.todaysIntakes[index]['amount'],
                     measurement: measurement,
                     date: date.toTimeOfDay,
                     drinkTypes: drinkTypes,
@@ -453,12 +451,12 @@ class DeleteWaterIntakeDialog extends HookWidget {
               return waterIntake.when(
                 data: (value) {
                   final String getDrinkTypes =
-                      value.todaysWaterIntake[index]['drinkTypes'];
+                      value.todaysIntakes[index]['drinkTypes'];
                   final drinkTypes = getDrinkTypes.toDrinkTypes;
                   final String getTileColors =
-                      value.todaysWaterIntake[index]['tileColors'];
+                      value.todaysIntakes[index]['tileColors'];
                   final tileColors = getTileColors.toTileColors;
-                  final String getDate = value.todaysWaterIntake[index]['date'];
+                  final String getDate = value.todaysIntakes[index]['date'];
                   final date = getDate.toDateTime;
                   final timeDifference = getTimeDifference(date);
 
@@ -631,7 +629,7 @@ class EditDrinkTypeLists extends HookWidget {
     return drinkType.when(
       data: (value) => ListView.builder(
         shrinkWrap: true,
-        itemCount: value.allDrinkType.length,
+        itemCount: value.allDrinkTypes.length,
         itemBuilder: (context, index) {
           return EditDrinkTypeItem(
             value: value,
@@ -669,17 +667,17 @@ class EditDrinkTypeItem extends HookWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
             leading: CircleAvatar(
-              child: Icon((value.allDrinkType[index]['drinkTypes'] as String)
+              child: Icon((value.allDrinkTypes[index]['drinkTypes'] as String)
                   .toDrinkTypes
                   .icon),
             ),
-            title: Text((value.allDrinkType[index]['drinkTypes'] as String)
+            title: Text((value.allDrinkTypes[index]['drinkTypes'] as String)
                 .toSentenceCase),
-            selected: value.allDrinkType[index]['drinkTypes'] ==
+            selected: value.allDrinkTypes[index]['drinkTypes'] ==
                     drinkTypes.description.toLowerCase()
                 ? true
                 : false,
-            trailing: value.allDrinkType[index]['drinkTypes'] ==
+            trailing: value.allDrinkTypes[index]['drinkTypes'] ==
                     drinkTypes.description.toLowerCase()
                 ? const Icon(Icons.check_circle)
                 : const SizedBox.shrink(),
@@ -688,7 +686,7 @@ class EditDrinkTypeItem extends HookWidget {
 
               context.read(editIntakeProvider).setSelectedDrinkTypes(
                     drinkTypes:
-                        (value.allDrinkType[index]['drinkTypes'] as String)
+                        (value.allDrinkTypes[index]['drinkTypes'] as String)
                             .toDrinkTypes,
                   );
             },
