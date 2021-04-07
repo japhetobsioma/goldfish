@@ -194,6 +194,14 @@ extension TimeOfDayExtension on TimeOfDay {
       minute,
     );
   }
+
+  String get toText {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, this.hour, this.minute);
+    final format = DateFormat.jm();
+
+    return format.format(dt);
+  }
 }
 
 extension GenderExtension on Gender {

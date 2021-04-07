@@ -19,20 +19,16 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   static final dbHelper = DatabaseHelper.instance;
 
   Future<void> fetchWaterIntake() async {
-    final todaysTotalWaterIntake = await dbHelper.fetchTodaysTotalWaterIntake();
-    final todaysWaterIntake = await dbHelper.fetchTodaysWaterIntake();
-    final thisMonthIntakes = await dbHelper.fetchThisMonthIntakes();
-    final hourlyWaterIntake = await dbHelper.fetchHourlyWaterIntake();
+    final todaysTotalIntakes = await dbHelper.fetchTodaysTotalIntakes();
+    final todaysIntakes = await dbHelper.fetchTodaysIntakes();
 
     await hasUserAchievedGoal();
     await read(dailyTotalProvider).fetchDailyTotal();
 
     state = AsyncValue.data(
       WaterIntake(
-        todaysTotalWaterIntake: todaysTotalWaterIntake,
-        todaysWaterIntake: todaysWaterIntake,
-        thisMonthIntakes: thisMonthIntakes,
-        hourlyWaterIntake: hourlyWaterIntake,
+        todaysTotalIntakes: todaysTotalIntakes,
+        todaysIntakes: todaysIntakes,
       ),
     );
   }
@@ -110,7 +106,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
 
   Future<void> hasUserAchievedGoal() async {
     final todaysTotalWaterIntake =
-        await dbHelper.fetchTodaysTotalWaterIntake() ?? 0;
+        await dbHelper.fetchTodaysTotalIntakes() ?? 0;
     final hydrationPlan = await dbHelper.readHydrationPlan();
     final dailyGoal = hydrationPlan[0]['dailyGoal'] as int;
 
