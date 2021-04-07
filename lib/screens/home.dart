@@ -10,6 +10,7 @@ import '../states/animated_key.dart';
 import '../states/completion.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
+import '../states/intake_bank.dart';
 import '../states/tile_color.dart';
 import '../states/water_intake.dart';
 import 'water_intake.dart';
@@ -75,11 +76,18 @@ class HomeScreen extends HookWidget {
   }
 }
 
-class MenuBottomSheet extends StatelessWidget {
+class MenuBottomSheet extends HookWidget {
   const MenuBottomSheet();
 
   @override
   Widget build(BuildContext context) {
+    final intakeBank = useProvider(intakeBankProvider.state);
+
+    useEffect(() {
+      context.read(intakeBankProvider).fetchIntakeBank();
+      return () {};
+    }, []);
+
     return Wrap(
       children: [
         ListTile(
@@ -90,21 +98,54 @@ class MenuBottomSheet extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        ListTile(
-          leading: const Icon(Icons.waves),
-          title: const Text('Aquarium'),
-          subtitle: const Text('Interact with your fishes'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(
-              context,
-              '/aquarium',
-              arguments: {
-                'water': '1000000',
-              },
-            );
-          },
-        ),
+        intakeBank.when(
+            data: (value) {
+              final amount = value.intakeBankAmount.toInt() ?? 0;
+
+              return ListTile(
+                leading: const Icon(Icons.waves),
+                title: const Text('Aquarium'),
+                subtitle: const Text('Interact with your fishes'),
+                onTap: () async {
+                  Navigator.pop(context);
+
+                  await context.read(intakeBankProvider).updateIntakeBank(
+                        value: amount.toDouble(),
+                        arithmeticOperator: '-',
+                      );
+
+                  await showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) {
+                      Future.delayed(
+                        const Duration(seconds: 5),
+                        () async {
+                          Navigator.of(context).pop(true);
+
+                          await Navigator.pushNamed(
+                            context,
+                            '/aquarium',
+                            arguments: {'water': '$amount'},
+                          );
+                        },
+                      );
+                      return AlertDialog(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Opening Unity Player...'),
+                            const CircularProgressIndicator(),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink()),
         ListTile(
           leading: const Icon(Icons.history),
           title: const Text('History'),
