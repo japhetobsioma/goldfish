@@ -8,6 +8,7 @@ import '../models/tile_color.dart';
 import '../models/user_info.dart';
 import '../models/water_intake.dart';
 import 'daily_total.dart';
+import 'intake_bank.dart';
 
 class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   WaterIntakeNotifier(this.read) : super(const AsyncValue.loading()) {
@@ -37,6 +38,11 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     final selectedCup = await dbHelper.getSelectedCup();
     final selectedDrinkType = await dbHelper.getSelectedDrinkType();
     final selectedTileColor = await dbHelper.getSelectedTileColor();
+
+    await read(intakeBankProvider).updateIntakeBank(
+      value: (selectedCup[0]['amount'] as int).toDouble(),
+      arithmeticOperator: '+',
+    );
 
     await dbHelper.insertWaterIntake(
       selectedCup[0]['amount'],

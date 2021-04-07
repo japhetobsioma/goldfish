@@ -361,10 +361,10 @@ class DatabaseHelper {
       INSERT INTO hydrationPlan (
         gender, birthday, wakeupTime, bedtime, 
         dailyGoal, liquidMeasurement, isUsingRecommendedDailyGoal, 
-        joinedDate
+        joinedDate, intakeBank
       ) 
       VALUES 
-        (?, ?, ?, ?, ?, ?, ?, ?)
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', [
       '${gender.nameLowerCase}',
       '${birthday.toString()}',
@@ -374,6 +374,7 @@ class DatabaseHelper {
       '${liquidMeasurement.description}',
       '${isUsingRecommendedDailyGoal.toString()}',
       '${joinedDate.toString()}',
+      '0',
     ]);
   }
 
@@ -527,5 +528,43 @@ class DatabaseHelper {
           strftime('%d%m%Y', date)
       '''),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> fetchIntakeBank() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        intakeBank 
+      FROM 
+        hydrationPlan 
+      WHERE 
+        id = 1
+    ''');
+  }
+
+  Future<void> updateIntakeBank({
+    @required double value,
+    @required String arithmeticOperator,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE 
+        hydrationPlan 
+      SET 
+        intakeBank = (
+          (
+            SELECT 
+              intakeBank 
+            FROM 
+              hydrationPlan 
+            WHERE 
+              id = 1
+          ) $arithmeticOperator $value
+        ) 
+      WHERE 
+        id = 1
+    ''');
   }
 }
