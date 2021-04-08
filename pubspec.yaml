@@ -39,6 +39,11 @@ dependencies:
   syncfusion_flutter_gauges: ^19.1.54+1
   flutter_svg: ^0.19.3
   shared_preferences: ^2.0.5
+  flutter_local_notifications: ^5.0.0+1
+  flutter_native_timezone: ^1.0.10
+
+dependency_overrides:
+  plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
   flutter_test:

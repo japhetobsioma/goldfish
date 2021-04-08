@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SettingsScreen extends StatelessWidget {
+import '../models/local_notification.dart';
+
+class SettingsScreen extends HookWidget {
   const SettingsScreen();
 
   @override
@@ -10,7 +13,27 @@ class SettingsScreen extends StatelessWidget {
         title: const Text('Settings'),
       ),
       body: Center(
-        child: const Text('Settings'),
+        child: TextButton(
+          onPressed: () {
+            final scheduledNotifications = [
+              LocalNotification(
+                id: 0,
+                hour: 15,
+                minute: 55,
+              ),
+              LocalNotification(
+                id: 1,
+                hour: 15,
+                minute: 58,
+              )
+            ];
+
+            scheduledNotifications.forEach((element) {
+              element.setScheduledNotification();
+            });
+          },
+          child: const Text('Show Notification'),
+        ),
       ),
     );
   }

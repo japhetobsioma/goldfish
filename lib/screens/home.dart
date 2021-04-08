@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../common/helpers.dart';
@@ -15,6 +16,8 @@ import '../states/tile_color.dart';
 import '../states/water_intake.dart';
 import 'water_intake.dart';
 
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 class HomeScreen extends HookWidget {
   const HomeScreen();
 
@@ -23,6 +26,27 @@ class HomeScreen extends HookWidget {
     final animatedList = useProvider(animatedListKeyProvider.state);
 
     useEffect(() {
+      Future<dynamic> selectNotification(String payload) async {
+        if (payload != null) {
+          debugPrint('notification payload: $payload');
+        }
+
+        await Navigator.pushNamed(context, '/home');
+      }
+
+      const initializationSettingsAndroid = AndroidInitializationSettings(
+        '@mipmap/ic_launcher',
+      );
+
+      final initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+      );
+
+      flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onSelectNotification: selectNotification,
+      );
+
       context.read(completionProvider).checkCompletionDates();
       return () {};
     }, []);
@@ -119,7 +143,7 @@ class MenuBottomSheet extends HookWidget {
                     context: context,
                     builder: (context) {
                       Future.delayed(
-                        const Duration(seconds: 5),
+                        const Duration(seconds: 2),
                         () async {
                           Navigator.of(context).pop(true);
 
