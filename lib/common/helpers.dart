@@ -574,3 +574,24 @@ extension WeekDaysExtension on WeekDays {
 extension NotificationModeExtension on NotificationMode {
   String get name => describeEnum(this);
 }
+
+List<TimeOfDay> getIntervalTimes({
+  @required DateTime wakeupTime,
+  @required DateTime bedtime,
+  @required TimeOfDay interval,
+}) {
+  final hour = interval.hour;
+  final minute = interval.minute;
+  final intervalTimeList = <TimeOfDay>[];
+  var newDate = wakeupTime;
+
+  while (newDate.isBefore(bedtime)) {
+    newDate = newDate.add(Duration(hours: hour, minutes: minute));
+
+    if (newDate.isBefore(bedtime)) {
+      intervalTimeList.add(newDate.toTimeOfDay);
+    }
+  }
+
+  return intervalTimeList;
+}

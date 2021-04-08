@@ -12,6 +12,7 @@ import '../states/completion.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/intake_bank.dart';
+import '../states/notifications_manager.dart';
 import '../states/tile_color.dart';
 import '../states/water_intake.dart';
 import 'water_intake.dart';
@@ -48,6 +49,10 @@ class HomeScreen extends HookWidget {
       );
 
       context.read(completionProvider).checkCompletionDates();
+      context
+          .read(notificationsManagerProvider)
+          .generateScheduledNotifications();
+      context.read(notificationsManagerProvider).setScheduledNotifications();
       return () {};
     }, []);
 

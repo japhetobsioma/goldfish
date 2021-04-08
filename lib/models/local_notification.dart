@@ -11,12 +11,16 @@ class LocalNotification {
     @required this.hour,
     @required this.minute,
     @required this.id,
-  })  : assert(hour <= 24),
-        assert(minute <= 60);
+    @required this.title,
+    @required this.body,
+  })  : assert(hour <= 23),
+        assert(minute <= 59);
 
   final int hour;
   final int minute;
   final int id;
+  final String title;
+  final String body;
 
   void setScheduledNotification() async {
     final currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -24,7 +28,7 @@ class LocalNotification {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-    tz.TZDateTime _nextInstanceOfTenAM() {
+    tz.TZDateTime scheduleTime() {
       final now = tz.TZDateTime.now(tz.local);
       var scheduledDate = tz.TZDateTime(
         tz.local,
@@ -42,14 +46,15 @@ class LocalNotification {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      'daily scheduled notification title',
-      'daily scheduled notification body',
-      _nextInstanceOfTenAM(),
+      title,
+      body,
+      scheduleTime(),
       const NotificationDetails(
         android: AndroidNotificationDetails(
-            'daily notification channel id',
-            'daily notification channel name',
-            'daily notification description'),
+          'channelID',
+          'channelName',
+          'channelDescription',
+        ),
       ),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:

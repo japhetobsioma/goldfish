@@ -567,4 +567,38 @@ class DatabaseHelper {
         id = 1
     ''');
   }
+
+  Future<void> insertScheduledNotifications(String query) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO scheduled_notifications (hour, minute, title, body) 
+      VALUES 
+        $query
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> fetchScheduledNotifications() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        * 
+      FROM 
+        scheduled_notifications
+    ''');
+  }
+
+  Future<int> getTotalScheduledNotifications() async {
+    final db = await instance.database;
+
+    return Sqflite.firstIntValue(
+      await db.rawQuery('''
+        SELECT 
+          count(id) 
+        FROM 
+          scheduled_notifications
+      '''),
+    );
+  }
 }
