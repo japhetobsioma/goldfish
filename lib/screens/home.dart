@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/helpers.dart';
 import '../models/cup.dart';
@@ -26,33 +27,46 @@ class HomeScreen extends HookWidget {
   Widget build(BuildContext context) {
     final animatedList = useProvider(animatedListKeyProvider.state);
 
-    useEffect(() {
-      Future<dynamic> selectNotification(String payload) async {
-        if (payload != null) {
-          debugPrint('notification payload: $payload');
-        }
-
-        await Navigator.pushNamed(context, '/home');
+    Future<dynamic> selectNotification(String payload) async {
+      if (payload != null) {
+        debugPrint('notification payload: $payload');
       }
 
-      const initializationSettingsAndroid = AndroidInitializationSettings(
-        '@mipmap/ic_launcher',
-      );
+      await Navigator.pushNamed(context, '/home');
+    }
 
-      final initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-      );
+    useEffect(() {
+      Future.microtask(() async {
+        const initializationSettingsAndroid = AndroidInitializationSettings(
+          '@mipmap/ic_launcher',
+        );
 
-      flutterLocalNotificationsPlugin.initialize(
-        initializationSettings,
-        onSelectNotification: selectNotification,
-      );
+        final initializationSettings = InitializationSettings(
+          android: initializationSettingsAndroid,
+        );
 
-      context.read(completionProvider).checkCompletionDates();
-      context
-          .read(notificationsManagerProvider)
-          .generateScheduledNotifications();
-      context.read(notificationsManagerProvider).setScheduledNotifications();
+        await flutterLocalNotificationsPlugin.initialize(
+          initializationSettings,
+          onSelectNotification: selectNotification,
+        );
+
+        await context.read(completionProvider).checkCompletionDates();
+
+        final sharedPreferences = await SharedPreferences.getInstance();
+        final firsTimeNofication =
+            sharedPreferences.getBool('firsTimeNofication') ?? true;
+
+        if (firsTimeNofication) {
+          await context
+              .read(notificationsManagerProvider)
+              .generateScheduledNotifications();
+          await context
+              .read(notificationsManagerProvider)
+              .setScheduledNotifications();
+        }
+
+        await sharedPreferences.setBool('firsTimeNofication', false);
+      });
       return () {};
     }, []);
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:goldfish/models/local_notification.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../database/database_helper.dart';
-import '../models/notifications_manager.dart';
 import '../common/helpers.dart';
+import '../database/database_helper.dart';
+import '../models/local_notification.dart';
+import '../models/notifications_manager.dart';
 
 class NotificationsManagerNotifier
     extends StateNotifier<AsyncValue<NotificationsManager>> {
@@ -47,9 +47,6 @@ class NotificationsManagerNotifier
       interval: interval,
     );
 
-    print(intervalTimes);
-    print(intervalTimes.length);
-
     if (intervalTimes.isNotEmpty) {
       var query = '';
 
@@ -64,10 +61,10 @@ class NotificationsManagerNotifier
         }
       }
 
-      print(query);
-
-      await dbHelper.insertScheduledNotifications(query);
+      await dbHelper.insertMultipleScheduledNotifications(query);
     }
+
+    await fetchNotificationsManager();
   }
 
   Future<void> setScheduledNotifications() async {
@@ -94,12 +91,34 @@ class NotificationsManagerNotifier
         );
       });
 
-      print(localNotificationList);
-
       localNotificationList.forEach((element) {
         element.setScheduledNotification();
       });
     }
+
+    await fetchNotificationsManager();
+  }
+
+  Future<void> deleteScheduledNotifications() async {
+    await dbHelper.deleteScheduledNotifications();
+
+    await fetchNotificationsManager();
+  }
+
+  Future<void> insertSingleScheduledNotifications({
+    @required int hour,
+    @required int minute,
+    @required String title,
+    @required String body,
+  }) async {
+    await dbHelper.insertSingleScheduledNotifications(
+      hour: hour,
+      minute: minute,
+      title: title,
+      body: body,
+    );
+
+    await fetchNotificationsManager();
   }
 }
 

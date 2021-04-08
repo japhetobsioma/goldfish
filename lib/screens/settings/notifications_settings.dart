@@ -4,7 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common/helpers.dart';
+import '../../common/routes.dart';
 import '../../models/notifications_settings.dart';
+import '../../states/notifications_manager.dart';
 import '../../states/notifications_settings.dart';
 
 class NotificationsSettingsScreens extends HookWidget {
@@ -14,6 +16,16 @@ class NotificationsSettingsScreens extends HookWidget {
   Widget build(BuildContext context) {
     final notificationsSettings =
         useProvider(notificationsSettingsProvider.state);
+    final notificationManager = useProvider(notificationsManagerProvider.state);
+
+    useEffect(() {
+      Future.microtask(() async {
+        await context
+            .read(notificationsManagerProvider)
+            .fetchNotificationsManager();
+      });
+      return () {};
+    }, []);
 
     return Scaffold(
       appBar: AppBar(
@@ -63,6 +75,7 @@ class NotificationsSettingsScreens extends HookWidget {
                                       subtitle: Text('${hour}h ${minute}m'),
                                       onTap: () {
                                         showDialog(
+                                          barrierDismissible: false,
                                           context: context,
                                           builder: (_) =>
                                               const ChangeIntervalDialog(),
@@ -78,8 +91,20 @@ class NotificationsSettingsScreens extends HookWidget {
                             subtitle: Text(
                               value.notificationMode ==
                                       NotificationMode.Interval
-                                  ? '10 active notification'
+                                  ? notificationManager.when(
+                                      data: (value) {
+                                        final total =
+                                            value.totalScheduledNotifications;
+                                        return '$total active notifications';
+                                      },
+                                      loading: () => '',
+                                      error: (_, __) => '',
+                                    )
                                   : '0 active notification',
+                            ),
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              scheduledNotificationRoute,
                             ),
                           ),
                           const Divider(),
@@ -244,7 +269,7 @@ class ChangeIntervalDialog extends HookWidget {
           child: Text('CANCEL'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             hourFormKey.value.currentState.validate();
             minuteFormKey.value.currentState.validate();
 
@@ -253,13 +278,22 @@ class ChangeIntervalDialog extends HookWidget {
               hourFormKey.value.currentState.validate();
               minuteFormKey.value.currentState.validate();
 
-              context
+              await context
                   .read(notificationsSettingsProvider)
                   .updateIntervalHour(hourTextController.text);
-
-              context
+              await context
                   .read(notificationsSettingsProvider)
                   .updateIntervalMinute(minuteTextController.text);
+
+              await context
+                  .read(notificationsManagerProvider)
+                  .deleteScheduledNotifications();
+              await context
+                  .read(notificationsManagerProvider)
+                  .generateScheduledNotifications();
+              await context
+                  .read(notificationsManagerProvider)
+                  .setScheduledNotifications();
 
               Navigator.of(context).pop();
             }

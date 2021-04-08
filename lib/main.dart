@@ -8,9 +8,10 @@ import 'screens/aquarium.dart';
 import 'screens/create_plan.dart';
 import 'screens/history.dart';
 import 'screens/home.dart';
-import 'screens/settings/notifications_settings.dart';
 import 'screens/onboarding.dart';
 import 'screens/settings.dart';
+import 'screens/settings/notifications_settings.dart';
+import 'screens/settings/scheduled_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,8 @@ class MyApp extends StatelessWidget {
         settingsRoute: (context) => const SettingsScreen(),
         notificationsSettingsRoute: (context) =>
             const NotificationsSettingsScreens(),
+        scheduledNotificationRoute: (context) =>
+            const ScheduledNotificationsScreen(),
       },
     );
   }

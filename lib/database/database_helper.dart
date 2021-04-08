@@ -568,13 +568,28 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> insertScheduledNotifications(String query) async {
+  Future<void> insertMultipleScheduledNotifications(String query) async {
     final db = await instance.database;
 
     await db.rawInsert('''
       INSERT INTO scheduled_notifications (hour, minute, title, body) 
       VALUES 
         $query
+    ''');
+  }
+
+  Future<void> insertSingleScheduledNotifications({
+    @required int hour,
+    @required int minute,
+    @required String title,
+    @required String body,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO scheduled_notifications (hour, minute, title, body) 
+      VALUES 
+        ($hour, $minute, '$title', '$body')
     ''');
   }
 
@@ -585,7 +600,10 @@ class DatabaseHelper {
       SELECT 
         * 
       FROM 
-        scheduled_notifications
+        scheduled_notifications 
+      ORDER BY 
+        hour ASC, 
+        minute ASC
     ''');
   }
 
@@ -600,5 +618,13 @@ class DatabaseHelper {
           scheduled_notifications
       '''),
     );
+  }
+
+  Future<void> deleteScheduledNotifications() async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM scheduled_notifications
+    ''');
   }
 }
