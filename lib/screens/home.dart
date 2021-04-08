@@ -158,7 +158,7 @@ class MenuBottomSheet extends HookWidget {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Opening Unity Player...'),
+                            const Text('Opening Unity Player'),
                             const CircularProgressIndicator(),
                           ],
                         ),

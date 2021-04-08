@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'common/routes.dart';
 import 'common/theme.dart';
 import 'screens/aquarium.dart';
 import 'screens/create_plan.dart';
 import 'screens/history.dart';
 import 'screens/home.dart';
+import 'screens/settings/notifications_settings.dart';
 import 'screens/onboarding.dart';
 import 'screens/settings.dart';
 
@@ -28,13 +30,6 @@ class MyApp extends StatelessWidget {
 
   final bool isUserSignedUp;
 
-  static const onboardingRoute = '/onboarding';
-  static const createPlanRoute = '/create-plan';
-  static const homeRoute = '/home';
-  static const aquariumRoute = '/aquarium';
-  static const historyRoute = '/history';
-  static const settingsRoute = '/settings';
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,6 +44,8 @@ class MyApp extends StatelessWidget {
         aquariumRoute: (context) => const Aquarium(),
         historyRoute: (context) => const HistoryScreen(),
         settingsRoute: (context) => const SettingsScreen(),
+        notificationsSettingsRoute: (context) =>
+            const NotificationsSettingsScreens(),
       },
     );
   }

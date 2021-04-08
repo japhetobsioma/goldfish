@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../models/local_notification.dart';
+import '../common/routes.dart';
 
-class SettingsScreen extends HookWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen();
 
   @override
@@ -12,27 +11,50 @@ class SettingsScreen extends HookWidget {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            final scheduledNotifications = [
-              LocalNotification(
-                id: 0,
-                hour: 15,
-                minute: 55,
-              ),
-              LocalNotification(
-                id: 1,
-                hour: 15,
-                minute: 58,
-              )
-            ];
-
-            scheduledNotifications.forEach((element) {
-              element.setScheduledNotification();
-            });
-          },
-          child: const Text('Show Notification'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.local_drink),
+              title: const Text('Hydration plan'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Notifications'),
+              onTap: () {
+                Navigator.pushNamed(context, notificationsSettingsRoute);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.local_cafe),
+              title: const Text('Cup'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.palette),
+              title: const Text('Theme'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+          ],
         ),
       ),
     );

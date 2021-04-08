@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../models/daily_total.dart';
 import '../models/drink_type.dart';
+import '../models/notifications_settings.dart';
 import '../models/streaks.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
@@ -145,6 +146,11 @@ extension StringExtension on String {
       }[this];
 
   String get onlyNumbers => this.replaceAll(RegExp(r'[^0-9]+'), '');
+
+  NotificationMode get toNotificationMode => {
+        'Interval': NotificationMode.Interval,
+        'Custom': NotificationMode.Custom,
+      }[this];
 }
 
 extension TimeOfDayExtension on TimeOfDay {
@@ -563,4 +569,8 @@ extension WeekDaysExtension on WeekDays {
         WeekDays.Friday: '-2 days',
         WeekDays.Saturday: '-1 days',
       }[this];
+}
+
+extension NotificationModeExtension on NotificationMode {
+  String get name => describeEnum(this);
 }
