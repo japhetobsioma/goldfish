@@ -18,15 +18,6 @@ class NotificationsSettingsScreens extends HookWidget {
         useProvider(notificationsSettingsProvider.state);
     final notificationManager = useProvider(notificationsManagerProvider.state);
 
-    useEffect(() {
-      Future.microtask(() async {
-        await context
-            .read(notificationsManagerProvider)
-            .fetchNotificationsManager();
-      });
-      return () {};
-    }, []);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
@@ -89,18 +80,15 @@ class NotificationsSettingsScreens extends HookWidget {
                           ListTile(
                             title: const Text('Scheduled notifications'),
                             subtitle: Text(
-                              value.notificationMode ==
-                                      NotificationMode.Interval
-                                  ? notificationManager.when(
-                                      data: (value) {
-                                        final total =
-                                            value.totalScheduledNotifications;
-                                        return '$total active notifications';
-                                      },
-                                      loading: () => '',
-                                      error: (_, __) => '',
-                                    )
-                                  : '0 active notification',
+                              notificationManager.when(
+                                data: (value) {
+                                  final total =
+                                      value.totalScheduledNotifications;
+                                  return '$total active notifications';
+                                },
+                                loading: () => '',
+                                error: (_, __) => '',
+                              ),
                             ),
                             onTap: () => Navigator.pushNamed(
                               context,
@@ -152,20 +140,26 @@ class NotificationModeDialog extends HookWidget {
           error: (_, __) => const SizedBox.shrink(),
         ),
         notificationsSettings.when(
-          data: (value) {
-            return RadioListTile(
-              title: const Text('Custom Mode'),
-              value: NotificationMode.Custom,
-              groupValue: value.notificationMode,
-              onChanged: (value) {
-                context
-                    .read(notificationsSettingsProvider)
-                    .updateNotificationMode(value);
+          data: (value) => RadioListTile(
+            title: const Text('Custom Mode'),
+            value: NotificationMode.Custom,
+            groupValue: value.notificationMode,
+            onChanged: (value) async {
+              await context
+                  .read(notificationsSettingsProvider)
+                  .updateNotificationMode(value);
 
-                Navigator.pop(context);
-              },
-            );
-          },
+              await context
+                  .read(notificationsManagerProvider)
+                  .deleteAllScheduledNotifications();
+
+              await context
+                  .read(notificationsManagerProvider)
+                  .cancelAllScheduledNotifications();
+
+              Navigator.pop(context);
+            },
+          ),
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
         ),
@@ -287,7 +281,7 @@ class ChangeIntervalDialog extends HookWidget {
 
               await context
                   .read(notificationsManagerProvider)
-                  .deleteScheduledNotifications();
+                  .deleteAllScheduledNotifications();
               await context
                   .read(notificationsManagerProvider)
                   .generateScheduledNotifications();

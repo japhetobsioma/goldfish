@@ -6,6 +6,7 @@ import '../common/helpers.dart';
 import '../database/database_helper.dart';
 import '../models/local_notification.dart';
 import '../models/notifications_manager.dart';
+import '../screens/home.dart';
 
 class NotificationsManagerNotifier
     extends StateNotifier<AsyncValue<NotificationsManager>> {
@@ -99,7 +100,7 @@ class NotificationsManagerNotifier
     await fetchNotificationsManager();
   }
 
-  Future<void> deleteScheduledNotifications() async {
+  Future<void> deleteAllScheduledNotifications() async {
     await dbHelper.deleteAllScheduledNotifications();
 
     await fetchNotificationsManager();
@@ -165,6 +166,14 @@ class NotificationsManagerNotifier
     );
 
     await fetchNotificationsManager();
+  }
+
+  Future<void> cancelAllScheduledNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  Future<void> cancelSingleScheduledNotifications({@required int id}) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
   }
 }
 
