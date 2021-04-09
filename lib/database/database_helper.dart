@@ -620,11 +620,69 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> deleteScheduledNotifications() async {
+  Future<void> deleteAllScheduledNotifications() async {
     final db = await instance.database;
 
     await db.rawDelete('''
       DELETE FROM scheduled_notifications
+    ''');
+  }
+
+  Future<void> deleteSingleScheduledNotifications({@required int id}) async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM 
+        scheduled_notifications 
+      WHERE 
+        id = $id
+    ''');
+  }
+
+  Future<void> updateScheduledNotificationsHourMinute({
+    @required int hour,
+    @required int minute,
+    @required int id,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE scheduled_notifications
+      SET
+        hour = $hour,
+        minute = $minute
+      WHERE
+        id = $id
+    ''');
+  }
+
+  Future<void> updateScheduledNotificationsTitle({
+    @required String title,
+    @required int id,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE scheduled_notifications
+      SET
+        title = '$title'
+      WHERE
+        id = $id
+    ''');
+  }
+
+  Future<void> updateScheduledNotificationsBody({
+    @required String body,
+    @required int id,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE scheduled_notifications
+      SET
+        body = '$body'
+      WHERE
+        id = $id
     ''');
   }
 }

@@ -100,7 +100,7 @@ class NotificationsManagerNotifier
   }
 
   Future<void> deleteScheduledNotifications() async {
-    await dbHelper.deleteScheduledNotifications();
+    await dbHelper.deleteAllScheduledNotifications();
 
     await fetchNotificationsManager();
   }
@@ -116,6 +116,52 @@ class NotificationsManagerNotifier
       minute: minute,
       title: title,
       body: body,
+    );
+
+    await fetchNotificationsManager();
+  }
+
+  Future<void> deleteSingleScheduledNotifications({@required int id}) async {
+    await dbHelper.deleteSingleScheduledNotifications(
+      id: id,
+    );
+
+    await fetchNotificationsManager();
+  }
+
+  Future<void> updateScheduledNotificationsHourMinute({
+    @required int hour,
+    @required int minute,
+    @required int id,
+  }) async {
+    await dbHelper.updateScheduledNotificationsHourMinute(
+      hour: hour,
+      minute: minute,
+      id: id,
+    );
+
+    await fetchNotificationsManager();
+  }
+
+  Future<void> updateScheduledNotificationsTitle({
+    @required String title,
+    @required int id,
+  }) async {
+    await dbHelper.updateScheduledNotificationsTitle(
+      title: title,
+      id: id,
+    );
+
+    await fetchNotificationsManager();
+  }
+
+  Future<void> updateScheduledNotificationsBody({
+    @required String body,
+    @required int id,
+  }) async {
+    await dbHelper.updateScheduledNotificationsBody(
+      body: body,
+      id: id,
     );
 
     await fetchNotificationsManager();
