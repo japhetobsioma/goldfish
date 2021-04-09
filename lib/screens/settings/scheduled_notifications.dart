@@ -101,6 +101,10 @@ class AddNotificationDialog extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final time = useState(TimeOfDay.now());
+    final timeTextController =
+        useTextEditingController(text: '${time.value.toText}');
+    final timeFormKey = useState(GlobalKey<FormState>());
+    final isTimeCorrect = useState(false);
     final titleTextController = useTextEditingController(text: 'Example title');
     final titleFormKey = useState(GlobalKey<FormState>());
     final isTitleCorrect = useState(false);
@@ -111,14 +115,19 @@ class AddNotificationDialog extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Notification'),
-        actions: isTitleCorrect.value && isBodyCorrect.value
+        actions: isTitleCorrect.value &&
+                isBodyCorrect.value &&
+                isTimeCorrect.value
             ? [
                 IconButton(
-                  icon: Icon(Icons.save),
+                  icon: const Icon(Icons.save),
                   onPressed: () async {
-                    if (isTitleCorrect.value && isBodyCorrect.value) {
-                      final hour = time.value.hour;
-                      final minute = time.value.minute;
+                    if (isTitleCorrect.value &&
+                        isBodyCorrect.value &&
+                        isTimeCorrect.value) {
+                      final time = timeTextController.text.toTimeOfDayFormatted;
+                      final hour = time.hour;
+                      final minute = time.minute;
                       final title = titleTextController.text;
                       final body = bodyTextController.text;
 
@@ -133,11 +142,18 @@ class AddNotificationDialog extends HookWidget {
                       await context
                           .read(notificationsManagerProvider)
                           .setScheduledNotifications();
+
+                      Navigator.pop(context);
                     }
                   },
-                )
+                ),
               ]
-            : [],
+            : [
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: null,
+                ),
+              ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -145,16 +161,87 @@ class AddNotificationDialog extends HookWidget {
             ListTile(
               leading: const Icon(Icons.schedule),
               title: const Text('Set time'),
-              subtitle: Text('${time.value.toText}'),
-              onTap: () async {
-                final selectedTime = await showTimePicker(
+              subtitle: Text(timeTextController.text),
+              onTap: () {
+                showDialog(
                   context: context,
-                  initialTime: TimeOfDay.now(),
-                );
+                  builder: (_) {
+                    return AlertDialog(
+                      title: const Text('Set time'),
+                      content: Container(
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            Form(
+                              key: timeFormKey.value,
+                              child: TextFormField(
+                                controller: timeTextController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Time',
+                                  hintText: 'e.g. ${time.value.toText}.',
+                                ),
+                                validator: (wakeupTime) {
+                                  if (wakeupTime.isEmpty) {
+                                    isTimeCorrect.value = false;
 
-                if (selectedTime != null) {
-                  time.value = selectedTime;
-                }
+                                    return 'Enter wake-up time';
+                                  }
+
+                                  if (wakeupTime.timeFormatIsNotValid) {
+                                    isTimeCorrect.value = false;
+
+                                    return 'Invalid time format';
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Positioned(
+                              top: 5.0,
+                              child: IconButton(
+                                icon: const Icon(Icons.schedule),
+                                onPressed: () async {
+                                  final selectedTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay(hour: 8, minute: 30),
+                                  );
+
+                                  if (selectedTime != null) {
+                                    time.value = selectedTime;
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('CANCEL'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            timeFormKey.value.currentState.validate();
+
+                            if (timeFormKey.value.currentState.validate()) {
+                              timeFormKey.value.currentState.validate();
+
+                              isTimeCorrect.value = true;
+
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: const Text('SAVE'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
             const Divider(),

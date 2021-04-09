@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../common/helpers.dart';
+import '../common/routes.dart';
 import '../models/cup.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
@@ -12,6 +13,7 @@ import '../states/animated_key.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/edit_intake.dart';
+import '../states/intake_bank.dart';
 import '../states/tile_color.dart';
 import '../states/user_info.dart';
 import '../states/water_intake.dart';
@@ -447,6 +449,19 @@ class DeleteWaterIntakeDialog extends HookWidget {
           onPressed: () async {
             await context.read(editIntakeProvider).deleteWaterIntake();
 
+            waterIntake.when(
+              data: (value) {
+                final amount = value.todaysIntakes[index]['amount'] as int;
+
+                context.read(intakeBankProvider).updateIntakeBank(
+                      value: amount.toDouble(),
+                      arithmeticOperator: '-',
+                    );
+              },
+              loading: () {},
+              error: (_, __) {},
+            );
+
             final builder = (context, animation) {
               return waterIntake.when(
                 data: (value) {
@@ -486,7 +501,7 @@ class DeleteWaterIntakeDialog extends HookWidget {
               duration: const Duration(milliseconds: 500),
             );
 
-            Navigator.popUntil(context, ModalRoute.withName('/home'));
+            Navigator.popUntil(context, ModalRoute.withName(homeRoute));
           },
           child: Text('DELETE'),
         ),

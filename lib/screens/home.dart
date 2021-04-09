@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/helpers.dart';
+import '../common/routes.dart';
 import '../models/cup.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
@@ -28,11 +29,11 @@ class HomeScreen extends HookWidget {
     final animatedList = useProvider(animatedListKeyProvider.state);
 
     Future<dynamic> selectNotification(String payload) async {
-      if (payload != null) {
-        debugPrint('notification payload: $payload');
-      }
-
-      await Navigator.pushNamed(context, '/home');
+      await Navigator.pushNamedAndRemoveUntil(
+        context,
+        homeRoute,
+        (route) => false,
+      );
     }
 
     useEffect(() {
@@ -66,6 +67,8 @@ class HomeScreen extends HookWidget {
         }
 
         await sharedPreferences.setBool('firsTimeNofication', false);
+
+        await context.read(intakeBankProvider).fetchIntakeBank();
       });
       return () {};
     }, []);
@@ -162,13 +165,13 @@ class MenuBottomSheet extends HookWidget {
                     context: context,
                     builder: (context) {
                       Future.delayed(
-                        const Duration(seconds: 2),
+                        const Duration(seconds: 1),
                         () async {
-                          Navigator.of(context).pop(true);
+                          Navigator.pop(context);
 
                           await Navigator.pushNamed(
                             context,
-                            '/aquarium',
+                            aquariumRoute,
                             arguments: {'water': '$amount'},
                           );
                         },
