@@ -195,6 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8997604143346292840}
   - component: {fileID: 258809269105316921}
+  - component: {fileID: 3095039573387111087}
   m_Layer: 0
   m_Name: Mesh_Trout
   m_TagString: Untagged
@@ -275,6 +276,20 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.00035339966, y: 0.061881848, z: -0.000050223432}
     m_Extent: {x: 0.012940856, y: 0.06505806, z: 0.024572212}
   m_DirtyAABB: 0
+--- !u!64 &3095039573387111087
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4990394642583613646}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6480787514047575783, guid: b0102ea650e0d914b8c2f9ddabc0381f, type: 3}
 --- !u!1 &5292536872166857564
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,7 +331,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6206071971421873389}
   - component: {fileID: 54123765598404247}
-  - component: {fileID: 5884758781213278216}
   - component: {fileID: 5884758781213278217}
   - component: {fileID: 4166912928547240003}
   - component: {fileID: -965829983540635523}
@@ -362,19 +376,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &5884758781213278216
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6731673351056244311}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 8.497906, y: 11.5533085, z: 19.199272}
-  m_Center: {x: 0.000009536743, y: 1.7102747, z: 0.5157032}
 --- !u!114 &5884758781213278217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,7 +415,6 @@ MonoBehaviour:
     - {fileID: 6731673351056244311}
     - {fileID: 6206071971421873389}
     - {fileID: 54123765598404247}
-    - {fileID: 5884758781213278216}
     - {fileID: 5884758781213278217}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
     - {fileID: 4166912928547240003}
@@ -443,7 +443,8 @@ MonoBehaviour:
     - {fileID: 258809269105316921}
     - {fileID: 6480787514047575783, guid: b0102ea650e0d914b8c2f9ddabc0381f, type: 3}
     - {fileID: 2100000, guid: 24c59db797bf92e449d156b703c41e4f, type: 2}
-    _Values: c6267e40c352ec590ce4032bc2b3c149b14ae85cf3416d44656505fe66f1c0172733655e96a7691a3834f7150a36610a41a3e1fc335c3e7cb93adb5e4cedf21924ec048e4d62b2081e326bd7c77cb06539efc0f62c43b47c8d1d59a333f43126d9eec709c50fa85cab1522fe0e984a35eb40973caee946675e7ee39543a9c3290044b0b543ba2a48971ca04265b38b26688e8e748c6dd510a85f6843f33da05426b301acb7ff865a6ce0d3cb8a89cc540d42d34ae4b1626d9160a25cdd92c32bbcf41cb1b2df6f68f8cc2093be5f641e941336b069556f28166e3d17a1e23827e35777805a81f913b23b531890cfaf31047c3636a4ec3e1264449b43a257c625
+    - {fileID: 3095039573387111087}
+    _Values: c6267e40c352ec590ce4032bc2b3c149b14ae85cf3416d442733655e96a7691a3834f7150a36610a41a3e1fc335c3e7cb93adb5e4cedf21924ec048e4d62b2081e326bd7c77cb06539efc0f62c43b47c8d1d59a333f43126d9eec709c50fa85cab1522fe0e984a35eb40973caee946675e7ee39543a9c3290044b0b543ba2a48971ca04265b38b26688e8e748c6dd510a85f6843f33da05426b301acb7ff865a6ce0d3cb8a89cc540d42d34ae4b1626d9160a25cdd92c32bbcf41cb1b2df6f68f8cc2093be5f641e941336b069556f28166e3d17a1e23827e35777805a81f913b23b531890cfaf31047c3636a4ec3e1264449b43a257c62509e4edb774fba760
 --- !u!114 &-965829983540635523
 MonoBehaviour:
   m_ObjectHideFlags: 0
