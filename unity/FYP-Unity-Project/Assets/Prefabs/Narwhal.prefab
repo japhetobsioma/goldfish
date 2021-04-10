@@ -351,6 +351,7 @@ GameObject:
   m_Component:
   - component: {fileID: 806328532628643365}
   - component: {fileID: 1118410300444695303}
+  - component: {fileID: 7512741130432948857}
   m_Layer: 0
   m_Name: Narwhal
   m_TagString: Untagged
@@ -436,6 +437,20 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: -0.0068892464, z: -0.003046963}
     m_Extent: {x: 0.025255783, y: 0.082178414, z: 0.015152231}
   m_DirtyAABB: 0
+--- !u!64 &7512741130432948857
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5636742116149392365}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7462903843288079800, guid: ae73ff3e4c21960458fae167c99660c4, type: 3}
 --- !u!1 &7499250968628775767
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,7 +523,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8946539414458285534}
   - component: {fileID: 3082805096265607076}
-  - component: {fileID: 8908902155348270248}
   - component: {fileID: 8908902155348270263}
   - component: {fileID: -7123875360954386361}
   - component: {fileID: 1874040834000059820}
@@ -554,19 +568,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &8908902155348270248
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8602911710281557860}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 9.67284, y: 8.486462, z: 21.747353}
-  m_Center: {x: 0.0000031789145, y: 0.9204668, z: -0.20664597}
 --- !u!114 &8908902155348270263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -606,7 +607,6 @@ MonoBehaviour:
     - {fileID: 8602911710281557860}
     - {fileID: 8946539414458285534}
     - {fileID: 3082805096265607076}
-    - {fileID: 8908902155348270248}
     - {fileID: 8908902155348270263}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
     - {fileID: -7123875360954386361}
@@ -647,7 +647,8 @@ MonoBehaviour:
     - {fileID: 1118410300444695303}
     - {fileID: 7462903843288079800, guid: ae73ff3e4c21960458fae167c99660c4, type: 3}
     - {fileID: 2100000, guid: 1d4ff22b83212844abebb29fc2d6b271, type: 2}
-    _Values: 6555ba1e8bb7607559e003541317d3149f9dfda576720370c209ca2885b8fd2278430121f660d026370a28bb6e84ed67272e22ccf0f14529a6d5a37d13c7101223d933a8e70bf50093db9193b6b7fd46f8324fb4daca136876d53734fbb2c56ffa16dd47b7964f3223225fcc82d9df5e2e168bbae93b1258c7ca1ebd422afb445efe72336bba01728282d7fc29dfeb63f6d961123d80593529350e82b50c754d1ea46d8367acf318e702c7989ce9d118e0bbb31c8b0e8121a53c0a35ab7fbc7108dae431b290354ae6482a3ab8c0993f63f56171c091d92c268fdd2ba1bd6c68bbaa6f3efa609a70f2fd02d438bcda1aa2cad1b61d4bb17600b80b23b30aa828243d0b9ccf28c53c702e9d416b519a1d970777281449b505a419c14c9342dc04a72bb0fbb03d4a35900d264be9f3e1525229b9ba81d13c2577fabe1616ed2f4d0ba19b3fa09f6d58bd42b9216f01ee4ec991069577dd7d7769d672aafc604b5c
+    - {fileID: 7512741130432948857}
+    _Values: 6555ba1e8bb7607559e003541317d3149f9dfda57672037078430121f660d026370a28bb6e84ed67272e22ccf0f14529a6d5a37d13c7101223d933a8e70bf50093db9193b6b7fd46f8324fb4daca136876d53734fbb2c56ffa16dd47b7964f3223225fcc82d9df5e2e168bbae93b1258c7ca1ebd422afb445efe72336bba01728282d7fc29dfeb63f6d961123d80593529350e82b50c754d1ea46d8367acf318e702c7989ce9d118e0bbb31c8b0e8121a53c0a35ab7fbc7108dae431b290354ae6482a3ab8c0993f63f56171c091d92c268fdd2ba1bd6c68bbaa6f3efa609a70f2fd02d438bcda1aa2cad1b61d4bb17600b80b23b30aa828243d0b9ccf28c53c702e9d416b519a1d970777281449b505a419c14c9342dc04a72bb0fbb03d4a35900d264be9f3e1525229b9ba81d13c2577fabe1616ed2f4d0ba19b3fa09f6d58bd42b9216f01ee4ec991069577dd7d7769d672aafc604b5c94e9dfc15da5ae50
 --- !u!114 &1874040834000059820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,7 +665,7 @@ MonoBehaviour:
   componentsToSave:
   - {fileID: 8946539414458285534}
   - {fileID: 3082805096265607076}
-  - {fileID: 8908902155348270248}
+  - {fileID: 0}
   - {fileID: 8908902155348270263}
   - {fileID: -7123875360954386361}
 --- !u!1 &8657770646309101647

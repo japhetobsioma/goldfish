@@ -30,7 +30,7 @@ public class Player : MonoBehaviour, IEventSystemHandler
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameDataManager.AddWater(100);
+            GameDataManager.AddWater(1000);
         }
     }
     

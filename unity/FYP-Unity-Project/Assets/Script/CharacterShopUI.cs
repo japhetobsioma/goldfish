@@ -111,7 +111,7 @@ public class CharacterShopUI : MonoBehaviour
             //Update Coin UI text
             GameSharedUI.Instance.UpdateWaterUIText();
 
-            Instantiate(character.fish, new Vector3(0, 20, 0), transform.rotation);
+            Instantiate(character.fish, new Vector3(0, 60, 0), transform.rotation);
 
         }
         else

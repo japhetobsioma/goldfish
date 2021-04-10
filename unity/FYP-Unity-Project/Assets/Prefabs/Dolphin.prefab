@@ -103,10 +103,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3116224529277995791}
   - component: {fileID: 9070004898372030837}
-  - component: {fileID: 3221679912293404471}
   - component: {fileID: 3221679912293404470}
   - component: {fileID: -5896499159640609248}
   - component: {fileID: -7558280004241537834}
+  - component: {fileID: 3588710688256857594}
   m_Layer: 0
   m_Name: Dolphin
   m_TagString: Untagged
@@ -149,19 +149,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &3221679912293404471
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2338737229331501493}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 13.598896, y: 15.721525, z: 30.15837}
-  m_Center: {x: -0.18900108, y: 3.1416311, z: -1.3884821}
 --- !u!114 &3221679912293404470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,10 +188,10 @@ MonoBehaviour:
     - {fileID: 2338737229331501493}
     - {fileID: 3116224529277995791}
     - {fileID: 9070004898372030837}
-    - {fileID: 3221679912293404471}
     - {fileID: 3221679912293404470}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
     - {fileID: -5896499159640609248}
+    - {fileID: 3588710688256857594}
     - {fileID: 5552958899015242203}
     - {fileID: 6309500060045581201}
     - {fileID: 8313666183314792769}
@@ -234,7 +221,8 @@ MonoBehaviour:
     - {fileID: 6728395490210081393}
     - {fileID: -5756625841560215563, guid: b884e6c23ed38ca4ca49f0009dd1e096, type: 3}
     - {fileID: 2100000, guid: 37a43eaddad53f140ab5fe0dd96a444e, type: 2}
-    _Values: 0d018cd4c841216d2a6517255d0051645a958ecbd4327442850d811443111613668dbe3e59638c46c43b936e11c55931c343d8150cdc56258d4950bac00c2a17b0fc3f30beedf5090a488f10c6e3534968b3d886ea2c1f41e4e3b21012d1862f9b5441eb79d68c294ece1f546b66eb57f606530c34a32d23e47eeb5d60fae3373e9f8a8e5d97306f27aed4b84b74ad4a30f6e5f381860408d9e1f80414d13648b15715ccdb5df97337c2e685ce75d76fd1a18d57dfd7b9479b81b47c9f2b5a08e51d6aa28a7a262dfd722a446c8ad74e48982b4aa171d776f0a2cea556822b621eeea1b10b34e556859fabadfe014b10569a3cc8a85b5672b90c4c18547f297f62729da4d477a5124d2a30bfe27a8b0f1220af43b99c463d67d195e87f025505
+    - {fileID: 30480763000764697}
+    _Values: 17238107f8a3e227caa382bb3491f00904b23c6705cb3d7f99e050bbda5a887119db4e752fa11850d46f347a78e9ac68631505666faf4f1e62006e1853274c6fe5ee2aef209ac6629aec3a7400b7f850cc18e10fa0111e698c30d6301030a35423c55f67149c8936b15d337d8a25e219f9bfe56b085c0f2ccfc163f0c396516948e597c6175f65685fe83f02bb630c4e12f028d0160f5d3ab73237d5ff79fa47af9cc56fbca83058dab2f2dfe2f38f33cdb1ded36e815238885d7c49973b671beff8531f9e9c91452080f5641c7d5756c36ba3b157ceb530effef819247aef604ad7cedb46afd26a4323b3ed8cee1c0bfbdaf3fc21e68d204423309fa377216490aae5bb5084ef71c2f20b847e5d4322e5fbe0b6780cc0319b11e195208ef144bbe782c92b28a375
 --- !u!114 &-7558280004241537834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,9 +239,23 @@ MonoBehaviour:
   componentsToSave:
   - {fileID: 3116224529277995791}
   - {fileID: 9070004898372030837}
-  - {fileID: 3221679912293404471}
+  - {fileID: 0}
   - {fileID: 3221679912293404470}
   - {fileID: -5896499159640609248}
+--- !u!64 &3588710688256857594
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2338737229331501493}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &3777875909962052798
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,6 +482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 454417383439298262}
   - component: {fileID: 6728395490210081393}
+  - component: {fileID: 30480763000764697}
   m_Layer: 0
   m_Name: Mesh_Dolphin
   m_TagString: Untagged
@@ -562,6 +565,20 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.09753031, z: -0.0051443707}
     m_Extent: {x: 0.03172491, y: 0.10003904, z: 0.044268258}
   m_DirtyAABB: 0
+--- !u!64 &30480763000764697
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7416448906383130231}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5756625841560215563, guid: b884e6c23ed38ca4ca49f0009dd1e096, type: 3}
 --- !u!1 &7950317054464550766
 GameObject:
   m_ObjectHideFlags: 0

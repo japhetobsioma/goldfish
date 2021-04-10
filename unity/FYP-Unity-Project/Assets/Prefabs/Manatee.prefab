@@ -72,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1613237282513738722}
   - component: {fileID: 4752546653390251369}
+  - component: {fileID: 3912751223142960551}
   m_Layer: 0
   m_Name: Mesh_Manatee
   m_TagString: Untagged
@@ -155,6 +156,20 @@ SkinnedMeshRenderer:
     m_Center: {x: 9.313226e-10, y: 0.029991178, z: -0.0073335664}
     m_Extent: {x: 0.009446402, y: 0.030916048, z: 0.015882023}
   m_DirtyAABB: 0
+--- !u!64 &3912751223142960551
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822440058371446822}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2396795056160738326, guid: 6a21a0842e833d442a29a94c914b81bb, type: 3}
 --- !u!1 &2031478143925105150
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,7 +180,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1691825376211266372}
   - component: {fileID: 4727300644508905790}
-  - component: {fileID: 1220523097970467046}
   - component: {fileID: 1220523097970467065}
   - component: {fileID: 6505068714402056556}
   - component: {fileID: 6269566108908066000}
@@ -211,19 +225,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &1220523097970467046
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2031478143925105150}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 4.3323307, y: 4.7560987, z: 8.5129795}
-  m_Center: {x: -0.0481596, y: 0.12520155, z: 0.07705498}
 --- !u!114 &1220523097970467065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,7 +264,6 @@ MonoBehaviour:
     - {fileID: 2031478143925105150}
     - {fileID: 1691825376211266372}
     - {fileID: 4727300644508905790}
-    - {fileID: 1220523097970467046}
     - {fileID: 1220523097970467065}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
     - {fileID: 6505068714402056556}
@@ -298,7 +298,8 @@ MonoBehaviour:
     - {fileID: 4752546653390251369}
     - {fileID: -2396795056160738326, guid: 6a21a0842e833d442a29a94c914b81bb, type: 3}
     - {fileID: 2100000, guid: 28248e81a94e6ea4296093b8349683bf, type: 2}
-    _Values: 4646e44f9635db3e6dd0dc9017e5f6163c79c8d5a945c1403d894feb5526974f287bd983662c24357e905fc70700675b05060e02fbba3d0086a4120de5efe86b99d3476c4085820e56935339a489473d0f540ea4ca65b51e4626013de5e9b06e88359f25b72b6374881d588e0e77a504a32be3c50173c9018a65b36686c0f43ebb3d4d9016dd793a487ce452f2d9f03080fd9aba05eb6d05015e64ae87031148ef692c2fd6eb1239b1a90d7d571cf4507682e7845aae432f30b7704786354d4a71d29b76533ea56bf02bf7a32110521b97ebdbf515695c3f26fdff1e7acbb219f6580b85817dfc4b2953942fb6a00d1e6655b19b59583524d22564aec13c192479de99791bd79c1417d8333e2ad2777a101f47dbe5e83f4e8d2f56a6e2ab0d13c6904927f96cfd7147634cce748bb15c
+    - {fileID: 3912751223142960551}
+    _Values: 4646e44f9635db3e6dd0dc9017e5f6163c79c8d5a945c140287bd983662c24357e905fc70700675b05060e02fbba3d0086a4120de5efe86b99d3476c4085820e56935339a489473d0f540ea4ca65b51e4626013de5e9b06e88359f25b72b6374881d588e0e77a504a32be3c50173c9018a65b36686c0f43ebb3d4d9016dd793a487ce452f2d9f03080fd9aba05eb6d05015e64ae87031148ef692c2fd6eb1239b1a90d7d571cf4507682e7845aae432f30b7704786354d4a71d29b76533ea56bf02bf7a32110521b97ebdbf515695c3f26fdff1e7acbb219f6580b85817dfc4b2953942fb6a00d1e6655b19b59583524d22564aec13c192479de99791bd79c1417d8333e2ad2777a101f47dbe5e83f4e8d2f56a6e2ab0d13c6904927f96cfd7147634cce748bb15c157e40ec0dee615f
 --- !u!114 &6269566108908066000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,7 +316,7 @@ MonoBehaviour:
   componentsToSave:
   - {fileID: 1691825376211266372}
   - {fileID: 4727300644508905790}
-  - {fileID: 1220523097970467046}
+  - {fileID: 0}
   - {fileID: 1220523097970467065}
   - {fileID: 6505068714402056556}
 --- !u!1 &2704535132464694816

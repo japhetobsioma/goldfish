@@ -72,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2663564299718689673}
   - component: {fileID: 6616969734440698693}
+  - component: {fileID: 3500536642720272049}
   m_Layer: 0
   m_Name: Piranha
   m_TagString: Untagged
@@ -150,6 +151,20 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.034076102, z: 0.002047399}
     m_Extent: {x: 0.00907036, y: 0.037287556, z: 0.022762}
   m_DirtyAABB: 0
+--- !u!64 &3500536642720272049
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465484839417349310}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4199818294640821237, guid: 059d3218cf411274fb4827a4e5a366a6, type: 3}
 --- !u!1 &2745011694923717505
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +175,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3266214994018615611}
   - component: {fileID: 8913681323427961665}
-  - component: {fileID: 3087591679997129917}
   - component: {fileID: 3087591679997129916}
   - component: {fileID: -8810956853673397329}
   - component: {fileID: -1955127530697574862}
@@ -206,19 +220,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &3087591679997129917
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2745011694923717505}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 6.5247636, y: 7.548889, z: 10.6666}
-  m_Center: {x: -0.027130246, y: 2.4059362, z: -0.07221222}
 --- !u!114 &3087591679997129916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +259,6 @@ MonoBehaviour:
     - {fileID: 2745011694923717505}
     - {fileID: 3266214994018615611}
     - {fileID: 8913681323427961665}
-    - {fileID: 3087591679997129917}
     - {fileID: 3087591679997129916}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
     - {fileID: -8810956853673397329}
@@ -283,7 +283,8 @@ MonoBehaviour:
     - {fileID: 6616969734440698693}
     - {fileID: -4199818294640821237, guid: 059d3218cf411274fb4827a4e5a366a6, type: 3}
     - {fileID: 2100000, guid: aae29a78c84b300418c00f62c151899e, type: 2}
-    _Values: 4415563519ef0931cadfb87e9bb14674d04aef02a9f38618458e4f884cd07a61d13e2b802a699d5753eae0966fc4a9368a29bd20526a8c3663918558c16e8165a5e6b02622386167ad985593d41d880a388512768e9bb43cca621d98e445953f93b9c3aa8b2fa63d75db321540dff546097a203b5b0bd70a31745bc01ac882680215001b59dd7e08212bff4c9660031493287096daa51b781f4687e82b19dd5358c9122adfdaec2b05e8a379f4dc5e6d898facbcc6e6bc57cf87c65f9a98cb074eaba460732ef46c169c92f202a2834217e59f6393df733e7a9607985fb33a6b
+    - {fileID: 3500536642720272049}
+    _Values: 4415563519ef0931cadfb87e9bb14674d04aef02a9f38618d13e2b802a699d5753eae0966fc4a9368a29bd20526a8c3663918558c16e8165a5e6b02622386167ad985593d41d880a388512768e9bb43cca621d98e445953f93b9c3aa8b2fa63d75db321540dff546097a203b5b0bd70a31745bc01ac882680215001b59dd7e08212bff4c9660031493287096daa51b781f4687e82b19dd5358c9122adfdaec2b05e8a379f4dc5e6d898facbcc6e6bc57cf87c65f9a98cb074eaba460732ef46c169c92f202a2834217e59f6393df733e7a9607985fb33a6bad4a6801e2045a1e
 --- !u!114 &-1955127530697574862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +301,7 @@ MonoBehaviour:
   componentsToSave:
   - {fileID: 3266214994018615611}
   - {fileID: 8913681323427961665}
-  - {fileID: 3087591679997129917}
+  - {fileID: 0}
   - {fileID: 3087591679997129916}
   - {fileID: -8810956853673397329}
 --- !u!1 &3603256381126917770

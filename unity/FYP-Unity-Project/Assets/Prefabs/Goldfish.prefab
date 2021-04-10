@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6292216837626808950}
   - component: {fileID: 900617028376340510}
+  - component: {fileID: 3764063127187702600}
   m_Layer: 0
   m_Name: Goldfish_01
   m_TagString: Untagged
@@ -118,6 +119,20 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.00012684427, y: 0.013644518, z: 0.0018774136}
     m_Extent: {x: 0.005741488, y: 0.015149759, z: 0.013933444}
   m_DirtyAABB: 0
+--- !u!64 &3764063127187702600
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 506396248093334736}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3339211567834323865, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
 --- !u!1 &2399274276408967265
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +235,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7215278640273648640}
   - component: {fileID: 3657482984539600506}
-  - component: {fileID: 7181949260148922118}
   - component: {fileID: 7181949260148922119}
   - component: {fileID: -4128879798694648604}
   - component: {fileID: 8752026988468428976}
@@ -266,19 +280,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &7181949260148922118
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8028230511657301690}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.017227, y: 3.780954, z: 6.05538}
-  m_Center: {x: 0.003074646, y: 1.390477, z: -0.20360565}
 --- !u!114 &7181949260148922119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,7 +319,6 @@ MonoBehaviour:
     - {fileID: 8028230511657301690}
     - {fileID: 7215278640273648640}
     - {fileID: 3657482984539600506}
-    - {fileID: 7181949260148922118}
     - {fileID: 7181949260148922119}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
     - {fileID: -4128879798694648604}
@@ -339,7 +339,8 @@ MonoBehaviour:
     - {fileID: -770769185735333164, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
     - {fileID: 1358659479680502452, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
     - {fileID: -6481666890843136435, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
-    _Values: 868058500460da712e5d4b52f8d16459757b278509e15d64c307e25bccd97c6446261535edcdf704cb74bc1ea9f6035190fd89be451e705b23f3130b42363d072650f22e44d193588522517d9e7b0d33fc6f3530b041e163698eed0646143d024f3b07a6fc2af240693143686fedfa581a20ef2dfef3a8673156c5b5e48c12669facd19d8c98c92e830b651e7bb52d7b6c6b13d9dbeffc42e56fd852efa82523e223373de3a3337e56c1aaf38e8aec7bd8b6deaf6013be70a91382fc711c1e2b
+    - {fileID: 3764063127187702600}
+    _Values: b581c7836fea720b0f39f61ac156022c4139dad05065f512f1914cd81dcd162e0a06b6fc20d29e1cfedf39140160fa508bb5720d25eb2f469881282f09290f7422abc649aef9f13e3c56780370738c6f97fc4c685a09081f29909b615591ed2b313a0daa654f5e6dc334497c6432b70b0e97980ddda71a19a2a6723e955394556a4dd33565e20a19a6455bda3f73455bb8599012d505f728aad9b2f43e62fd70610c1a4efa138f0fa1b2b22302f4581614327ac33d7e806e72e79296654b4b0d
 --- !u!114 &8752026988468428976
 MonoBehaviour:
   m_ObjectHideFlags: 0
