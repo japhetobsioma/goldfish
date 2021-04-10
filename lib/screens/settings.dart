@@ -25,8 +25,8 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Notifications'),
-              onTap: () {
-                Navigator.pushNamed(context, notificationsSettingsRoute);
+              onTap: () async {
+                await Navigator.pushNamed(context, notificationsSettingsRoute);
               },
             ),
             const Divider(),

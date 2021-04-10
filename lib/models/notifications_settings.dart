@@ -9,6 +9,7 @@ class NotificationsSettings {
     @required this.totalActiveNotifications,
     @required this.intervalTimeHour,
     @required this.intervalTimeMinute,
+    @required this.isIgnoringBatteryOptimizations,
   });
 
   final bool isNotificationTurnOn;
@@ -16,4 +17,5 @@ class NotificationsSettings {
   final int totalActiveNotifications;
   final int intervalTimeHour;
   final int intervalTimeMinute;
+  final bool isIgnoringBatteryOptimizations;
 }

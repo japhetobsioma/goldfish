@@ -1,3 +1,4 @@
+import 'package:battery_optimization/battery_optimization.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,8 @@ class NotificationsSettingsNotifier
 
   Future<void> fetchNotificationsSettings() async {
     final sharedPreferences = await SharedPreferences.getInstance();
+    final isIgnoring =
+        await BatteryOptimization.isIgnoringBatteryOptimizations();
 
     final isNotificationTurnOn =
         sharedPreferences.getBool('isNotificationTurnOn') ?? true;
@@ -24,6 +27,7 @@ class NotificationsSettingsNotifier
     final intervalTimeHour = sharedPreferences.getInt('intervalTimeHour') ?? 1;
     final intervalTimeMinute =
         sharedPreferences.getInt('intervalTimeMinute') ?? 30;
+    final isIgnoringBatteryOptimizations = isIgnoring;
 
     state = AsyncValue.data(
       NotificationsSettings(
@@ -32,6 +36,7 @@ class NotificationsSettingsNotifier
         totalActiveNotifications: totalActiveNotification,
         intervalTimeHour: intervalTimeHour,
         intervalTimeMinute: intervalTimeMinute,
+        isIgnoringBatteryOptimizations: isIgnoringBatteryOptimizations,
       ),
     );
   }

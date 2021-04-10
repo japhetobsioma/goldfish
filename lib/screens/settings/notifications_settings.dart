@@ -1,3 +1,5 @@
+import 'package:android_power_manager/android_power_manager.dart';
+import 'package:battery_optimization/battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,6 +27,50 @@ class NotificationsSettingsScreens extends HookWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            notificationsSettings.when(
+              data: (value) {
+                final isIgnoringBatteryOptimizations =
+                    value.isIgnoringBatteryOptimizations;
+
+                if (isIgnoringBatteryOptimizations == false) {
+                  return MaterialBanner(
+                    leading: CircleAvatar(
+                      child: Icon(Icons.warning),
+                    ),
+                    content:
+                        Text('Notifications may not be shown on your device'),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const FixItDialog(),
+                          );
+
+                          await context
+                              .read(notificationsSettingsProvider)
+                              .fetchNotificationsSettings();
+                        },
+                        child: const Text('FIX IT'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const LearnMoreDialog(),
+                          );
+                        },
+                        child: const Text('LEARN MORE'),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
             SwitchListTile(
               value: notificationsSettings.when(
                 data: (value) => value.isNotificationTurnOn,
@@ -327,6 +373,76 @@ class ChangeIntervalDialog extends HookWidget {
             }
           },
           child: Text('SAVE'),
+        ),
+      ],
+    );
+  }
+}
+
+class LearnMoreDialog extends StatelessWidget {
+  const LearnMoreDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        'Why do notifications may not work?',
+      ),
+      content: const Text(
+        'Sometimes this application does not ring at the scheduled time, '
+        'because of cleaner apps or phone system shut off this application '
+        'notifications.\n\n'
+        'If you have installed cleaner apps such as CM Security, please make '
+        'sure that they do not stop this app from sending notifications.\n\n'
+        'Some devices, specially Samsung, have strict power plans, the system '
+        'will shut off this application after locking your screen. \n\n'
+        'We suggest you add this application to the Unmonitored Apps list to '
+        'avoid missing reminders.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('CLOSE'),
+        ),
+      ],
+    );
+  }
+}
+
+class FixItDialog extends StatelessWidget {
+  const FixItDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        'How to fix notifications?',
+      ),
+      content: const Text(
+        'You have two options to ring notification at the scheduled time: '
+        'Accept the request to remove this app from battery optimization, or '
+        'go to settings and remove this app from the list manually.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () async {
+            await AndroidPowerManager.requestIgnoreBatteryOptimizations();
+          },
+          child: const Text('SHOW REQUEST DIALOG'),
+        ),
+        TextButton(
+          onPressed: () async {
+            await BatteryOptimization.openBatteryOptimizationSettings();
+          },
+          child: const Text('GO TO SETTINGS'),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+          },
+          child: const Text('CLOSE'),
         ),
       ],
     );
