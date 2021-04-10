@@ -136,13 +136,34 @@ class NotificationModeDialog extends HookWidget {
         notificationsSettings.when(
           data: (value) {
             return RadioListTile(
-              title: const Text('Interval Mode'),
+              title: const Text('Interval mode'),
+              subtitle: const Text(
+                'Generate notifications times based on the interval that you '
+                'set. You can also add custom notifications times.',
+              ),
+              isThreeLine: true,
               value: NotificationMode.Interval,
               groupValue: value.notificationMode,
-              onChanged: (value) {
-                context
+              onChanged: (value) async {
+                await context
                     .read(notificationsSettingsProvider)
                     .updateNotificationMode(value);
+
+                await context
+                    .read(notificationsManagerProvider)
+                    .deleteAllScheduledNotifications();
+
+                await context
+                    .read(notificationsManagerProvider)
+                    .cancelAllScheduledNotifications();
+
+                await context
+                    .read(notificationsManagerProvider)
+                    .generateScheduledNotifications();
+
+                await context
+                    .read(notificationsManagerProvider)
+                    .setAllScheduledNotifications();
 
                 Navigator.pop(context);
               },
@@ -153,7 +174,8 @@ class NotificationModeDialog extends HookWidget {
         ),
         notificationsSettings.when(
           data: (value) => RadioListTile(
-            title: const Text('Custom Mode'),
+            title: const Text('Custom mode'),
+            subtitle: const Text('Add your own custom notifications times.'),
             value: NotificationMode.Custom,
             groupValue: value.notificationMode,
             onChanged: (value) async {

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -18,6 +20,29 @@ class NotificationsManagerNotifier
   }
 
   static final dbHelper = DatabaseHelper.instance;
+
+  static final defaultNotificationTitle = "Hey, it''s time to drink!";
+  static final defaultNotificationBody = [
+    'Consume water now',
+    'Time for a glass of water',
+    'Time to drink water',
+    "Let''s drink some water",
+    'Drink some water',
+    'Have you had any water yet?',
+    'Remember to drink some water!',
+    'Frequently supplementing your body with water is good for your health',
+    'Frequently supplementing your body with water is good for your skin',
+    'Frequently supplementing your body with water is good for your brain',
+    'Frequently supplementing your body with water is good for your digestive '
+        'system',
+    'Frequently supplementing your body with water helps maintain your blood '
+        'pressure',
+    'Frequently supplementing your body with water prevents kidney damage',
+    'Frequently supplementing your body with water helps with weight loss',
+    "Don''t forget to drink your water!",
+    'Hydration makes the body happy',
+    "Don''t forget to drink!",
+  ];
 
   Future<void> fetchNotificationsManager() async {
     final allScheduledNotifications =
@@ -57,11 +82,14 @@ class NotificationsManagerNotifier
       for (var index = 0; index < intervalTimes.length; index++) {
         final hour = intervalTimes[index].hour;
         final minute = intervalTimes[index].minute;
+        final randomNumber = Random().nextInt(defaultNotificationBody.length);
 
         if (index != intervalTimes.length - 1) {
-          query += "($hour, $minute, 'title', 'body'),";
+          query += "($hour, $minute, '$defaultNotificationTitle', "
+              "'${defaultNotificationBody[randomNumber]}'),";
         } else {
-          query += "($hour, $minute, 'title', 'body')";
+          query += "($hour, $minute, '$defaultNotificationTitle', "
+              "'${defaultNotificationBody[randomNumber]}')";
         }
       }
 
@@ -130,6 +158,9 @@ class NotificationsManagerNotifier
   }) async {
     await setTimeZones();
 
+    title = title.replaceAll(RegExp(r"''"), "'");
+    body = body.replaceAll(RegExp(r"''"), "'");
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -161,6 +192,9 @@ class NotificationsManagerNotifier
     @required String title,
     @required String body,
   }) async {
+    title = title.replaceAll(RegExp(r"'"), "''");
+    body = body.replaceAll(RegExp(r"'"), "''");
+
     final id = await dbHelper.insertSingleScheduledNotifications(
       hour: hour,
       minute: minute,
@@ -199,6 +233,8 @@ class NotificationsManagerNotifier
     @required String title,
     @required int id,
   }) async {
+    title = title.replaceAll(RegExp(r"'"), "''");
+
     await dbHelper.updateScheduledNotificationsTitle(
       title: title,
       id: id,
@@ -211,6 +247,8 @@ class NotificationsManagerNotifier
     @required String body,
     @required int id,
   }) async {
+    body = body.replaceAll(RegExp(r"'"), "''");
+
     await dbHelper.updateScheduledNotificationsBody(
       body: body,
       id: id,
