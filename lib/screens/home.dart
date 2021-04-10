@@ -53,22 +53,22 @@ class HomeScreen extends HookWidget {
 
         await context.read(completionProvider).checkCompletionDates();
 
-        final sharedPreferences = await SharedPreferences.getInstance();
-        final firsTimeNofication =
-            sharedPreferences.getBool('firsTimeNofication') ?? true;
+        await context.read(intakeBankProvider).fetchIntakeBank();
 
-        if (firsTimeNofication) {
+        final sharedPreferences = await SharedPreferences.getInstance();
+        final initializeNotification =
+            sharedPreferences.getBool('initializeNotification') ?? true;
+
+        if (initializeNotification) {
           await context
               .read(notificationsManagerProvider)
               .generateScheduledNotifications();
           await context
               .read(notificationsManagerProvider)
-              .setScheduledNotifications();
+              .setAllScheduledNotifications();
         }
 
-        await sharedPreferences.setBool('firsTimeNofication', false);
-
-        await context.read(intakeBankProvider).fetchIntakeBank();
+        await sharedPreferences.setBool('initializeNotification', false);
       });
       return () {};
     }, []);

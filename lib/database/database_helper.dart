@@ -578,7 +578,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> insertSingleScheduledNotifications({
+  Future<int> insertSingleScheduledNotifications({
     @required int hour,
     @required int minute,
     @required String title,
@@ -586,11 +586,13 @@ class DatabaseHelper {
   }) async {
     final db = await instance.database;
 
-    await db.rawInsert('''
+    final id = await db.rawInsert('''
       INSERT INTO scheduled_notifications (hour, minute, title, body) 
       VALUES 
         ($hour, $minute, '$title', '$body')
     ''');
+
+    return id;
   }
 
   Future<List<Map<String, dynamic>>> fetchScheduledNotifications() async {

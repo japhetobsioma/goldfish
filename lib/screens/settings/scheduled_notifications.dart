@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../common/helpers.dart';
 import '../../common/routes.dart';
 import '../../states/notifications_manager.dart';
-import '../home.dart';
 
 class ScheduledNotificationsScreen extends HookWidget {
   const ScheduledNotificationsScreen();
@@ -171,9 +170,11 @@ class EditDeleteNotificationDialog extends HookWidget {
                         onPressed: () async {
                           await context
                               .read(notificationsManagerProvider)
-                              .deleteSingleScheduledNotifications(id: id);
+                              .deleteSingleScheduledNotifications(id);
 
-                          await flutterLocalNotificationsPlugin.cancel(id);
+                          await context
+                              .read(notificationsManagerProvider)
+                              .cancelSingleScheduledNotifications(id);
 
                           Navigator.popUntil(context,
                               ModalRoute.withName(scheduledNotificationRoute));
@@ -278,7 +279,17 @@ class EditDeleteNotificationDialog extends HookWidget {
 
                               await context
                                   .read(notificationsManagerProvider)
-                                  .setScheduledNotifications();
+                                  .cancelSingleScheduledNotifications(id);
+
+                              await context
+                                  .read(notificationsManagerProvider)
+                                  .setSingleScheduledNotifications(
+                                    id: id,
+                                    hour: hour,
+                                    minute: minute,
+                                    title: title,
+                                    body: body,
+                                  );
 
                               Navigator.of(context).pop();
                             }
@@ -349,7 +360,17 @@ class EditDeleteNotificationDialog extends HookWidget {
 
                               await context
                                   .read(notificationsManagerProvider)
-                                  .setScheduledNotifications();
+                                  .cancelSingleScheduledNotifications(id);
+
+                              await context
+                                  .read(notificationsManagerProvider)
+                                  .setSingleScheduledNotifications(
+                                    id: id,
+                                    hour: hour,
+                                    minute: minute,
+                                    title: title,
+                                    body: body,
+                                  );
 
                               Navigator.of(context).pop();
                             }
@@ -420,7 +441,17 @@ class EditDeleteNotificationDialog extends HookWidget {
 
                               await context
                                   .read(notificationsManagerProvider)
-                                  .setScheduledNotifications();
+                                  .cancelSingleScheduledNotifications(id);
+
+                              await context
+                                  .read(notificationsManagerProvider)
+                                  .setSingleScheduledNotifications(
+                                    id: id,
+                                    hour: hour,
+                                    minute: minute,
+                                    title: title,
+                                    body: body,
+                                  );
 
                               Navigator.of(context).pop();
                             }
@@ -572,7 +603,7 @@ class AddNotificationDialog extends HookWidget {
                     final title = titleTextController.text;
                     final body = bodyTextController.text;
 
-                    await context
+                    final id = await context
                         .read(notificationsManagerProvider)
                         .insertSingleScheduledNotifications(
                           hour: hour,
@@ -580,9 +611,16 @@ class AddNotificationDialog extends HookWidget {
                           title: title,
                           body: body,
                         );
+
                     await context
                         .read(notificationsManagerProvider)
-                        .setScheduledNotifications();
+                        .setSingleScheduledNotifications(
+                          id: id,
+                          hour: hour,
+                          minute: minute,
+                          title: title,
+                          body: body,
+                        );
 
                     Navigator.pop(context);
                   }

@@ -31,9 +31,21 @@ class NotificationsSettingsScreens extends HookWidget {
                 loading: () => true,
                 error: (_, __) => true,
               ),
-              onChanged: (value) => context
-                  .read(notificationsSettingsProvider)
-                  .updateIsNotificationTurnOn(value),
+              onChanged: (value) async {
+                await context
+                    .read(notificationsSettingsProvider)
+                    .updateIsNotificationTurnOn(value);
+
+                if (value) {
+                  await context
+                      .read(notificationsManagerProvider)
+                      .setAllScheduledNotifications();
+                } else {
+                  await context
+                      .read(notificationsManagerProvider)
+                      .cancelAllScheduledNotifications();
+                }
+              },
               title: const Text('On'),
             ),
             const Divider(),
@@ -287,7 +299,7 @@ class ChangeIntervalDialog extends HookWidget {
                   .generateScheduledNotifications();
               await context
                   .read(notificationsManagerProvider)
-                  .setScheduledNotifications();
+                  .setAllScheduledNotifications();
 
               Navigator.of(context).pop();
             }
