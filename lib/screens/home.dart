@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/helpers.dart';
+import '../common/routes.dart';
 import '../models/cup.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
@@ -11,9 +14,12 @@ import '../states/completion.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/intake_bank.dart';
+import '../states/notifications_manager.dart';
 import '../states/tile_color.dart';
 import '../states/water_intake.dart';
 import 'water_intake.dart';
+
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class HomeScreen extends HookWidget {
   const HomeScreen();
@@ -22,8 +28,48 @@ class HomeScreen extends HookWidget {
   Widget build(BuildContext context) {
     final animatedList = useProvider(animatedListKeyProvider.state);
 
+    Future<dynamic> selectNotification(String payload) async {
+      await Navigator.pushNamedAndRemoveUntil(
+        context,
+        homeRoute,
+        (route) => false,
+      );
+    }
+
     useEffect(() {
-      context.read(completionProvider).checkCompletionDates();
+      Future.microtask(() async {
+        const initializationSettingsAndroid = AndroidInitializationSettings(
+          '@mipmap/ic_launcher',
+        );
+
+        final initializationSettings = InitializationSettings(
+          android: initializationSettingsAndroid,
+        );
+
+        await flutterLocalNotificationsPlugin.initialize(
+          initializationSettings,
+          onSelectNotification: selectNotification,
+        );
+
+        await context.read(completionProvider).checkCompletionDates();
+
+        await context.read(intakeBankProvider).fetchIntakeBank();
+
+        final sharedPreferences = await SharedPreferences.getInstance();
+        final initializeNotification =
+            sharedPreferences.getBool('initializeNotification') ?? true;
+
+        if (initializeNotification) {
+          await context
+              .read(notificationsManagerProvider)
+              .generateScheduledNotifications();
+          await context
+              .read(notificationsManagerProvider)
+              .setAllScheduledNotifications();
+        }
+
+        await sharedPreferences.setBool('initializeNotification', false);
+      });
       return () {};
     }, []);
 
@@ -119,13 +165,13 @@ class MenuBottomSheet extends HookWidget {
                     context: context,
                     builder: (context) {
                       Future.delayed(
-                        const Duration(seconds: 5),
+                        const Duration(seconds: 1),
                         () async {
-                          Navigator.of(context).pop(true);
+                          Navigator.pop(context);
 
                           await Navigator.pushNamed(
                             context,
-                            '/aquarium',
+                            aquariumRoute,
                             arguments: {'water': '$amount'},
                           );
                         },
@@ -134,7 +180,7 @@ class MenuBottomSheet extends HookWidget {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Opening Unity Player...'),
+                            const Text('Opening Unity Player'),
                             const CircularProgressIndicator(),
                           ],
                         ),

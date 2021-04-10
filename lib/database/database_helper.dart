@@ -567,4 +567,124 @@ class DatabaseHelper {
         id = 1
     ''');
   }
+
+  Future<void> insertMultipleScheduledNotifications(String query) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO scheduled_notifications (hour, minute, title, body) 
+      VALUES 
+        $query
+    ''');
+  }
+
+  Future<int> insertSingleScheduledNotifications({
+    @required int hour,
+    @required int minute,
+    @required String title,
+    @required String body,
+  }) async {
+    final db = await instance.database;
+
+    final id = await db.rawInsert('''
+      INSERT INTO scheduled_notifications (hour, minute, title, body) 
+      VALUES 
+        ($hour, $minute, '$title', '$body')
+    ''');
+
+    return id;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchScheduledNotifications() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        * 
+      FROM 
+        scheduled_notifications 
+      ORDER BY 
+        hour ASC, 
+        minute ASC
+    ''');
+  }
+
+  Future<int> getTotalScheduledNotifications() async {
+    final db = await instance.database;
+
+    return Sqflite.firstIntValue(
+      await db.rawQuery('''
+        SELECT 
+          count(id) 
+        FROM 
+          scheduled_notifications
+      '''),
+    );
+  }
+
+  Future<void> deleteAllScheduledNotifications() async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM scheduled_notifications
+    ''');
+  }
+
+  Future<void> deleteSingleScheduledNotifications({@required int id}) async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM 
+        scheduled_notifications 
+      WHERE 
+        id = $id
+    ''');
+  }
+
+  Future<void> updateScheduledNotificationsHourMinute({
+    @required int hour,
+    @required int minute,
+    @required int id,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE scheduled_notifications
+      SET
+        hour = $hour,
+        minute = $minute
+      WHERE
+        id = $id
+    ''');
+  }
+
+  Future<void> updateScheduledNotificationsTitle({
+    @required String title,
+    @required int id,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE scheduled_notifications
+      SET
+        title = '$title'
+      WHERE
+        id = $id
+    ''');
+  }
+
+  Future<void> updateScheduledNotificationsBody({
+    @required String body,
+    @required int id,
+  }) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE scheduled_notifications
+      SET
+        body = '$body'
+      WHERE
+        id = $id
+    ''');
+  }
 }

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/colors.dart';
 import '../common/helpers.dart';
+import '../common/routes.dart';
 import '../models/user_info.dart';
 import '../states/completion.dart';
 import '../states/create_plan.dart';
@@ -555,7 +556,7 @@ class BottomButtons extends HookWidget {
 
                 await Navigator.pushNamedAndRemoveUntil(
                   context,
-                  '/home',
+                  homeRoute,
                   (route) => false,
                 );
               }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../common/routes.dart';
 import '../models/custom_card.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -279,8 +280,8 @@ class GetStarted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        Navigator.pushNamed(context, '/create-plan');
+      onPressed: () async {
+        await Navigator.pushNamed(context, createPlanRoute);
       },
       child: const Text('Get started'),
     );

@@ -290,7 +290,7 @@ class AllTime extends HookWidget {
             data: (value) {
               final allTimeRatio = value.allTimeRatio;
 
-              return '${allTimeRatio.toString()}%';
+              return "${allTimeRatio == 0 ? '0' : allTimeRatio.toString()}%";
             },
             loading: () => '',
             error: (_, __) => '',
