@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../models/daily_total.dart';
 import '../models/drink_type.dart';
-import '../models/notifications_settings.dart';
+import '../models/notification_settings.dart';
 import '../models/streaks.dart';
 import '../models/tile_color.dart';
 import '../models/user_info.dart';
@@ -21,7 +21,7 @@ extension DateTimeExtension on DateTime {
   /// The default date pattern is `d MMMM y`.
   ///
   /// Output: `25 June 1997`
-  String get format => DateFormat(_datePattern).format(this);
+  String get toText => DateFormat(_datePattern).format(this);
 
   TimeOfDay get toTimeOfDay => TimeOfDay.fromDateTime(this);
 }
@@ -226,6 +226,11 @@ extension GenderExtension on Gender {
 extension LiquidMeasurementExtension on LiquidMeasurement {
   /// Return a string representation of this liquid measurement.
   String get name => describeEnum(this);
+
+  String get properName => {
+        LiquidMeasurement.Milliliter: 'Milliliter',
+        LiquidMeasurement.FluidOunce: 'Fluid Ounce'
+      }[this];
 
   /// Return a string description of this liquid measurement.
   String get descriptionPerDay => {
@@ -561,13 +566,13 @@ extension WeekDaysExtension on WeekDays {
   String get name => describeEnum(this);
 
   String get queryValue => {
-        WeekDays.Sunday: '-7 days',
-        WeekDays.Monday: '-6 days',
-        WeekDays.Tuesday: '-5 days',
-        WeekDays.Wednesday: '-4 days',
-        WeekDays.Thursday: '-3 days',
-        WeekDays.Friday: '-2 days',
-        WeekDays.Saturday: '-1 days',
+        WeekDays.Sunday: ' ',
+        WeekDays.Monday: ", '-6 days'",
+        WeekDays.Tuesday: ", '-5 days'",
+        WeekDays.Wednesday: ", '-4 days'",
+        WeekDays.Thursday: ", '-3 days'",
+        WeekDays.Friday: ", '-2 days'",
+        WeekDays.Saturday: ", '-1 days'",
       }[this];
 }
 

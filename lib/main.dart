@@ -10,8 +10,9 @@ import 'screens/history.dart';
 import 'screens/home.dart';
 import 'screens/onboarding.dart';
 import 'screens/settings.dart';
-import 'screens/settings/notifications_settings.dart';
-import 'screens/settings/scheduled_notifications.dart';
+import 'screens/settings/hydration_plan.dart';
+import 'screens/settings/notification.dart';
+import 'screens/settings/scheduled_notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,9 +47,10 @@ class MyApp extends StatelessWidget {
         historyRoute: (context) => const HistoryScreen(),
         settingsRoute: (context) => const SettingsScreen(),
         notificationsSettingsRoute: (context) =>
-            const NotificationsSettingsScreens(),
+            const NotificationSettingsScreen(),
         scheduledNotificationRoute: (context) =>
-            const ScheduledNotificationsScreen(),
+            const ScheduledNotificationSettingsScreen(),
+        hydrationPlanRoute: (context) => const HydrationPlanSettingsScreen(),
       },
     );
   }

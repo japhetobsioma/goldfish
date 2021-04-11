@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NotificationsManager {
-  const NotificationsManager({
+class NotificationManager {
+  const NotificationManager({
     @required this.allScheduledNotifications,
     @required this.totalScheduledNotifications,
   });

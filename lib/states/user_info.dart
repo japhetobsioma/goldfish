@@ -11,7 +11,7 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<UserInfo>> {
   static final dbHelper = DatabaseHelper.instance;
 
   Future<void> fetchUserInfo() async {
-    final hydrationPlan = await dbHelper.readHydrationPlan();
+    final hydrationPlan = await dbHelper.fetchHydrationPlan();
 
     state = AsyncValue.data(
       UserInfo(

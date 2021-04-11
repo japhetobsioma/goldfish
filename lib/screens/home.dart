@@ -61,10 +61,10 @@ class HomeScreen extends HookWidget {
 
         if (initializeNotification) {
           await context
-              .read(notificationsManagerProvider)
+              .read(notificationManagerProvider)
               .generateScheduledNotifications();
           await context
-              .read(notificationsManagerProvider)
+              .read(notificationManagerProvider)
               .setAllScheduledNotifications();
         }
 

@@ -17,8 +17,8 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.local_drink),
               title: const Text('Hydration plan'),
-              onTap: () {
-                Navigator.pop(context);
+              onTap: () async {
+                await Navigator.pushNamed(context, hydrationPlanRoute);
               },
             ),
             const Divider(),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 enum NotificationMode { Interval, Custom }
 
-class NotificationsSettings {
-  const NotificationsSettings({
+class NotificationSettings {
+  const NotificationSettings({
     @required this.isNotificationTurnOn,
     @required this.notificationMode,
     @required this.totalActiveNotifications,

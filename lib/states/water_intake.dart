@@ -113,7 +113,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   Future<void> hasUserAchievedGoal() async {
     final todaysTotalWaterIntake =
         await dbHelper.fetchTodaysTotalIntakes() ?? 0;
-    final hydrationPlan = await dbHelper.readHydrationPlan();
+    final hydrationPlan = await dbHelper.fetchHydrationPlan();
     final dailyGoal = hydrationPlan[0]['dailyGoal'] as int;
 
     todaysTotalWaterIntake >= dailyGoal

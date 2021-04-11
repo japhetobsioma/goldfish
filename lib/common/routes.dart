@@ -4,5 +4,6 @@ const homeRoute = '/home';
 const aquariumRoute = '/aquarium';
 const historyRoute = '/history';
 const settingsRoute = '/settings';
-const notificationsSettingsRoute = '/notifications';
+const notificationsSettingsRoute = '/notification';
 const scheduledNotificationRoute = '/scheduled-notification';
+const hydrationPlanRoute = '/hydration-plan';
