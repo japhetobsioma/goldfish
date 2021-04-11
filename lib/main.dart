@@ -10,6 +10,7 @@ import 'screens/history.dart';
 import 'screens/home.dart';
 import 'screens/onboarding.dart';
 import 'screens/settings.dart';
+import 'screens/settings/cup_manager.dart';
 import 'screens/settings/hydration_plan.dart';
 import 'screens/settings/notification.dart';
 import 'screens/settings/scheduled_notification.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         scheduledNotificationRoute: (context) =>
             const ScheduledNotificationSettingsScreen(),
         hydrationPlanRoute: (context) => const HydrationPlanSettingsScreen(),
+        cupManagerRoute: (context) => CupManagerScreen(),
       },
     );
   }

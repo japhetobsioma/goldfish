@@ -61,7 +61,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllCup() async {
     final db = await instance.database;
 
-    return await db.rawQuery('SELECT * FROM cup');
+    return await db.rawQuery('SELECT * FROM cup ORDER BY amount, cupID');
   }
 
   /// Set all the `cup` tables' `isActive` column to `false`
@@ -771,6 +771,16 @@ class DatabaseHelper {
         isUsingRecommendedDailyGoal = '${useRecommendedGoal.toString()}'
       WHERE
         id = 1
+    ''');
+  }
+
+  Future<void> addCup(int amount) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO cup (amount, measurement, isActive) 
+      VALUES 
+        ($amount, 'ml', 'false')
     ''');
   }
 }

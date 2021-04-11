@@ -588,7 +588,7 @@ class DailyGoalDialog extends HookWidget {
                 }
 
                 if (dailyGoal.isZero) {
-                  return 'Daily goal cannot be 0';
+                  return 'The daily goal can not be 0';
                 }
 
                 if (int.tryParse(dailyGoal) == null) {

@@ -7,3 +7,4 @@ const settingsRoute = '/settings';
 const notificationsSettingsRoute = '/notification';
 const scheduledNotificationRoute = '/scheduled-notification';
 const hydrationPlanRoute = '/hydration-plan';
+const cupManagerRoute = '/cup-manager';

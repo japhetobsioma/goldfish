@@ -21,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
                 await Navigator.pushNamed(context, hydrationPlanRoute);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Notifications'),
@@ -29,15 +29,15 @@ class SettingsScreen extends StatelessWidget {
                 await Navigator.pushNamed(context, notificationsSettingsRoute);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.local_cafe),
               title: const Text('Cup'),
-              onTap: () {
-                Navigator.pop(context);
+              onTap: () async {
+                await Navigator.pushNamed(context, cupManagerRoute);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.palette),
               title: const Text('Theme'),
@@ -45,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.info),
               title: const Text('About'),
@@ -53,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
           ],
         ),
       ),

@@ -5,12 +5,12 @@ import '../models/cup.dart';
 
 class CupNotifier extends StateNotifier<AsyncValue<Cup>> {
   CupNotifier() : super(const AsyncValue.loading()) {
-    _fetchCup();
+    fetchCup();
   }
 
   static final dbHelper = DatabaseHelper.instance;
 
-  Future<void> _fetchCup() async {
+  Future<void> fetchCup() async {
     final selectedCup = await dbHelper.getSelectedCup();
     final allCup = await dbHelper.getAllCup();
 
@@ -19,6 +19,7 @@ class CupNotifier extends StateNotifier<AsyncValue<Cup>> {
         selectedCupAmount: selectedCup[0]['amount'],
         selectedCupMeasurement: selectedCup[0]['measurement'],
         allCup: allCup,
+        selectedCupID: selectedCup[0]['cupID'],
       ),
     );
   }
@@ -26,16 +27,7 @@ class CupNotifier extends StateNotifier<AsyncValue<Cup>> {
   Future<void> setSelectedCup(int cupID) async {
     await dbHelper.setSelectedCup(cupID);
 
-    final selectedCup = await dbHelper.getSelectedCup();
-    final allCup = await dbHelper.getAllCup();
-
-    state = AsyncValue.data(
-      Cup(
-        selectedCupAmount: selectedCup[0]['amount'],
-        selectedCupMeasurement: selectedCup[0]['measurement'],
-        allCup: allCup,
-      ),
-    );
+    await fetchCup();
   }
 }
 
