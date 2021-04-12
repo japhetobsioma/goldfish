@@ -21,35 +21,42 @@ class ScheduledNotificationSettingsScreen extends HookWidget {
         width: double.maxFinite,
         child: notificationManager.when(
           data: (value) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: value.allScheduledNotifications.length,
-              itemBuilder: (_, index) {
-                final hour =
-                    value.allScheduledNotifications[index]['hour'] as int;
-                final minute =
-                    value.allScheduledNotifications[index]['minute'] as int;
-                final time = TimeOfDay(hour: hour, minute: minute);
-                final title =
-                    value.allScheduledNotifications[index]['title'] as String;
-                final body =
-                    value.allScheduledNotifications[index]['body'] as String;
-                final id = value.allScheduledNotifications[index]['id'] as int;
-
-                return Column(
-                  children: [
-                    NotificationItem(
-                      hour: hour,
-                      minute: minute,
-                      time: time,
-                      title: title,
-                      body: body,
-                      id: id,
-                    ),
-                    const Divider(),
-                  ],
-                );
+            return NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (notification) {
+                notification.disallowGlow();
+                return false;
               },
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: value.allScheduledNotifications.length,
+                itemBuilder: (_, index) {
+                  final hour =
+                      value.allScheduledNotifications[index]['hour'] as int;
+                  final minute =
+                      value.allScheduledNotifications[index]['minute'] as int;
+                  final time = TimeOfDay(hour: hour, minute: minute);
+                  final title =
+                      value.allScheduledNotifications[index]['title'] as String;
+                  final body =
+                      value.allScheduledNotifications[index]['body'] as String;
+                  final id =
+                      value.allScheduledNotifications[index]['id'] as int;
+
+                  return Column(
+                    children: [
+                      NotificationItem(
+                        hour: hour,
+                        minute: minute,
+                        time: time,
+                        title: title,
+                        body: body,
+                        id: id,
+                      ),
+                      const Divider(height: 1),
+                    ],
+                  );
+                },
+              ),
             );
           },
           loading: () => const SizedBox.shrink(),
@@ -310,7 +317,7 @@ class EditDeleteNotificationDialog extends HookWidget {
                 );
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.text_snippet),
               title: const Text('Set title'),
@@ -393,7 +400,7 @@ class EditDeleteNotificationDialog extends HookWidget {
                 );
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.text_snippet),
               title: const Text('Set body'),
@@ -476,7 +483,7 @@ class EditDeleteNotificationDialog extends HookWidget {
                 );
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
           ],
         ),
       ),

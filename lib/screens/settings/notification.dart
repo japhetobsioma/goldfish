@@ -122,7 +122,7 @@ class NotificationSettingsScreen extends HookWidget {
               },
               title: const Text('On'),
             ),
-            const Divider(),
+            const Divider(height: 1),
             notificationsSettings.when(
               data: (value) {
                 final hour = value.intervalTimeHour.toString();
@@ -143,7 +143,7 @@ class NotificationSettingsScreen extends HookWidget {
                               );
                             },
                           ),
-                          const Divider(),
+                          const Divider(height: 1),
                           value.notificationMode == NotificationMode.Interval
                               ? Column(
                                   children: [
@@ -159,7 +159,7 @@ class NotificationSettingsScreen extends HookWidget {
                                         );
                                       },
                                     ),
-                                    const Divider(),
+                                    const Divider(height: 1),
                                   ],
                                 )
                               : const SizedBox.shrink(),
@@ -181,7 +181,7 @@ class NotificationSettingsScreen extends HookWidget {
                               scheduledNotificationRoute,
                             ),
                           ),
-                          const Divider(),
+                          const Divider(height: 1),
                         ],
                       )
                     : const SizedBox.shrink();

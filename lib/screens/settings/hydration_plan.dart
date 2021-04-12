@@ -21,86 +21,92 @@ class HydrationPlanSettingsScreen extends HookWidget {
       appBar: AppBar(
         title: const Text('Hydration Plan'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            hydrationPlan.when(
-              data: (value) {
-                final gender = value.gender.name;
-                final birthday = value.birthday.toText;
-                final wakeupTime = value.wakeupTime;
-                final bedtime = value.bedtime;
-                final dailyGoal = value.dailyGoal;
+      body: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowGlow();
+          return false;
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              hydrationPlan.when(
+                data: (value) {
+                  final gender = value.gender.name;
+                  final birthday = value.birthday.toText;
+                  final wakeupTime = value.wakeupTime;
+                  final bedtime = value.bedtime;
+                  final dailyGoal = value.dailyGoal;
 
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.wc),
-                      title: const Text('Change gender'),
-                      subtitle: Text(gender),
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (_) => const GenderDialog(),
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.cake),
-                      title: const Text('Change birthday'),
-                      subtitle: Text(birthday),
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (_) => const BirthdayDialog(),
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.wb_sunny),
-                      title: const Text('Change wake-up time'),
-                      subtitle: Text(wakeupTime.toFormattedTypeString),
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (_) => const WakeupTimeDialog(),
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.nightlight_round),
-                      title: const Text('Change bedtime'),
-                      subtitle: Text(bedtime.toFormattedTypeString),
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (_) => const BedtimeDialog(),
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.flag),
-                      title: const Text('Change daily goal'),
-                      subtitle: Text(dailyGoal.toString()),
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (_) => const DailyGoalDialog(),
-                        );
-                      },
-                    ),
-                    const Divider(),
-                  ],
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-          ],
+                  return Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.wc),
+                        title: const Text('Change gender'),
+                        subtitle: Text(gender),
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const GenderDialog(),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.cake),
+                        title: const Text('Change birthday'),
+                        subtitle: Text(birthday),
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const BirthdayDialog(),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.wb_sunny),
+                        title: const Text('Change wake-up time'),
+                        subtitle: Text(wakeupTime.toFormattedTypeString),
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const WakeupTimeDialog(),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.nightlight_round),
+                        title: const Text('Change bedtime'),
+                        subtitle: Text(bedtime.toFormattedTypeString),
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const BedtimeDialog(),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.flag),
+                        title: const Text('Change daily goal'),
+                        subtitle: Text(dailyGoal.toString()),
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => const DailyGoalDialog(),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1),
+                    ],
+                  );
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -576,6 +582,7 @@ class DailyGoalDialog extends HookWidget {
                 border: const OutlineInputBorder(),
                 labelText: 'Daily Goal',
                 hintText: 'e.g. 3000',
+                suffixText: 'ml',
               ),
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
