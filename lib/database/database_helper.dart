@@ -783,4 +783,27 @@ class DatabaseHelper {
         ($amount, 'ml', 'false')
     ''');
   }
+
+  Future<void> editCup({@required int id, @required int amount}) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE cup
+      SET
+        amount = $amount
+      WHERE
+        cupID = $id
+    ''');
+  }
+
+  Future<void> deleteCup(int id) async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM
+        cup
+      WHERE
+        cupID = $id
+    ''');
+  }
 }
