@@ -20,24 +20,30 @@ class HistoryScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('History'),
       ),
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            const ThisWeeksTitle(),
-            const ThisWeeksCharts(),
-            const Divider(
-              indent: 30.0,
-              endIndent: 30.0,
-            ),
-            const StreaksTitle(),
-            const StreaksInfo(),
-            const Divider(
-              indent: 30.0,
-              endIndent: 30.0,
-            ),
-            const TopDrinkTypes(),
-          ],
+      body: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowGlow();
+          return false;
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              const ThisWeeksTitle(),
+              const ThisWeeksCharts(),
+              const Divider(
+                indent: 30.0,
+                endIndent: 30.0,
+              ),
+              const StreaksTitle(),
+              const StreaksInfo(),
+              const Divider(
+                indent: 30.0,
+                endIndent: 30.0,
+              ),
+              const TopDrinkTypes(),
+            ],
+          ),
         ),
       ),
     );

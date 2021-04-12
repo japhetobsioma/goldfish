@@ -61,7 +61,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllCup() async {
     final db = await instance.database;
 
-    return await db.rawQuery('SELECT * FROM cup');
+    return await db.rawQuery('SELECT * FROM cup ORDER BY amount, cupID');
   }
 
   /// Set all the `cup` tables' `isActive` column to `false`
@@ -378,7 +378,7 @@ class DatabaseHelper {
     ]);
   }
 
-  Future<List<Map<String, dynamic>>> readHydrationPlan() async {
+  Future<List<Map<String, dynamic>>> fetchHydrationPlan() async {
     final db = await instance.database;
 
     return await db.rawQuery('''
@@ -521,8 +521,8 @@ class DatabaseHelper {
           waterIntake 
         WHERE 
           strftime('%d%m%Y', date) = strftime(
-            '%d%m%Y', 'now', 'localtime', 'weekday 0', 
-            '${weekDay.queryValue}'
+            '%d%m%Y', 'now', 'localtime', 'weekday 0'
+            ${weekDay.queryValue}
           ) 
         GROUP BY 
           strftime('%d%m%Y', date)
@@ -578,7 +578,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<int> insertSingleScheduledNotifications({
+  Future<int> insertSingleScheduledNotification({
     @required int hour,
     @required int minute,
     @required String title,
@@ -630,7 +630,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> deleteSingleScheduledNotifications({@required int id}) async {
+  Future<void> deleteSingleScheduledNotification({@required int id}) async {
     final db = await instance.database;
 
     await db.rawDelete('''
@@ -641,7 +641,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> updateScheduledNotificationsHourMinute({
+  Future<void> updateScheduledNotificationHourMinute({
     @required int hour,
     @required int minute,
     @required int id,
@@ -658,7 +658,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> updateScheduledNotificationsTitle({
+  Future<void> updateScheduledNotificationTitle({
     @required String title,
     @required int id,
   }) async {
@@ -673,7 +673,7 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> updateScheduledNotificationsBody({
+  Future<void> updateScheduledNotificationBody({
     @required String body,
     @required int id,
   }) async {
@@ -685,6 +685,125 @@ class DatabaseHelper {
         body = '$body'
       WHERE
         id = $id
+    ''');
+  }
+
+  Future<void> updateGender(Gender gender) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        gender = '${gender.nameLowerCase}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> updateBirthday(DateTime birthday) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        birthday = '${birthday.toString()}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> updateWakeupTime(TimeOfDay wakeupTime) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        wakeupTime = '${wakeupTime.toDateTimeTypeString}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> updateBedtime(TimeOfDay bedtime) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        bedtime = '${bedtime.toDateTimeTypeString}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> updateDailyGoal(int dailyGoal) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        dailyGoal = '${dailyGoal.toString()}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> updateLiquidMeasurement(
+    LiquidMeasurement liquidMeasurement,
+  ) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        liquidMeasurement = '${liquidMeasurement.description}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> updateUseRecommendedGoal(bool useRecommendedGoal) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE hydrationPlan
+      SET
+        isUsingRecommendedDailyGoal = '${useRecommendedGoal.toString()}'
+      WHERE
+        id = 1
+    ''');
+  }
+
+  Future<void> addCup(int amount) async {
+    final db = await instance.database;
+
+    await db.rawInsert('''
+      INSERT INTO cup (amount, measurement, isActive) 
+      VALUES 
+        ($amount, 'ml', 'false')
+    ''');
+  }
+
+  Future<void> editCup({@required int id, @required int amount}) async {
+    final db = await instance.database;
+
+    await db.rawUpdate('''
+      UPDATE cup
+      SET
+        amount = $amount
+      WHERE
+        cupID = $id
+    ''');
+  }
+
+  Future<void> deleteCup(int id) async {
+    final db = await instance.database;
+
+    await db.rawDelete('''
+      DELETE FROM
+        cup
+      WHERE
+        cupID = $id
     ''');
   }
 }

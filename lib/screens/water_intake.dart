@@ -25,19 +25,21 @@ class WaterIntakeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => context.read(waterIntakeProvider).fetchWaterIntake(),
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30.0,
-            ),
-            const WaterIntakeGauge(),
-            const WaterIntakeLists(),
-            const SizedBox(
-              height: 30.0,
-            ),
-          ],
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowGlow();
+          return false;
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 30.0),
+              const WaterIntakeGauge(),
+              const WaterIntakeLists(),
+              const SizedBox(height: 30.0),
+            ],
+          ),
         ),
       ),
     );
@@ -173,32 +175,38 @@ class WaterIntakeLists extends HookWidget {
       data: (value) {
         return Container(
           child: value.todaysIntakes.isNotEmpty
-              ? AnimatedList(
-                  key: animatedList.key,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  initialItemCount: value.todaysIntakes.length,
-                  itemBuilder: (context, index, animation) {
-                    final String getDrinkTypes =
-                        value.todaysIntakes[index]['drinkTypes'];
-                    final drinkTypes = getDrinkTypes.toDrinkTypes;
-                    final String getTileColors =
-                        value.todaysIntakes[index]['tileColors'];
-                    final tileColors = getTileColors.toTileColors;
-                    final String getDate = value.todaysIntakes[index]['date'];
-                    final date = getDate.toDateTime;
-                    final timeDifference = getTimeDifference(date);
-
-                    return WaterIntakeItem(
-                      tileColors: tileColors,
-                      drinkTypes: drinkTypes,
-                      date: date,
-                      timeDifference: timeDifference,
-                      animation: animation,
-                      value: value,
-                      index: index,
-                    );
+              ? NotificationListener<OverscrollIndicatorNotification>(
+                  onNotification: (notification) {
+                    notification.disallowGlow();
+                    return false;
                   },
+                  child: AnimatedList(
+                    key: animatedList.key,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    initialItemCount: value.todaysIntakes.length,
+                    itemBuilder: (context, index, animation) {
+                      final String getDrinkTypes =
+                          value.todaysIntakes[index]['drinkTypes'];
+                      final drinkTypes = getDrinkTypes.toDrinkTypes;
+                      final String getTileColors =
+                          value.todaysIntakes[index]['tileColors'];
+                      final tileColors = getTileColors.toTileColors;
+                      final String getDate = value.todaysIntakes[index]['date'];
+                      final date = getDate.toDateTime;
+                      final timeDifference = getTimeDifference(date);
+
+                      return WaterIntakeItem(
+                        tileColors: tileColors,
+                        drinkTypes: drinkTypes,
+                        date: date,
+                        timeDifference: timeDifference,
+                        animation: animation,
+                        value: value,
+                        index: index,
+                      );
+                    },
+                  ),
                 )
               : Padding(
                   padding: const EdgeInsets.symmetric(

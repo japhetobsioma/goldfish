@@ -17,11 +17,11 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.local_drink),
               title: const Text('Hydration plan'),
-              onTap: () {
-                Navigator.pop(context);
+              onTap: () async {
+                await Navigator.pushNamed(context, hydrationPlanRoute);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Notifications'),
@@ -29,31 +29,53 @@ class SettingsScreen extends StatelessWidget {
                 await Navigator.pushNamed(context, notificationsSettingsRoute);
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.local_cafe),
-              title: const Text('Cup'),
-              onTap: () {
-                Navigator.pop(context);
+              title: const Text('Manage cups'),
+              onTap: () async {
+                await Navigator.pushNamed(context, cupManagerRoute);
               },
             ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.palette),
-              title: const Text('Theme'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            const Divider(),
+            const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.info),
               title: const Text('About'),
               onTap: () {
-                Navigator.pop(context);
+                showAboutDialog(
+                  context: context,
+                  applicationName: 'Aqua',
+                  applicationVersion: 'v1.0',
+                  applicationIcon: const Icon(Icons.local_drink),
+                  children: [
+                    const Text(
+                      'Description',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      'A Flutter application that can track user\'s water '
+                      'intake.',
+                    ),
+                    const Text(
+                      '\nAuthors',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      'Japhet Mert Catilo Obsioma (Dart, Flutter, SQLite)'
+                      '\nShamsul Bin Majid (Unity, C#)',
+                    ),
+                    const Text(
+                      '\nGitHub',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      'github.com/japhetobsioma/goldfish',
+                    ),
+                  ],
+                );
               },
             ),
-            const Divider(),
+            const Divider(height: 1),
           ],
         ),
       ),

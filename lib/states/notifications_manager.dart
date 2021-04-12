@@ -10,13 +10,13 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../common/helpers.dart';
 import '../database/database_helper.dart';
-import '../models/notifications_manager.dart';
+import '../models/notification_manager.dart';
 import '../screens/home.dart';
 
-class NotificationsManagerNotifier
-    extends StateNotifier<AsyncValue<NotificationsManager>> {
-  NotificationsManagerNotifier() : super(const AsyncValue.loading()) {
-    fetchNotificationsManager();
+class NotificationManagerNotifier
+    extends StateNotifier<AsyncValue<NotificationManager>> {
+  NotificationManagerNotifier() : super(const AsyncValue.loading()) {
+    fetchNotificationManager();
   }
 
   static final dbHelper = DatabaseHelper.instance;
@@ -44,14 +44,14 @@ class NotificationsManagerNotifier
     "Don''t forget to drink!",
   ];
 
-  Future<void> fetchNotificationsManager() async {
+  Future<void> fetchNotificationManager() async {
     final allScheduledNotifications =
         await dbHelper.fetchScheduledNotifications();
     final totalScheduledNotifications =
         await dbHelper.getTotalScheduledNotifications();
 
     state = AsyncValue.data(
-      NotificationsManager(
+      NotificationManager(
         allScheduledNotifications: allScheduledNotifications,
         totalScheduledNotifications: totalScheduledNotifications,
       ),
@@ -59,7 +59,7 @@ class NotificationsManagerNotifier
   }
 
   Future<void> generateScheduledNotifications() async {
-    final hydrationPlan = await dbHelper.readHydrationPlan();
+    final hydrationPlan = await dbHelper.fetchHydrationPlan();
     final wakeupTime = (hydrationPlan[0]['wakeupTime'] as String).toDateTime;
     final bedtime = (hydrationPlan[0]['bedtime'] as String).toDateTime;
 
@@ -96,10 +96,10 @@ class NotificationsManagerNotifier
       await dbHelper.insertMultipleScheduledNotifications(query);
     }
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
-  Future<void> setTimeZones() async {
+  Future<void> setTimeZone() async {
     final currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
     tz.initializeTimeZones();
@@ -135,7 +135,7 @@ class NotificationsManagerNotifier
           final title = element['title'];
           final body = element['body'];
 
-          setSingleScheduledNotifications(
+          setSingleScheduledNotification(
             id: id,
             hour: hour,
             minute: minute,
@@ -146,17 +146,17 @@ class NotificationsManagerNotifier
       );
     }
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
-  Future<void> setSingleScheduledNotifications({
+  Future<void> setSingleScheduledNotification({
     @required int id,
     @required int hour,
     @required int minute,
     @required String title,
     @required String body,
   }) async {
-    await setTimeZones();
+    await setTimeZone();
 
     title = title.replaceAll(RegExp(r"''"), "'");
     body = body.replaceAll(RegExp(r"''"), "'");
@@ -183,10 +183,10 @@ class NotificationsManagerNotifier
   Future<void> deleteAllScheduledNotifications() async {
     await dbHelper.deleteAllScheduledNotifications();
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
-  Future<int> insertSingleScheduledNotifications({
+  Future<int> insertSingleScheduledNotification({
     @required int hour,
     @required int minute,
     @required String title,
@@ -195,77 +195,77 @@ class NotificationsManagerNotifier
     title = title.replaceAll(RegExp(r"'"), "''");
     body = body.replaceAll(RegExp(r"'"), "''");
 
-    final id = await dbHelper.insertSingleScheduledNotifications(
+    final id = await dbHelper.insertSingleScheduledNotification(
       hour: hour,
       minute: minute,
       title: title,
       body: body,
     );
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
 
     return id;
   }
 
-  Future<void> deleteSingleScheduledNotifications(int id) async {
-    await dbHelper.deleteSingleScheduledNotifications(
+  Future<void> deleteSingleScheduledNotification(int id) async {
+    await dbHelper.deleteSingleScheduledNotification(
       id: id,
     );
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
-  Future<void> updateScheduledNotificationsHourMinute({
+  Future<void> updateScheduledNotificationHourMinute({
     @required int hour,
     @required int minute,
     @required int id,
   }) async {
-    await dbHelper.updateScheduledNotificationsHourMinute(
+    await dbHelper.updateScheduledNotificationHourMinute(
       hour: hour,
       minute: minute,
       id: id,
     );
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
-  Future<void> updateScheduledNotificationsTitle({
+  Future<void> updateScheduledNotificationTitle({
     @required String title,
     @required int id,
   }) async {
     title = title.replaceAll(RegExp(r"'"), "''");
 
-    await dbHelper.updateScheduledNotificationsTitle(
+    await dbHelper.updateScheduledNotificationTitle(
       title: title,
       id: id,
     );
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
-  Future<void> updateScheduledNotificationsBody({
+  Future<void> updateScheduledNotificationBody({
     @required String body,
     @required int id,
   }) async {
     body = body.replaceAll(RegExp(r"'"), "''");
 
-    await dbHelper.updateScheduledNotificationsBody(
+    await dbHelper.updateScheduledNotificationBody(
       body: body,
       id: id,
     );
 
-    await fetchNotificationsManager();
+    await fetchNotificationManager();
   }
 
   Future<void> cancelAllScheduledNotifications() async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
 
-  Future<void> cancelSingleScheduledNotifications(int id) async {
+  Future<void> cancelSingleScheduledNotification(int id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
   }
 }
 
-final notificationsManagerProvider =
-    StateNotifierProvider<NotificationsManagerNotifier>(
-        (ref) => NotificationsManagerNotifier());
+final notificationManagerProvider =
+    StateNotifierProvider<NotificationManagerNotifier>(
+        (ref) => NotificationManagerNotifier());

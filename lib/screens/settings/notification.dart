@@ -7,18 +7,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common/helpers.dart';
 import '../../common/routes.dart';
-import '../../models/notifications_settings.dart';
+import '../../models/notification_settings.dart';
 import '../../states/notifications_manager.dart';
 import '../../states/notifications_settings.dart';
 
-class NotificationsSettingsScreens extends HookWidget {
-  const NotificationsSettingsScreens();
+class NotificationSettingsScreen extends HookWidget {
+  const NotificationSettingsScreen();
 
   @override
   Widget build(BuildContext context) {
     final notificationsSettings =
-        useProvider(notificationsSettingsProvider.state);
-    final notificationManager = useProvider(notificationsManagerProvider.state);
+        useProvider(notificationSettingsProvider.state);
+    final notificationManager = useProvider(notificationManagerProvider.state);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,6 +35,8 @@ class NotificationsSettingsScreens extends HookWidget {
                 if (isIgnoringBatteryOptimizations == false) {
                   return MaterialBanner(
                     leading: CircleAvatar(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
                       child: Icon(Icons.warning),
                     ),
                     content:
@@ -48,8 +50,8 @@ class NotificationsSettingsScreens extends HookWidget {
                           );
 
                           await context
-                              .read(notificationsSettingsProvider)
-                              .fetchNotificationsSettings();
+                              .read(notificationSettingsProvider)
+                              .fetchNotificationSettings();
                         },
                         child: const Text('FIX IT'),
                       ),
@@ -79,22 +81,48 @@ class NotificationsSettingsScreens extends HookWidget {
               ),
               onChanged: (value) async {
                 await context
-                    .read(notificationsSettingsProvider)
+                    .read(notificationSettingsProvider)
                     .updateIsNotificationTurnOn(value);
 
-                if (value) {
+                NotificationMode notificationMode;
+
+                notificationsSettings.when(
+                  data: (value) => notificationMode = value.notificationMode,
+                  loading: () {},
+                  error: (_, __) {},
+                );
+
+                if (value && notificationMode == NotificationMode.Custom) {
                   await context
-                      .read(notificationsManagerProvider)
+                      .read(notificationManagerProvider)
                       .setAllScheduledNotifications();
-                } else {
+                } else if (value == false &&
+                    notificationMode == NotificationMode.Custom) {
                   await context
-                      .read(notificationsManagerProvider)
+                      .read(notificationManagerProvider)
+                      .cancelAllScheduledNotifications();
+                }
+
+                if (value && notificationMode == NotificationMode.Interval) {
+                  await context
+                      .read(notificationManagerProvider)
+                      .generateScheduledNotifications();
+                  await context
+                      .read(notificationManagerProvider)
+                      .setAllScheduledNotifications();
+                } else if (value == false &&
+                    notificationMode == NotificationMode.Interval) {
+                  await context
+                      .read(notificationManagerProvider)
+                      .deleteAllScheduledNotifications();
+                  await context
+                      .read(notificationManagerProvider)
                       .cancelAllScheduledNotifications();
                 }
               },
               title: const Text('On'),
             ),
-            const Divider(),
+            const Divider(height: 1),
             notificationsSettings.when(
               data: (value) {
                 final hour = value.intervalTimeHour.toString();
@@ -115,7 +143,7 @@ class NotificationsSettingsScreens extends HookWidget {
                               );
                             },
                           ),
-                          const Divider(),
+                          const Divider(height: 1),
                           value.notificationMode == NotificationMode.Interval
                               ? Column(
                                   children: [
@@ -131,7 +159,7 @@ class NotificationsSettingsScreens extends HookWidget {
                                         );
                                       },
                                     ),
-                                    const Divider(),
+                                    const Divider(height: 1),
                                   ],
                                 )
                               : const SizedBox.shrink(),
@@ -153,7 +181,7 @@ class NotificationsSettingsScreens extends HookWidget {
                               scheduledNotificationRoute,
                             ),
                           ),
-                          const Divider(),
+                          const Divider(height: 1),
                         ],
                       )
                     : const SizedBox.shrink();
@@ -174,7 +202,7 @@ class NotificationModeDialog extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationsSettings =
-        useProvider(notificationsSettingsProvider.state);
+        useProvider(notificationSettingsProvider.state);
 
     return SimpleDialog(
       title: const Text('Select notification mode'),
@@ -192,23 +220,23 @@ class NotificationModeDialog extends HookWidget {
               groupValue: value.notificationMode,
               onChanged: (value) async {
                 await context
-                    .read(notificationsSettingsProvider)
+                    .read(notificationSettingsProvider)
                     .updateNotificationMode(value);
 
                 await context
-                    .read(notificationsManagerProvider)
+                    .read(notificationManagerProvider)
                     .deleteAllScheduledNotifications();
 
                 await context
-                    .read(notificationsManagerProvider)
+                    .read(notificationManagerProvider)
                     .cancelAllScheduledNotifications();
 
                 await context
-                    .read(notificationsManagerProvider)
+                    .read(notificationManagerProvider)
                     .generateScheduledNotifications();
 
                 await context
-                    .read(notificationsManagerProvider)
+                    .read(notificationManagerProvider)
                     .setAllScheduledNotifications();
 
                 Navigator.pop(context);
@@ -226,15 +254,15 @@ class NotificationModeDialog extends HookWidget {
             groupValue: value.notificationMode,
             onChanged: (value) async {
               await context
-                  .read(notificationsSettingsProvider)
+                  .read(notificationSettingsProvider)
                   .updateNotificationMode(value);
 
               await context
-                  .read(notificationsManagerProvider)
+                  .read(notificationManagerProvider)
                   .deleteAllScheduledNotifications();
 
               await context
-                  .read(notificationsManagerProvider)
+                  .read(notificationManagerProvider)
                   .cancelAllScheduledNotifications();
 
               Navigator.pop(context);
@@ -254,13 +282,14 @@ class ChangeIntervalDialog extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationsSettings =
-        useProvider(notificationsSettingsProvider.state);
+        useProvider(notificationSettingsProvider.state);
     final hourTextController = useTextEditingController();
     final hourFormKey = useState(GlobalKey<FormState>());
     final minuteTextController = useTextEditingController();
     final minuteFormKey = useState(GlobalKey<FormState>());
 
     return AlertDialog(
+      contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
       title: const Text('Set interval time'),
       content: Wrap(
         children: [
@@ -353,20 +382,20 @@ class ChangeIntervalDialog extends HookWidget {
               minuteFormKey.value.currentState.validate();
 
               await context
-                  .read(notificationsSettingsProvider)
+                  .read(notificationSettingsProvider)
                   .updateIntervalHour(hourTextController.text);
               await context
-                  .read(notificationsSettingsProvider)
+                  .read(notificationSettingsProvider)
                   .updateIntervalMinute(minuteTextController.text);
 
               await context
-                  .read(notificationsManagerProvider)
+                  .read(notificationManagerProvider)
                   .deleteAllScheduledNotifications();
               await context
-                  .read(notificationsManagerProvider)
+                  .read(notificationManagerProvider)
                   .generateScheduledNotifications();
               await context
-                  .read(notificationsManagerProvider)
+                  .read(notificationManagerProvider)
                   .setAllScheduledNotifications();
 
               Navigator.of(context).pop();
@@ -388,6 +417,7 @@ class LearnMoreDialog extends StatelessWidget {
       title: const Text(
         'Why do notifications may not work?',
       ),
+      contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
       content: const Text(
         'Sometimes this application does not ring at the scheduled time, '
         'because of cleaner apps or phone system shut off this application '
@@ -420,6 +450,7 @@ class FixItDialog extends StatelessWidget {
       title: const Text(
         'How to fix notifications?',
       ),
+      contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
       content: const Text(
         'You have two options to ring notification at the scheduled time: '
         'Accept the request to remove this app from battery optimization, or '

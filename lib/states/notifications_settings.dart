@@ -4,17 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/helpers.dart';
 import '../database/database_helper.dart';
-import '../models/notifications_settings.dart';
+import '../models/notification_settings.dart';
 
-class NotificationsSettingsNotifier
-    extends StateNotifier<AsyncValue<NotificationsSettings>> {
-  NotificationsSettingsNotifier() : super(const AsyncValue.loading()) {
-    fetchNotificationsSettings();
+class NotificationSettingsNotifier
+    extends StateNotifier<AsyncValue<NotificationSettings>> {
+  NotificationSettingsNotifier() : super(const AsyncValue.loading()) {
+    fetchNotificationSettings();
   }
 
   static final dbHelper = DatabaseHelper.instance;
 
-  Future<void> fetchNotificationsSettings() async {
+  Future<void> fetchNotificationSettings() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     final isIgnoring =
         await BatteryOptimization.isIgnoringBatteryOptimizations();
@@ -30,7 +30,7 @@ class NotificationsSettingsNotifier
     final isIgnoringBatteryOptimizations = isIgnoring;
 
     state = AsyncValue.data(
-      NotificationsSettings(
+      NotificationSettings(
         isNotificationTurnOn: isNotificationTurnOn,
         notificationMode: notificationMode.toNotificationMode,
         totalActiveNotifications: totalActiveNotification,
@@ -45,14 +45,14 @@ class NotificationsSettingsNotifier
     final sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setBool('isNotificationTurnOn', value);
 
-    await fetchNotificationsSettings();
+    await fetchNotificationSettings();
   }
 
   Future<void> updateNotificationMode(NotificationMode value) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString('notificationMode', value.name);
 
-    await fetchNotificationsSettings();
+    await fetchNotificationSettings();
   }
 
   Future<void> updateIntervalHour(String value) async {
@@ -61,7 +61,7 @@ class NotificationsSettingsNotifier
     final sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setInt('intervalTimeHour', newValue);
 
-    await fetchNotificationsSettings();
+    await fetchNotificationSettings();
   }
 
   Future<void> updateIntervalMinute(String value) async {
@@ -70,10 +70,10 @@ class NotificationsSettingsNotifier
     final sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setInt('intervalTimeMinute', newValue);
 
-    await fetchNotificationsSettings();
+    await fetchNotificationSettings();
   }
 }
 
-final notificationsSettingsProvider =
-    StateNotifierProvider<NotificationsSettingsNotifier>(
-        (ref) => NotificationsSettingsNotifier());
+final notificationSettingsProvider =
+    StateNotifierProvider<NotificationSettingsNotifier>(
+        (ref) => NotificationSettingsNotifier());
