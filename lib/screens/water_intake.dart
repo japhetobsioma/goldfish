@@ -51,6 +51,8 @@ class WaterIntakeGauge extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
     final waterIntake = useProvider(waterIntakeProvider.state);
     final userInfo = useProvider(userInfoProvider.state);
 
@@ -77,6 +79,7 @@ class WaterIntakeGauge extends HookWidget {
             showLabels: false,
             axisLineStyle: AxisLineStyle(
               thickness: 25.0,
+              color: Theme.of(context).chipTheme.backgroundColor,
             ),
             pointers: [
               RangePointer(
@@ -94,7 +97,9 @@ class WaterIntakeGauge extends HookWidget {
                   },
                 ),
                 width: 25.0,
-                color: Theme.of(context).primaryColor,
+                color: darkModeOn
+                    ? Theme.of(context).accentColor
+                    : Theme.of(context).primaryColor,
                 enableAnimation: true,
               ),
             ],
@@ -124,7 +129,9 @@ class WaterIntakeGauge extends HookWidget {
                           },
                         ),
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color: darkModeOn
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 28.0,
                         ),
@@ -146,7 +153,7 @@ class WaterIntakeGauge extends HookWidget {
                           },
                         ),
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: darkModeOn ? Colors.white : Colors.black54,
                           fontWeight: FontWeight.bold,
                           fontSize: 28.0,
                         ),
@@ -256,6 +263,9 @@ class WaterIntakeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 15.0,
@@ -264,19 +274,26 @@ class WaterIntakeItem extends StatelessWidget {
       child: SizeTransition(
         sizeFactor: animation,
         child: Card(
-          color: tileColors.color,
+          color: tileColors.color == Colors.white && darkModeOn
+              ? Theme.of(context).chipTheme.backgroundColor
+              : tileColors.color,
           child: ListTile(
             leading: tileColors.color == Colors.white
                 ? Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFe0e0e0),
+                        color: tileColors.color == Colors.white && darkModeOn
+                            ? Theme.of(context).chipTheme.backgroundColor
+                            : const Color(0xFFe0e0e0),
                         width: 1.0,
                       ),
                     ),
                     child: CircleAvatar(
-                      backgroundColor: tileColors.color,
+                      backgroundColor:
+                          tileColors.color == Colors.white && darkModeOn
+                              ? Theme.of(context).chipTheme.backgroundColor
+                              : tileColors.color,
                       child: Icon(
                         drinkTypes.icon,
                         color: const Color(0xFF202124),
@@ -340,6 +357,8 @@ class WaterIntakeDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
     final tileColors = useProvider(editTileColorsProvider);
     final amount = useProvider(editAmountProvider);
     final measurement = useProvider(editMeasurementProvider);
@@ -349,13 +368,19 @@ class WaterIntakeDialog extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: const Color(0xFF202124),
+          color: darkModeOn && tileColors.color == Colors.white
+              ? Colors.white
+              : const Color(0xFF202124),
         ),
-        backgroundColor: tileColors.color,
-        title: const Text(
+        backgroundColor: tileColors.color == Colors.white && darkModeOn
+            ? Theme.of(context).chipTheme.backgroundColor
+            : tileColors.color,
+        title: Text(
           'Edit intake information',
           style: TextStyle(
-            color: Color(0xFF202124),
+            color: darkModeOn && tileColors.color == Colors.white
+                ? Colors.white
+                : Color(0xFF202124),
           ),
         ),
         actions: [
@@ -783,6 +808,8 @@ class EditTileColorItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
     final tileColors = useProvider(editTileColorsProvider);
 
     return Column(
@@ -798,13 +825,16 @@ class EditTileColorItem extends HookWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFe0e0e0),
+                        color: darkModeOn
+                            ? Theme.of(context).chipTheme.backgroundColor
+                            : const Color(0xFFe0e0e0),
                         width: 1.0,
                       ),
                     ),
                     child: CircleAvatar(
-                      backgroundColor:
-                          (value.allTileColor[index]['tileColors'] as String)
+                      backgroundColor: darkModeOn
+                          ? Theme.of(context).chipTheme.backgroundColor
+                          : (value.allTileColor[index]['tileColors'] as String)
                               .toTileColors
                               .color,
                     ),
