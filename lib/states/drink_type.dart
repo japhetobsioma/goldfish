@@ -42,4 +42,6 @@ class DrinkTypeNotifier extends StateNotifier<AsyncValue<DrinkType>> {
 }
 
 final drinkTypeProvider =
-    StateNotifierProvider<DrinkTypeNotifier>((ref) => DrinkTypeNotifier());
+    StateNotifierProvider<DrinkTypeNotifier, AsyncValue<DrinkType>>(
+  (ref) => DrinkTypeNotifier(),
+);

@@ -39,21 +39,22 @@ class CupManagerNotifier extends StateNotifier<CupManager> {
 
   Future<void> addCup() async {
     await dbHelper.addCup(state.cupAmount);
-    await read(cupProvider).fetchCup();
+    await read(cupProvider.notifier).fetchCup();
   }
 
   Future<void> editCup({@required int id, @required int amount}) async {
     await dbHelper.editCup(id: id, amount: amount);
-    await read(cupProvider).fetchCup();
+    await read(cupProvider.notifier).fetchCup();
   }
 
   Future<void> deleteCup() async {
     await dbHelper.deleteCup(state.editedCupID);
 
-    await read(cupProvider).fetchCup();
+    await read(cupProvider.notifier).fetchCup();
   }
 }
 
-final cupManagerProvider = StateNotifierProvider<CupManagerNotifier>(
+final cupManagerProvider =
+    StateNotifierProvider<CupManagerNotifier, CupManager>(
   (ref) => CupManagerNotifier(ref.read),
 );

@@ -33,4 +33,6 @@ class IntakeBankNotifier extends StateNotifier<AsyncValue<IntakeBank>> {
 }
 
 final intakeBankProvider =
-    StateNotifierProvider<IntakeBankNotifier>((ref) => IntakeBankNotifier());
+    StateNotifierProvider<IntakeBankNotifier, AsyncValue<IntakeBank>>(
+  (ref) => IntakeBankNotifier(),
+);

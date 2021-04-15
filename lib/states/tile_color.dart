@@ -38,4 +38,6 @@ class TileColorNotifier extends StateNotifier<AsyncValue<TileColor>> {
 }
 
 final tileColorProvider =
-    StateNotifierProvider<TileColorNotifier>((ref) => TileColorNotifier());
+    StateNotifierProvider<TileColorNotifier, AsyncValue<TileColor>>(
+  (ref) => TileColorNotifier(),
+);

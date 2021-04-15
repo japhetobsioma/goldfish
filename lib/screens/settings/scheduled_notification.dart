@@ -11,7 +11,7 @@ class ScheduledNotificationSettingsScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationManager = useProvider(notificationManagerProvider.state);
+    final notificationManager = useProvider(notificationManagerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -149,7 +149,9 @@ class EditDeleteNotificationDialog extends HookWidget {
     final bodyFormKey = useState(GlobalKey<FormState>());
 
     useEffect(() {
-      context.read(notificationManagerProvider).fetchNotificationManager();
+      context
+          .read(notificationManagerProvider.notifier)
+          .fetchNotificationManager();
       return () {};
     }, []);
 
@@ -182,11 +184,11 @@ class EditDeleteNotificationDialog extends HookWidget {
                       TextButton(
                         onPressed: () async {
                           await context
-                              .read(notificationManagerProvider)
+                              .read(notificationManagerProvider.notifier)
                               .deleteSingleScheduledNotification(id);
 
                           await context
-                              .read(notificationManagerProvider)
+                              .read(notificationManagerProvider.notifier)
                               .cancelSingleScheduledNotification(id);
 
                           Navigator.popUntil(context,
@@ -285,7 +287,7 @@ class EditDeleteNotificationDialog extends HookWidget {
                               final newMinute = time.minute;
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .updateScheduledNotificationHourMinute(
                                     hour: newHour,
                                     minute: newMinute,
@@ -293,11 +295,11 @@ class EditDeleteNotificationDialog extends HookWidget {
                                   );
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .cancelSingleScheduledNotification(id);
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .setSingleScheduledNotification(
                                     id: id,
                                     hour: hour,
@@ -369,18 +371,18 @@ class EditDeleteNotificationDialog extends HookWidget {
                               titleText.value = titleTextController.text;
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .updateScheduledNotificationTitle(
                                     title: titleTextController.text,
                                     id: id,
                                   );
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .cancelSingleScheduledNotification(id);
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .setSingleScheduledNotification(
                                     id: id,
                                     hour: hour,
@@ -452,18 +454,18 @@ class EditDeleteNotificationDialog extends HookWidget {
                               bodyText.value = bodyTextController.text;
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .updateScheduledNotificationBody(
                                     body: bodyTextController.text,
                                     id: id,
                                   );
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .cancelSingleScheduledNotification(id);
 
                               await context
-                                  .read(notificationManagerProvider)
+                                  .read(notificationManagerProvider.notifier)
                                   .setSingleScheduledNotification(
                                     id: id,
                                     hour: hour,
@@ -623,7 +625,7 @@ class AddNotificationDialog extends HookWidget {
                     final body = bodyTextController.text;
 
                     final id = await context
-                        .read(notificationManagerProvider)
+                        .read(notificationManagerProvider.notifier)
                         .insertSingleScheduledNotification(
                           hour: hour,
                           minute: minute,
@@ -632,7 +634,7 @@ class AddNotificationDialog extends HookWidget {
                         );
 
                     await context
-                        .read(notificationManagerProvider)
+                        .read(notificationManagerProvider.notifier)
                         .setSingleScheduledNotification(
                           id: id,
                           hour: hour,

@@ -30,7 +30,7 @@ dependencies:
 
   pedantic: ^1.11.0
   flutter_hooks: ^0.16.0
-  hooks_riverpod: ^0.13.1
+  hooks_riverpod: ^0.14.0
   intl: ^0.17.0
   flutter_unity_widget: ^3.0.3
   sqflite: ^2.0.0+3

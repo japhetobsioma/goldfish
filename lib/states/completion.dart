@@ -51,4 +51,6 @@ class CompletionNotifier extends StateNotifier<AsyncValue<Completion>> {
 }
 
 final completionProvider =
-    StateNotifierProvider<CompletionNotifier>((ref) => CompletionNotifier());
+    StateNotifierProvider<CompletionNotifier, AsyncValue<Completion>>(
+  (ref) => CompletionNotifier(),
+);

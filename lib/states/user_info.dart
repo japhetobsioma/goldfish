@@ -26,4 +26,6 @@ class UserInfoNotifier extends StateNotifier<AsyncValue<UserInfo>> {
 }
 
 final userInfoProvider =
-    StateNotifierProvider<UserInfoNotifier>((ref) => UserInfoNotifier());
+    StateNotifierProvider<UserInfoNotifier, AsyncValue<UserInfo>>(
+  (ref) => UserInfoNotifier(),
+);

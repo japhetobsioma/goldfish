@@ -218,77 +218,79 @@ class CreatePlanFormNotifier extends StateNotifier<CreatePlanForm> {
   }
 }
 
-final createPlanFormProvider = StateNotifierProvider<CreatePlanFormNotifier>(
-    (ref) => CreatePlanFormNotifier());
+final createPlanFormProvider =
+    StateNotifierProvider<CreatePlanFormNotifier, CreatePlanForm>(
+  (ref) => CreatePlanFormNotifier(),
+);
 
-final _selectedGenderState = Provider<Gender>(
-    (ref) => ref.watch(createPlanFormProvider.state).selectedGender);
+final _selectedGenderState =
+    Provider<Gender>((ref) => ref.watch(createPlanFormProvider).selectedGender);
 
 final selectedGenderProvider =
     Provider<Gender>((ref) => ref.watch(_selectedGenderState));
 
-final _isGenderNoneState = Provider<bool>(
-    (ref) => ref.watch(createPlanFormProvider.state).isGenderNone);
+final _isGenderNoneState =
+    Provider<bool>((ref) => ref.watch(createPlanFormProvider).isGenderNone);
 
 final isGenderNoneProvider =
     Provider<bool>((ref) => ref.watch(_isGenderNoneState));
 
 final _birthdayFormKeyState = Provider<GlobalKey<FormState>>(
-    (ref) => ref.watch(createPlanFormProvider.state).birthdayFormKey);
+    (ref) => ref.watch(createPlanFormProvider).birthdayFormKey);
 
 final birthdayFormKeyProvider =
     Provider<GlobalKey<FormState>>((ref) => ref.watch(_birthdayFormKeyState));
 
 final _birthdayTextControllerState = Provider<TextEditingController>(
-    (ref) => ref.watch(createPlanFormProvider.state).birthdayTextController);
+    (ref) => ref.watch(createPlanFormProvider).birthdayTextController);
 
 final birthdayTextControllerProvider = Provider<TextEditingController>(
     (ref) => ref.watch(_birthdayTextControllerState));
 
 final _wakeupTimeFormKeyState = Provider<GlobalKey<FormState>>(
-    (ref) => ref.watch(createPlanFormProvider.state).wakeupTimeFormKey);
+    (ref) => ref.watch(createPlanFormProvider).wakeupTimeFormKey);
 
 final wakeupTimeFormKeyProvider =
     Provider<GlobalKey<FormState>>((ref) => ref.watch(_wakeupTimeFormKeyState));
 
 final _wakeupTimeTextControllerState = Provider<TextEditingController>(
-    (ref) => ref.watch(createPlanFormProvider.state).wakeupTimeTextController);
+    (ref) => ref.watch(createPlanFormProvider).wakeupTimeTextController);
 
 final wakeupTimeTextControllerProvider = Provider<TextEditingController>(
     (ref) => ref.watch(_wakeupTimeTextControllerState));
 
 final _bedtimeFormKeyState = Provider<GlobalKey<FormState>>(
-    (ref) => ref.watch(createPlanFormProvider.state).bedtimeFormKey);
+    (ref) => ref.watch(createPlanFormProvider).bedtimeFormKey);
 
 final bedtimeFormKeyProvider =
     Provider<GlobalKey<FormState>>((ref) => ref.watch(_bedtimeFormKeyState));
 
 final _bedtimeTextControllerState = Provider<TextEditingController>(
-    (ref) => ref.watch(createPlanFormProvider.state).bedtimeTextController);
+    (ref) => ref.watch(createPlanFormProvider).bedtimeTextController);
 
 final bedtimeTextControllerProvider = Provider<TextEditingController>(
     (ref) => ref.watch(_bedtimeTextControllerState));
 
 final _dailyGoalFormKeyState = Provider<GlobalKey<FormState>>(
-    (ref) => ref.watch(createPlanFormProvider.state).dailyGoalFormKey);
+    (ref) => ref.watch(createPlanFormProvider).dailyGoalFormKey);
 
 final dailyGoalFormKeyProvider =
     Provider<GlobalKey<FormState>>((ref) => ref.watch(_dailyGoalFormKeyState));
 
 final _dailyGoalTextControllerState = Provider<TextEditingController>(
-    (ref) => ref.watch(createPlanFormProvider.state).dailyGoalTextController);
+    (ref) => ref.watch(createPlanFormProvider).dailyGoalTextController);
 
 final dailyGoalTextControllerProvider = Provider<TextEditingController>(
     (ref) => ref.watch(_dailyGoalTextControllerState));
 
 final _selectedLiquidMeasurementState = Provider<LiquidMeasurement>(
-    (ref) => ref.watch(createPlanFormProvider.state).selectedLiquidMeasurement);
+    (ref) => ref.watch(createPlanFormProvider).selectedLiquidMeasurement);
 
 final selectedLiquidMeasurementProvider = Provider<LiquidMeasurement>(
     (ref) => ref.watch(_selectedLiquidMeasurementState));
 
-final _isUsingRecommendedDailyGoalState = Provider<bool>((ref) =>
-    ref.watch(createPlanFormProvider.state).isUsingRecommendedDailyGoal);
+final _isUsingRecommendedDailyGoalState = Provider<bool>(
+    (ref) => ref.watch(createPlanFormProvider).isUsingRecommendedDailyGoal);
 
 final isUsingRecommendedDailyGoalProvider =
     Provider<bool>((ref) => ref.watch(_isUsingRecommendedDailyGoalState));

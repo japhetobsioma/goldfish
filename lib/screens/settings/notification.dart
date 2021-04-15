@@ -16,9 +16,8 @@ class NotificationSettingsScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationsSettings =
-        useProvider(notificationSettingsProvider.state);
-    final notificationManager = useProvider(notificationManagerProvider.state);
+    final notificationsSettings = useProvider(notificationSettingsProvider);
+    final notificationManager = useProvider(notificationManagerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +49,7 @@ class NotificationSettingsScreen extends HookWidget {
                           );
 
                           await context
-                              .read(notificationSettingsProvider)
+                              .read(notificationSettingsProvider.notifier)
                               .fetchNotificationSettings();
                         },
                         child: const Text('FIX IT'),
@@ -81,7 +80,7 @@ class NotificationSettingsScreen extends HookWidget {
               ),
               onChanged: (value) async {
                 await context
-                    .read(notificationSettingsProvider)
+                    .read(notificationSettingsProvider.notifier)
                     .updateIsNotificationTurnOn(value);
 
                 NotificationMode notificationMode;
@@ -94,29 +93,29 @@ class NotificationSettingsScreen extends HookWidget {
 
                 if (value && notificationMode == NotificationMode.Custom) {
                   await context
-                      .read(notificationManagerProvider)
+                      .read(notificationManagerProvider.notifier)
                       .setAllScheduledNotifications();
                 } else if (value == false &&
                     notificationMode == NotificationMode.Custom) {
                   await context
-                      .read(notificationManagerProvider)
+                      .read(notificationManagerProvider.notifier)
                       .cancelAllScheduledNotifications();
                 }
 
                 if (value && notificationMode == NotificationMode.Interval) {
                   await context
-                      .read(notificationManagerProvider)
+                      .read(notificationManagerProvider.notifier)
                       .generateScheduledNotifications();
                   await context
-                      .read(notificationManagerProvider)
+                      .read(notificationManagerProvider.notifier)
                       .setAllScheduledNotifications();
                 } else if (value == false &&
                     notificationMode == NotificationMode.Interval) {
                   await context
-                      .read(notificationManagerProvider)
+                      .read(notificationManagerProvider.notifier)
                       .deleteAllScheduledNotifications();
                   await context
-                      .read(notificationManagerProvider)
+                      .read(notificationManagerProvider.notifier)
                       .cancelAllScheduledNotifications();
                 }
               },
@@ -201,8 +200,7 @@ class NotificationModeDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationsSettings =
-        useProvider(notificationSettingsProvider.state);
+    final notificationsSettings = useProvider(notificationSettingsProvider);
 
     return SimpleDialog(
       title: const Text('Select notification mode'),
@@ -220,23 +218,23 @@ class NotificationModeDialog extends HookWidget {
               groupValue: value.notificationMode,
               onChanged: (value) async {
                 await context
-                    .read(notificationSettingsProvider)
+                    .read(notificationSettingsProvider.notifier)
                     .updateNotificationMode(value);
 
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .deleteAllScheduledNotifications();
 
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .cancelAllScheduledNotifications();
 
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .generateScheduledNotifications();
 
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .setAllScheduledNotifications();
 
                 Navigator.pop(context);
@@ -254,15 +252,15 @@ class NotificationModeDialog extends HookWidget {
             groupValue: value.notificationMode,
             onChanged: (value) async {
               await context
-                  .read(notificationSettingsProvider)
+                  .read(notificationSettingsProvider.notifier)
                   .updateNotificationMode(value);
 
               await context
-                  .read(notificationManagerProvider)
+                  .read(notificationManagerProvider.notifier)
                   .deleteAllScheduledNotifications();
 
               await context
-                  .read(notificationManagerProvider)
+                  .read(notificationManagerProvider.notifier)
                   .cancelAllScheduledNotifications();
 
               Navigator.pop(context);
@@ -281,8 +279,7 @@ class ChangeIntervalDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notificationsSettings =
-        useProvider(notificationSettingsProvider.state);
+    final notificationsSettings = useProvider(notificationSettingsProvider);
     final hourTextController = useTextEditingController();
     final hourFormKey = useState(GlobalKey<FormState>());
     final minuteTextController = useTextEditingController();
@@ -382,20 +379,20 @@ class ChangeIntervalDialog extends HookWidget {
               minuteFormKey.value.currentState.validate();
 
               await context
-                  .read(notificationSettingsProvider)
+                  .read(notificationSettingsProvider.notifier)
                   .updateIntervalHour(hourTextController.text);
               await context
-                  .read(notificationSettingsProvider)
+                  .read(notificationSettingsProvider.notifier)
                   .updateIntervalMinute(minuteTextController.text);
 
               await context
-                  .read(notificationManagerProvider)
+                  .read(notificationManagerProvider.notifier)
                   .deleteAllScheduledNotifications();
               await context
-                  .read(notificationManagerProvider)
+                  .read(notificationManagerProvider.notifier)
                   .generateScheduledNotifications();
               await context
-                  .read(notificationManagerProvider)
+                  .read(notificationManagerProvider.notifier)
                   .setAllScheduledNotifications();
 
               Navigator.of(context).pop();

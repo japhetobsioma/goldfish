@@ -107,14 +107,16 @@ class GenderField extends HookWidget {
                   value: Gender.Male,
                   groupValue: selectedGender,
                   onChanged: (value) {
-                    context.read(createPlanFormProvider).setGender(value);
+                    context
+                        .read(createPlanFormProvider.notifier)
+                        .setGender(value);
 
                     isUsingRecommendedDailyGoal
                         ? context
-                            .read(createPlanFormProvider)
+                            .read(createPlanFormProvider.notifier)
                             .calculateDailyGoal()
                         : context
-                            .read(createPlanFormProvider)
+                            .read(createPlanFormProvider.notifier)
                             .setDailyGoal('0');
                   },
                 ),
@@ -123,14 +125,16 @@ class GenderField extends HookWidget {
                   value: Gender.Female,
                   groupValue: selectedGender,
                   onChanged: (value) {
-                    context.read(createPlanFormProvider).setGender(value);
+                    context
+                        .read(createPlanFormProvider.notifier)
+                        .setGender(value);
 
                     isUsingRecommendedDailyGoal
                         ? context
-                            .read(createPlanFormProvider)
+                            .read(createPlanFormProvider.notifier)
                             .calculateDailyGoal()
                         : context
-                            .read(createPlanFormProvider)
+                            .read(createPlanFormProvider.notifier)
                             .setDailyGoal('0');
                   },
                 ),
@@ -192,9 +196,11 @@ class BirthdayField extends HookWidget {
                 onChanged: (_) {
                   isUsingRecommendedDailyGoal
                       ? context
-                          .read(createPlanFormProvider)
+                          .read(createPlanFormProvider.notifier)
                           .calculateDailyGoal()
-                      : context.read(createPlanFormProvider).setDailyGoal('0');
+                      : context
+                          .read(createPlanFormProvider.notifier)
+                          .setDailyGoal('0');
                 },
                 validator: (birthday) {
                   if (birthday.isEmpty) return 'Enter birthday';
@@ -226,7 +232,9 @@ class BirthdayField extends HookWidget {
 
                   if (selectedDate != null) {
                     birthdayTextController.text = selectedDate.toText;
-                    context.read(createPlanFormProvider).calculateDailyGoal();
+                    context
+                        .read(createPlanFormProvider.notifier)
+                        .calculateDailyGoal();
                   }
                 },
               ),
@@ -430,15 +438,15 @@ class DailyGoal extends HookWidget {
                     initialValue: selectedLiquidMeasurement,
                     onSelected: (value) {
                       context
-                          .read(createPlanFormProvider)
+                          .read(createPlanFormProvider.notifier)
                           .setLiquidMeasurement(value);
 
                       isUsingRecommendedDailyGoal
                           ? context
-                              .read(createPlanFormProvider)
+                              .read(createPlanFormProvider.notifier)
                               .calculateDailyGoal()
                           : context
-                              .read(createPlanFormProvider)
+                              .read(createPlanFormProvider.notifier)
                               .convertDailyGoal();
                     },
                     itemBuilder: (BuildContext context) => <PopupMenuEntry>[
@@ -472,12 +480,16 @@ class DailyGoal extends HookWidget {
               value: isUsingRecommendedDailyGoal,
               onChanged: (value) {
                 context
-                    .read(createPlanFormProvider)
+                    .read(createPlanFormProvider.notifier)
                     .setUsingRecommendedDailyGoal(value);
 
                 value
-                    ? context.read(createPlanFormProvider).calculateDailyGoal()
-                    : context.read(createPlanFormProvider).setDailyGoal('0');
+                    ? context
+                        .read(createPlanFormProvider.notifier)
+                        .calculateDailyGoal()
+                    : context
+                        .read(createPlanFormProvider.notifier)
+                        .setDailyGoal('0');
               },
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
@@ -511,7 +523,7 @@ class BottomButtons extends HookWidget {
         children: [
           TextButton(
             onPressed: () {
-              context.read(createPlanFormProvider).clearAllFields();
+              context.read(createPlanFormProvider.notifier).clearAllFields();
             },
             child: const Text('Clear'),
           ),
@@ -520,9 +532,13 @@ class BottomButtons extends HookWidget {
               // Validate all the fields.
               if (selectedGender.isNone) {
                 // Show an error message if the gender is none.
-                context.read(createPlanFormProvider).setGenderNone(true);
+                context
+                    .read(createPlanFormProvider.notifier)
+                    .setGenderNone(true);
               } else {
-                context.read(createPlanFormProvider).setGenderNone(false);
+                context
+                    .read(createPlanFormProvider.notifier)
+                    .setGenderNone(false);
               }
 
               birthdayFormKey.currentState.validate();
@@ -545,13 +561,15 @@ class BottomButtons extends HookWidget {
                 bedtimeFormKey.currentState.validate();
                 dailyGoalFormKey.currentState.validate();
 
-                await context.read(createPlanFormProvider).setUserInfo();
+                await context
+                    .read(createPlanFormProvider.notifier)
+                    .setUserInfo();
 
                 final sharedPreferences = await SharedPreferences.getInstance();
                 await sharedPreferences.setBool('isUserSignedUp', true);
 
                 await context
-                    .read(completionProvider)
+                    .read(completionProvider.notifier)
                     .initializeCompletionDates();
 
                 await Navigator.pushNamedAndRemoveUntil(

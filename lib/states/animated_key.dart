@@ -11,5 +11,7 @@ class AnimatedListKeyNotifier extends StateNotifier<AnimatedListKey> {
   );
 }
 
-final animatedListKeyProvider = StateNotifierProvider<AnimatedListKeyNotifier>(
-    (ref) => AnimatedListKeyNotifier());
+final animatedListKeyProvider =
+    StateNotifierProvider<AnimatedListKeyNotifier, AnimatedListKey>(
+  (ref) => AnimatedListKeyNotifier(),
+);
