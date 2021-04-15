@@ -195,7 +195,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8997604143346292840}
   - component: {fileID: 258809269105316921}
-  - component: {fileID: 3095039573387111087}
   m_Layer: 0
   m_Name: Mesh_Trout
   m_TagString: Untagged
@@ -276,20 +275,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.00035339966, y: 0.061881848, z: -0.000050223432}
     m_Extent: {x: 0.012940856, y: 0.06505806, z: 0.024572212}
   m_DirtyAABB: 0
---- !u!64 &3095039573387111087
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4990394642583613646}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6480787514047575783, guid: b0102ea650e0d914b8c2f9ddabc0381f, type: 3}
 --- !u!1 &5292536872166857564
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,8 +317,9 @@ GameObject:
   - component: {fileID: 6206071971421873389}
   - component: {fileID: 54123765598404247}
   - component: {fileID: 5884758781213278217}
-  - component: {fileID: 4166912928547240003}
-  - component: {fileID: -965829983540635523}
+  - component: {fileID: 8785660015832410070}
+  - component: {fileID: 8389705736850319433}
+  - component: {fileID: -1025127393680050537}
   m_Layer: 0
   m_Name: Trout
   m_TagString: Untagged
@@ -397,7 +383,20 @@ MonoBehaviour:
   wanderPeriodDuration: 0.8
   wanderProbability: 0.15
   swimSpeed: 0
---- !u!114 &4166912928547240003
+--- !u!65 &8785660015832410070
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6731673351056244311}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.2338257, y: 5.5617247, z: 13.577335}
+  m_Center: {x: -0.0638237, y: 1.0752616, z: 0.3258381}
+--- !u!114 &8389705736850319433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -409,7 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabId: 5476178900610023255
+  prefabId: 1234269136162988649
   localRefs:
     _Keys:
     - {fileID: 6731673351056244311}
@@ -417,7 +416,8 @@ MonoBehaviour:
     - {fileID: 54123765598404247}
     - {fileID: 5884758781213278217}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: 4166912928547240003}
+    - {fileID: 8785660015832410070}
+    - {fileID: 8389705736850319433}
     - {fileID: 3463121414088261177}
     - {fileID: 3067145690786313331}
     - {fileID: 1044689401772592803}
@@ -443,9 +443,8 @@ MonoBehaviour:
     - {fileID: 258809269105316921}
     - {fileID: 6480787514047575783, guid: b0102ea650e0d914b8c2f9ddabc0381f, type: 3}
     - {fileID: 2100000, guid: 24c59db797bf92e449d156b703c41e4f, type: 2}
-    - {fileID: 3095039573387111087}
-    _Values: c6267e40c352ec590ce4032bc2b3c149b14ae85cf3416d442733655e96a7691a3834f7150a36610a41a3e1fc335c3e7cb93adb5e4cedf21924ec048e4d62b2081e326bd7c77cb06539efc0f62c43b47c8d1d59a333f43126d9eec709c50fa85cab1522fe0e984a35eb40973caee946675e7ee39543a9c3290044b0b543ba2a48971ca04265b38b26688e8e748c6dd510a85f6843f33da05426b301acb7ff865a6ce0d3cb8a89cc540d42d34ae4b1626d9160a25cdd92c32bbcf41cb1b2df6f68f8cc2093be5f641e941336b069556f28166e3d17a1e23827e35777805a81f913b23b531890cfaf31047c3636a4ec3e1264449b43a257c62509e4edb774fba760
---- !u!114 &-965829983540635523
+    _Values: 14531debb385cf4a461a9768303cac375db1d31a3ee24529864858d8f2a23354dd4909bbfb447200dae53c7629b3b859cf710c8b2e06d20966b99995d308a85c18bdba86b997cd193ed2f4241ebc522e91fea763afbe822977005541aadd2d1d7166701991c1ed375d0cb3a4ed5214569995d92e4ff3f32840e40eb9428c6e615b294c48b4c76352ecde07a30bdd3c3614abd93fb75b6d655a98d9adb333f41785ebb53bfa335e2ecd78bd8e13afe31e2044a497b22eaa4a98b2a24da010051fd41f28f69377311fb3558ec06221ae55b5bb8d6e8e5d6556bf942d522954302183229dcc27254e678a3bb5f843945376044d025c9e73ae30857e38fe4adef55d
+--- !u!114 &-1025127393680050537
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
