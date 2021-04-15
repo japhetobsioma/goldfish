@@ -32,20 +32,17 @@ dependencies:
   flutter_hooks: ^0.16.0
   hooks_riverpod: ^0.14.0
   intl: ^0.17.0
-  flutter_unity_widget: ^3.0.3
+  flutter_unity_widget: ^4.1.0-null-safe
   sqflite: ^2.0.0+3
   path: ^1.8.0
   path_provider: ^2.0.1
   syncfusion_flutter_gauges: ^19.1.54+1
-  flutter_svg: ^0.19.3
+  flutter_svg: ^0.21.0+1
   shared_preferences: ^2.0.5
   flutter_local_notifications: ^5.0.0+1
   flutter_native_timezone: ^1.0.10
   battery_optimization: ^0.1.0
   android_power_manager: ^0.1.6
-
-dependency_overrides:
-  plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -58,37 +57,10 @@ public class UnityMessage
     public Action<object> callBack;
 }
 
-#if UNITY_IOS || UNITY_TVOS
-public class NativeAPI
+public class UnityMessageManager : SingletonMonoBehaviour<UnityMessageManager>
 {
-    [DllImport("__Internal")]
-    public static extern void onUnityMessage(string message);
-    
-    /* [DllImport("__Internal")]
-    public static extern void showHostMainWindow();
-    
-    [DllImport("__Internal")]
-    public static extern void unloadPlayer();
-    
-    [DllImport("__Internal")]
-    public static extern void quitPlayer(); */
-
-    [DllImport("__Internal")]
-    public static extern void onUnitySceneLoaded(string name, int buildIndex, bool isLoaded, bool IsValid);
-}
-#endif
-
-public class UnityMessageManager : MonoBehaviour
-{
-    /* #if UNITY_IOS && !UNITY_EDITOR
-        [DllImport("__Internal")]
-        private static extern void onUnityMessage(string message);
-        [DllImport("__Internal")]
-        public static extern void onUnitySceneLoaded(string name, int buildIndex, bool isLoaded, bool IsValid);
-    #endif */
 
     public const string MessagePrefix = "@UnityMessage@";
-
     private static int ID = 0;
 
     private static int generateId()
@@ -96,8 +68,6 @@ public class UnityMessageManager : MonoBehaviour
         ID = ID + 1;
         return ID;
     }
-
-    public static UnityMessageManager Instance { get; private set; }
 
     public delegate void MessageDelegate(string message);
     public event MessageDelegate OnMessage;
@@ -107,17 +77,6 @@ public class UnityMessageManager : MonoBehaviour
 
     private Dictionary<int, UnityMessage> waitCallbackMessageMap = new Dictionary<int, UnityMessage>();
 
-    static UnityMessageManager()
-    {
-        GameObject go = new GameObject("UnityMessageManager");
-        DontDestroyOnLoad(go);
-        Instance = go.AddComponent<UnityMessageManager>();
-    }
-
-    void Awake()
-    {
-    }
-
     private void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -125,93 +84,30 @@ public class UnityMessageManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log(scene);
-#if UNITY_ANDROID
-        try
-        {
-            AndroidJavaClass jc = new AndroidJavaClass("com.xraph.plugins.flutterunitywidget.UnityUtils");
-            jc.CallStatic("onUnitySceneLoaded", scene.name, scene.buildIndex, scene.isLoaded, scene.IsValid());
-        }
-        catch (Exception e)
-        {
-            print(e.Message);
-        }
-#elif UNITY_IOS && !UNITY_EDITOR
-            NativeAPI.onUnitySceneLoaded(scene.name, scene.buildIndex, scene.isLoaded, scene.IsValid());
-#endif
+        NativeAPI.OnSceneLoaded(scene, mode);
+
     }
 
     public void ShowHostMainWindow()
     {
-#if UNITY_ANDROID
-        try
-        {
-            AndroidJavaClass jc = new AndroidJavaClass("com.xraph.plugins.flutterunitywidget.OverrideUnityActivity");
-            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-            overrideActivity.Call("showMainActivity");
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-#elif UNITY_IOS || UNITY_TVOS
-        // NativeAPI.showHostMainWindow();
-#endif
+        NativeAPI.ShowHostMainWindow();
     }
 
     public void UnloadMainWindow()
     {
-#if UNITY_ANDROID
-        try
-        {
-            AndroidJavaClass jc = new AndroidJavaClass("com.xraph.plugins.flutterunitywidget.OverrideUnityActivity");
-            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-            overrideActivity.Call("unloadPlayer");
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-#elif UNITY_IOS || UNITY_TVOS
-        // NativeAPI.unloadPlayer();
-#endif
+        NativeAPI.UnloadMainWindow();
     }
 
 
     public void QuitUnityWindow()
     {
-#if UNITY_ANDROID
-        try
-        {
-            AndroidJavaClass jc = new AndroidJavaClass("com.xraph.plugins.flutterunitywidget.OverrideUnityActivity");
-            AndroidJavaObject overrideActivity = jc.GetStatic<AndroidJavaObject>("instance");
-            overrideActivity.Call("quitPlayer");
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-#elif UNITY_IOS || UNITY_TVOS
-        // NativeAPI.quitPlayer();
-#endif
+        NativeAPI.QuitUnityWindow();
     }
 
 
     public void SendMessageToFlutter(string message)
     {
-        #if UNITY_ANDROID
-            try
-            {
-                AndroidJavaClass jc = new AndroidJavaClass("com.xraph.plugins.flutterunitywidget.UnityUtils");
-                jc.CallStatic("onUnityMessage", message);
-            }
-            catch (Exception e)
-            {
-                print(e.Message);
-            }
-        #elif UNITY_IOS && !UNITY_EDITOR
-            NativeAPI.onUnityMessage(message);
-        #endif
+        NativeAPI.SendMessageToFlutter(message);
     }
 
     public void SendMessageToFlutter(UnityMessage message)
