@@ -40,7 +40,7 @@ class ScreenTitle extends StatelessWidget {
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.none,
-            color: const Color(0xFF0076FF),
+            color: Theme.of(context).buttonColor,
           ),
         ),
         const Text(
@@ -88,10 +88,6 @@ class FeaturesList extends HookWidget {
               );
             },
             itemCount: welcomeScreenCards.length,
-            controller: PageController(
-              initialPage: 0,
-              viewportFraction: 0.75,
-            ),
             onPageChanged: (index) {
               currentPage.value = index;
             },
@@ -118,7 +114,7 @@ class Features extends StatelessWidget {
           width: 280.0,
           height: 280.0,
           decoration: BoxDecoration(
-            color: customCard.background,
+            color: Theme.of(context).buttonColor,
             borderRadius: BorderRadius.circular(41.0),
           ),
           child: Column(
@@ -126,15 +122,13 @@ class Features extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(
                   top: 32.0,
-                  left: 32.0,
-                  right: 32.0,
                 ),
                 child: Column(
                   children: [
                     Text(
                       customCard.cardSubtitle,
                       style: TextStyle(
-                        color: Color(0xE6FFFFFF),
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 13.0,
                         decoration: TextDecoration.none,
                       ),
@@ -146,7 +140,7 @@ class Features extends StatelessWidget {
                       customCard.cardTitle,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 22.0,
                         decoration: TextDecoration.none,
                       ),
@@ -221,7 +215,9 @@ class UpdateIndicators extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: currentPage == index ? Color(0xFF0971FE) : Color(0xFFA6AEBD),
+            color: currentPage == index
+                ? Theme.of(context).buttonColor
+                : Color(0xFFA6AEBD),
           ),
         );
       }).toList(),
@@ -238,7 +234,10 @@ class GetStarted extends StatelessWidget {
       onPressed: () async {
         await Navigator.pushNamed(context, createPlanRoute);
       },
-      style: ElevatedButton.styleFrom(primary: Theme.of(context).primaryColor),
+      style: ElevatedButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+        onPrimary: Theme.of(context).colorScheme.onPrimary,
+      ),
       child: const Text('Get started'),
     );
   }
