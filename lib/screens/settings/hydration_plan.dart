@@ -15,7 +15,7 @@ class HydrationPlanSettingsScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hydrationPlan = useProvider(hydrationPlanProvider.state);
+    final hydrationPlan = useProvider(hydrationPlanProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +118,7 @@ class GenderDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hydrationPlan = useProvider(hydrationPlanProvider.state);
+    final hydrationPlan = useProvider(hydrationPlanProvider);
     final selectedGender = useState(Gender.Male);
 
     useEffect(() {
@@ -163,7 +163,7 @@ class GenderDialog extends HookWidget {
         TextButton(
           onPressed: () async {
             await context
-                .read(hydrationPlanProvider)
+                .read(hydrationPlanProvider.notifier)
                 .updateGender(selectedGender.value);
 
             bool useRecommendedGoal;
@@ -174,7 +174,9 @@ class GenderDialog extends HookWidget {
             );
 
             if (useRecommendedGoal) {
-              await context.read(hydrationPlanProvider).calculateDailyGoal();
+              await context
+                  .read(hydrationPlanProvider.notifier)
+                  .calculateDailyGoal();
             }
 
             Navigator.pop(context);
@@ -191,7 +193,7 @@ class BirthdayDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hydrationPlan = useProvider(hydrationPlanProvider.state);
+    final hydrationPlan = useProvider(hydrationPlanProvider);
     final birthdayKey = useState(GlobalKey<FormState>());
     final birthdayController = useTextEditingController();
 
@@ -273,7 +275,7 @@ class BirthdayDialog extends HookWidget {
               birthdayKey.value.currentState.validate();
 
               await context
-                  .read(hydrationPlanProvider)
+                  .read(hydrationPlanProvider.notifier)
                   .updatebirthday(birthdayController.text.toDateTimeFormatted);
 
               bool useRecommendedGoal;
@@ -284,7 +286,9 @@ class BirthdayDialog extends HookWidget {
               );
 
               if (useRecommendedGoal) {
-                await context.read(hydrationPlanProvider).calculateDailyGoal();
+                await context
+                    .read(hydrationPlanProvider.notifier)
+                    .calculateDailyGoal();
               }
 
               Navigator.pop(context);
@@ -302,9 +306,9 @@ class WakeupTimeDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hydrationPlan = useProvider(hydrationPlanProvider.state);
+    final hydrationPlan = useProvider(hydrationPlanProvider);
     final notificationSettings = useProvider(
-      notificationSettingsProvider.state,
+      notificationSettingsProvider,
     );
     final wakeupTimeKey = useState(GlobalKey<FormState>());
     final wakeupTimeController = useTextEditingController();
@@ -381,8 +385,10 @@ class WakeupTimeDialog extends HookWidget {
             if (wakeupTimeKey.value.currentState.validate()) {
               wakeupTimeKey.value.currentState.validate();
 
-              await context.read(hydrationPlanProvider).updateWakeupTime(
-                  wakeupTimeController.text.toTimeOfDayFormatted);
+              await context
+                  .read(hydrationPlanProvider.notifier)
+                  .updateWakeupTime(
+                      wakeupTimeController.text.toTimeOfDayFormatted);
 
               bool isNotificationTurnOn;
               NotificationMode notificationMode;
@@ -398,16 +404,16 @@ class WakeupTimeDialog extends HookWidget {
               if (notificationMode == NotificationMode.Interval &&
                   isNotificationTurnOn == true) {
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .deleteAllScheduledNotifications();
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .cancelAllScheduledNotifications();
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .generateScheduledNotifications();
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .setAllScheduledNotifications();
               }
 
@@ -426,9 +432,9 @@ class BedtimeDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hydrationPlan = useProvider(hydrationPlanProvider.state);
+    final hydrationPlan = useProvider(hydrationPlanProvider);
     final notificationSettings = useProvider(
-      notificationSettingsProvider.state,
+      notificationSettingsProvider,
     );
     final bedtimeKey = useState(GlobalKey<FormState>());
     final bedtimeController = useTextEditingController();
@@ -505,7 +511,7 @@ class BedtimeDialog extends HookWidget {
               bedtimeKey.value.currentState.validate();
 
               await context
-                  .read(hydrationPlanProvider)
+                  .read(hydrationPlanProvider.notifier)
                   .updateBedtime(bedtimeController.text.toTimeOfDayFormatted);
 
               bool isNotificationTurnOn;
@@ -522,16 +528,16 @@ class BedtimeDialog extends HookWidget {
               if (notificationMode == NotificationMode.Interval &&
                   isNotificationTurnOn == true) {
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .deleteAllScheduledNotifications();
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .cancelAllScheduledNotifications();
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .generateScheduledNotifications();
                 await context
-                    .read(notificationManagerProvider)
+                    .read(notificationManagerProvider.notifier)
                     .setAllScheduledNotifications();
               }
 
@@ -550,7 +556,7 @@ class DailyGoalDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hydrationPlan = useProvider(hydrationPlanProvider.state);
+    final hydrationPlan = useProvider(hydrationPlanProvider);
     final dailyGoalKey = useState(GlobalKey<FormState>());
     final dailyGoalController = useTextEditingController();
     final useRecommendedGoal = useState(true);
@@ -619,7 +625,7 @@ class DailyGoalDialog extends HookWidget {
 
               if (value) {
                 final dailyGoal = await context
-                    .read(hydrationPlanProvider)
+                    .read(hydrationPlanProvider.notifier)
                     .calculateDailyGoal();
                 dailyGoalController.text = dailyGoal.toString();
               } else {
@@ -646,11 +652,11 @@ class DailyGoalDialog extends HookWidget {
               dailyGoalKey.value.currentState.validate();
 
               await context
-                  .read(hydrationPlanProvider)
+                  .read(hydrationPlanProvider.notifier)
                   .updateDailyGoal(int.tryParse(dailyGoalController.text));
 
               await context
-                  .read(hydrationPlanProvider)
+                  .read(hydrationPlanProvider.notifier)
                   .updateUseRecommendedGoal(useRecommendedGoal.value);
 
               Navigator.pop(context);

@@ -31,4 +31,6 @@ class CupNotifier extends StateNotifier<AsyncValue<Cup>> {
   }
 }
 
-final cupProvider = StateNotifierProvider<CupNotifier>((ref) => CupNotifier());
+final cupProvider = StateNotifierProvider<CupNotifier, AsyncValue<Cup>>(
+  (ref) => CupNotifier(),
+);

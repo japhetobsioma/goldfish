@@ -24,7 +24,8 @@ class WaterIntakeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => context.read(waterIntakeProvider).fetchWaterIntake(),
+      onRefresh: () =>
+          context.read(waterIntakeProvider.notifier).fetchWaterIntake(),
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (notification) {
           notification.disallowGlow();
@@ -51,8 +52,8 @@ class WaterIntakeGauge extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final waterIntake = useProvider(waterIntakeProvider.state);
-    final userInfo = useProvider(userInfoProvider.state);
+    final waterIntake = useProvider(waterIntakeProvider);
+    final userInfo = useProvider(userInfoProvider);
 
     return Container(
       child: SfRadialGauge(
@@ -168,8 +169,8 @@ class WaterIntakeLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final waterIntake = useProvider(waterIntakeProvider.state);
-    final animatedList = useProvider(animatedListKeyProvider.state);
+    final waterIntake = useProvider(waterIntakeProvider);
+    final animatedList = useProvider(animatedListKeyProvider);
 
     return waterIntake.when(
       data: (value) {
@@ -310,7 +311,7 @@ class WaterIntakeItem extends StatelessWidget {
                   value.todaysIntakes[index]['measurement'];
               final measurement = measurementString.toLiquidMeasurement;
 
-              context.read(editIntakeProvider).setEditIntake(
+              context.read(editIntakeProvider.notifier).setEditIntake(
                     waterIntakeID: value.todaysIntakes[index]['waterIntakeID'],
                     amount: value.todaysIntakes[index]['amount'],
                     measurement: measurement,
@@ -422,7 +423,7 @@ class WaterIntakeDialog extends HookWidget {
 
                 if (selectedTime != null) {
                   context
-                      .read(editIntakeProvider)
+                      .read(editIntakeProvider.notifier)
                       .setSelectedDate(date: selectedTime);
                 }
               },
@@ -439,8 +440,8 @@ class DeleteWaterIntakeDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final animatedList = useProvider(animatedListKeyProvider.state);
-    final waterIntake = useProvider(waterIntakeProvider.state);
+    final animatedList = useProvider(animatedListKeyProvider);
+    final waterIntake = useProvider(waterIntakeProvider);
     final index = useProvider(editIndexProvider);
 
     return AlertDialog(
@@ -455,13 +456,13 @@ class DeleteWaterIntakeDialog extends HookWidget {
         ),
         TextButton(
           onPressed: () async {
-            await context.read(editIntakeProvider).deleteWaterIntake();
+            await context.read(editIntakeProvider.notifier).deleteWaterIntake();
 
             waterIntake.when(
               data: (value) {
                 final amount = value.todaysIntakes[index]['amount'] as int;
 
-                context.read(intakeBankProvider).updateIntakeBank(
+                context.read(intakeBankProvider.notifier).updateIntakeBank(
                       value: amount.toDouble(),
                       arithmeticOperator: '-',
                     );
@@ -546,7 +547,7 @@ class EditCupLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cup = useProvider(cupProvider.state);
+    final cup = useProvider(cupProvider);
 
     return cup.when(
       data: (value) => ListView.builder(
@@ -607,7 +608,7 @@ class EditCupItem extends HookWidget {
                   value.allCup[index]['measurement'];
               final measurement = measurementString.toLiquidMeasurement;
 
-              context.read(editIntakeProvider).setSelectedCup(
+              context.read(editIntakeProvider.notifier).setSelectedCup(
                     amount: amount,
                     measurement: measurement,
                   );
@@ -647,7 +648,7 @@ class EditDrinkTypeLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drinkType = useProvider(drinkTypeProvider.state);
+    final drinkType = useProvider(drinkTypeProvider);
 
     return drinkType.when(
       data: (value) => ListView.builder(
@@ -707,7 +708,7 @@ class EditDrinkTypeItem extends HookWidget {
             onTap: () {
               Navigator.pop(context);
 
-              context.read(editIntakeProvider).setSelectedDrinkTypes(
+              context.read(editIntakeProvider.notifier).setSelectedDrinkTypes(
                     drinkTypes:
                         (value.allDrinkTypes[index]['drinkTypes'] as String)
                             .toDrinkTypes,
@@ -748,7 +749,7 @@ class EditTileColorLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tileColor = useProvider(tileColorProvider.state);
+    final tileColor = useProvider(tileColorProvider);
 
     return tileColor.when(
       data: (value) => ListView.builder(
@@ -830,7 +831,7 @@ class EditTileColorItem extends HookWidget {
             onTap: () {
               Navigator.pop(context);
 
-              context.read(editIntakeProvider).setSelectedTileColors(
+              context.read(editIntakeProvider.notifier).setSelectedTileColors(
                     tileColors:
                         (value.allTileColor[index]['tileColors'] as String)
                             .toTileColors,

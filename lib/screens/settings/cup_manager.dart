@@ -14,7 +14,7 @@ class CupManagerScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cup = useProvider(cupProvider.state);
+    final cup = useProvider(cupProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +59,7 @@ class CupManagerScreen extends HookWidget {
           );
 
           if (dialogResult == 'SAVE') {
-            await context.read(cupManagerProvider).addCup();
+            await context.read(cupManagerProvider.notifier).addCup();
           }
         },
         child: const Icon(Icons.add),
@@ -81,7 +81,7 @@ class CupItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cup = useProvider(cupProvider.state);
+    final cup = useProvider(cupProvider);
     final selectedCupID = cup.when(
       data: (value) => value.selectedCupID,
       loading: () => null,
@@ -93,7 +93,7 @@ class CupItem extends HookWidget {
       title: Text('$amount ${measurement.description}'),
       selected: selectedCupID == id ? true : false,
       onTap: () {
-        context.read(cupManagerProvider).setEditedCupValue(
+        context.read(cupManagerProvider.notifier).setEditedCupValue(
               editedCupAmount: amount,
               editedCupID: id,
             );
@@ -116,7 +116,7 @@ class AddCupDialog extends HookWidget {
   Widget build(BuildContext context) {
     final amountGlobalKey = useState(GlobalKey<FormState>());
     final amountTextController = useTextEditingController();
-    final cup = useProvider(cupProvider.state);
+    final cup = useProvider(cupProvider);
 
     return AlertDialog(
       title: const Text('Add cup'),
@@ -195,7 +195,7 @@ class AddCupDialog extends HookWidget {
               amountGlobalKey.value.currentState.validate();
 
               final cupAmount = int.tryParse(amountTextController.text);
-              context.read(cupManagerProvider).setCupAmount(cupAmount);
+              context.read(cupManagerProvider.notifier).setCupAmount(cupAmount);
 
               Navigator.pop(context, 'SAVE');
             }
@@ -212,13 +212,13 @@ class EditCupFullScreenDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final amount = useProvider(cupManagerProvider.state.select(
+    final amount = useProvider(cupManagerProvider.select(
       (value) => value.editedCupAmount,
     ));
-    final id = useProvider(cupManagerProvider.state.select(
+    final id = useProvider(cupManagerProvider.select(
       (value) => value.editedCupID,
     ));
-    final cup = useProvider(cupProvider.state);
+    final cup = useProvider(cupProvider);
     final selectedCupID = cup.when(
       data: (value) => value.selectedCupID,
       loading: () => null,
@@ -273,10 +273,10 @@ class EditCupDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final amount = useProvider(cupManagerProvider.state.select(
+    final amount = useProvider(cupManagerProvider.select(
       (value) => value.editedCupAmount,
     ));
-    final id = useProvider(cupManagerProvider.state.select(
+    final id = useProvider(cupManagerProvider.select(
       (value) => value.editedCupID,
     ));
     final amountKey = useState(GlobalKey<FormState>());
@@ -338,10 +338,10 @@ class EditCupDialog extends HookWidget {
             } else if (amountKey.value.currentState.validate()) {
               final cupAmount = int.tryParse(amountController.text);
               await context
-                  .read(cupManagerProvider)
+                  .read(cupManagerProvider.notifier)
                   .editCup(id: id, amount: cupAmount);
 
-              context.read(cupManagerProvider).setEditedCupValue(
+              context.read(cupManagerProvider.notifier).setEditedCupValue(
                     editedCupAmount: cupAmount,
                     editedCupID: id,
                   );
@@ -372,7 +372,7 @@ class DeleteDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () async {
-            await context.read(cupManagerProvider).deleteCup();
+            await context.read(cupManagerProvider.notifier).deleteCup();
 
             Navigator.popUntil(context, ModalRoute.withName(cupManagerRoute));
           },

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -26,7 +28,7 @@ class HomeScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final animatedList = useProvider(animatedListKeyProvider.state);
+    final animatedList = useProvider(animatedListKeyProvider);
 
     Future<dynamic> selectNotification(String payload) async {
       await Navigator.pushNamedAndRemoveUntil(
@@ -51,9 +53,9 @@ class HomeScreen extends HookWidget {
           onSelectNotification: selectNotification,
         );
 
-        await context.read(completionProvider).checkCompletionDates();
+        await context.read(completionProvider.notifier).checkCompletionDates();
 
-        await context.read(intakeBankProvider).fetchIntakeBank();
+        await context.read(intakeBankProvider.notifier).fetchIntakeBank();
 
         final sharedPreferences = await SharedPreferences.getInstance();
         final initializeNotification =
@@ -61,10 +63,10 @@ class HomeScreen extends HookWidget {
 
         if (initializeNotification) {
           await context
-              .read(notificationManagerProvider)
+              .read(notificationManagerProvider.notifier)
               .generateScheduledNotifications();
           await context
-              .read(notificationManagerProvider)
+              .read(notificationManagerProvider.notifier)
               .setAllScheduledNotifications();
         }
 
@@ -73,51 +75,56 @@ class HomeScreen extends HookWidget {
       return () {};
     }, []);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: WaterIntakeScreen(),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (_) => const MenuBottomSheet(),
-                );
-              },
-            ),
-            Spacer(),
-            IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (_) => const MoreBottomSheet(),
-                );
-              },
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: () => exit(0),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Home'),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await context.read(waterIntakeProvider).insertWaterIntake();
+        body: WaterIntakeScreen(),
+        bottomNavigationBar: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => const MenuBottomSheet(),
+                  );
+                },
+              ),
+              Spacer(),
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => const MoreBottomSheet(),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            await context
+                .read(waterIntakeProvider.notifier)
+                .insertWaterIntake();
 
-          if (animatedList.key.currentState != null) {
-            animatedList.key.currentState.insertItem(
-              0,
-              duration: const Duration(milliseconds: 500),
-            );
-          }
-        },
-        child: const Icon(Icons.local_drink),
+            if (animatedList.key.currentState != null) {
+              animatedList.key.currentState.insertItem(
+                0,
+                duration: const Duration(milliseconds: 500),
+              );
+            }
+          },
+          child: const Icon(Icons.local_drink),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -127,10 +134,10 @@ class MenuBottomSheet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final intakeBank = useProvider(intakeBankProvider.state);
+    final intakeBank = useProvider(intakeBankProvider);
 
     useEffect(() {
-      context.read(intakeBankProvider).fetchIntakeBank();
+      context.read(intakeBankProvider.notifier).fetchIntakeBank();
       return () {};
     }, []);
 
@@ -155,7 +162,9 @@ class MenuBottomSheet extends HookWidget {
                 onTap: () async {
                   Navigator.pop(context);
 
-                  await context.read(intakeBankProvider).updateIntakeBank(
+                  await context
+                      .read(intakeBankProvider.notifier)
+                      .updateIntakeBank(
                         value: amount.toDouble(),
                         arithmeticOperator: '-',
                       );
@@ -220,9 +229,9 @@ class MoreBottomSheet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cup = useProvider(cupProvider.state);
-    final drinkType = useProvider(drinkTypeProvider.state);
-    final tileColor = useProvider(tileColorProvider.state);
+    final cup = useProvider(cupProvider);
+    final drinkType = useProvider(drinkTypeProvider);
+    final tileColor = useProvider(tileColorProvider);
 
     return Wrap(
       children: [
@@ -321,7 +330,7 @@ class CupLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cup = useProvider(cupProvider.state);
+    final cup = useProvider(cupProvider);
 
     return cup.when(
       data: (value) => ListView.builder(
@@ -376,7 +385,7 @@ class CupItem extends StatelessWidget {
               Navigator.pop(context);
 
               context
-                  .read(cupProvider)
+                  .read(cupProvider.notifier)
                   .setSelectedCup(value.allCup[index]['cupID']);
             },
           ),
@@ -414,7 +423,7 @@ class DrinkTypeLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drinkType = useProvider(drinkTypeProvider.state);
+    final drinkType = useProvider(drinkTypeProvider);
 
     return drinkType.when(
       data: (value) => ListView.builder(
@@ -476,7 +485,7 @@ class DrinkTypeItem extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
 
-              context.read(drinkTypeProvider).setSelectedDrinkType(
+              context.read(drinkTypeProvider.notifier).setSelectedDrinkType(
                   value.allDrinkTypes[index]['drinkTypes']);
             },
           ),
@@ -514,7 +523,7 @@ class TileColorLists extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tileColor = useProvider(tileColorProvider.state);
+    final tileColor = useProvider(tileColorProvider);
 
     return tileColor.when(
       data: (value) => ListView.builder(
@@ -589,7 +598,7 @@ class TileColorItem extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
 
-              context.read(tileColorProvider).setSelectedTileColor(
+              context.read(tileColorProvider.notifier).setSelectedTileColor(
                   value.allTileColor[index]['tileColors']);
             },
           ),

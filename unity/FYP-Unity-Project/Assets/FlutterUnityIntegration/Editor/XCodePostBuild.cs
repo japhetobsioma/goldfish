@@ -1,6 +1,6 @@
 ﻿/*
 MIT License
-Copyright (c) 2017 Jiulong Wang
+Copyright (c) 2021 REX ISAAC RAPHAEL
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -42,11 +42,6 @@ public static class XcodePostBuild
     /// </summary>
     private const string TouchedMarker = "https://github.com/juicycleff/flutter-unity-view-widget";
 
-    private static string flutterAppPath = "../../ios";
-
-    // Enabled this for iOS plugin export and disable for non plugin export.
-    private static bool isBuildingPlugin = false;
-
     [PostProcessBuild]
     public static void OnPostBuild(BuildTarget target, string pathToBuiltProject)
     {
@@ -59,10 +54,7 @@ public static class XcodePostBuild
 
         UpdateUnityProjectFiles(pathToBuiltProject);
 
-        if(isBuildingPlugin)
-        {
-            UpdateBuildSettings(pathToBuiltProject);
-        }
+        UpdateBuildSettings(pathToBuiltProject);
     }
 
     /// <summary>
@@ -77,42 +69,17 @@ public static class XcodePostBuild
         var pbxPath = Path.Combine(pathToBuildProject, "Unity-iPhone.xcodeproj/project.pbxproj");
         pbx.ReadFromFile(pbxPath);
 
-        var targetGuid = pbx.TargetGuidByName("UnityFramework");
+        var targetGuid = pbx.GetUnityFrameworkTargetGuid();
+        var projGuid = pbx.ProjectGuid();
 
         // Set skip_install to NO 
         pbx.SetBuildProperty(targetGuid, "SKIP_INSTALL", "NO");
 
+        // Set some linker flags
+        pbx.SetBuildProperty(projGuid, "ENABLE_BITCODE", "YES");
+
         // Persist changes
         pbx.WriteToFile(pbxPath);
-    }
-
-    /// <summary>
-    /// Make necessary changes to Unity build output that enables it to be embedded into existing Xcode project.
-    /// </summary>
-    private static void PatchRemoveTargetMembership(string pathToBuiltProject)
-    {
-
-        var pbx2 = new PBXProject();
-        var pbxPath2 = Path.Combine(pathToBuiltProject, "Unity-iPhone.xcodeproj/project.pbxproj");
-        pbx2.ReadFromFile(pbxPath2);
-
-        var pbx = new PBXProject();
-        var pbxPath = Path.Combine(flutterAppPath, "Runner.xcodeproj/project.pbxproj");
-        pbx.ReadFromFile(pbxPath);
-
-        // Add unityLibrary/Data
-        var targetGuid = pbx2.TargetGuidByName("UnityFramework");
-
-        var fileGuid = pbx.AddFolderReference(Path.Combine(pathToBuiltProject, "Data"), "Data");
-
-
-        string appTargetGUID = pbx.TargetGuidByName("Runner");
-        Debug.Log(appTargetGUID);
-        pbx.AddFrameworkToProject(appTargetGUID, "UnityFramework", false);
-        // pbx.AddFileToBuild(targetGuid, fileGuid);
-        pbx.WriteToFile(pbxPath);
-
-        Debug.Log("Build mang console");
     }
 
     /// <summary>
@@ -138,43 +105,8 @@ public static class XcodePostBuild
     /// </summary>
     private static void PatchUnityNativeCode(string pathToBuiltProject)
     {
-        EditUnityFrameworkH(Path.Combine(pathToBuiltProject, "UnityFramework/UnityFramework.h"));
         EditUnityAppControllerH(Path.Combine(pathToBuiltProject, "Classes/UnityAppController.h"));
         EditUnityAppControllerMM(Path.Combine(pathToBuiltProject, "Classes/UnityAppController.mm"));
-        EditUnityViewMM(Path.Combine(pathToBuiltProject, "Classes/UI/UnityView.mm"));
-    }
-
-
-    /// <summary>
-    /// Edit 'UnityFramework.h': add  'frameworkWarmup' 
-    /// </summary>
-    private static void EditUnityFrameworkH(string path)
-    {
-        var inScope = false;
-
-        // Add frameworkWarmup method
-        EditCodeFile(path, line =>
-        {
-            inScope |= line.Contains("- (void)runUIApplicationMainWithArgc:");
-
-            if (inScope)
-            {
-                if (line.Trim() == "")
-                {
-                    inScope = false;
-
-                    return new string[]
-                    {
-                        "",
-                        "// Added by " + TouchedMarker,
-                        "- (void)frameworkWarmup:(int)argc argv:(char*[])argv;",
-                        ""
-                    };
-                }
-            }
-
-            return new string[] { line };
-        });
     }
 
     /// <summary>
@@ -221,6 +153,38 @@ public static class XcodePostBuild
         // Modify inline GetAppController
         EditCodeFile(path, line =>
         {
+            inScope |= line.Contains("include \"RenderPluginDelegate.h\"");
+
+            if (inScope && !markerDetected)
+            {
+                if (line.Trim() == "")
+                {
+                    inScope = false;
+                    markerDetected = true;
+
+                    return new string[]
+                    {
+                        "",
+                        "// Added by " + TouchedMarker,
+                        "typedef void(^unitySceneLoadedCallbackType)(const char* name, const int* buildIndex, const bool* isLoaded, const bool* IsValid);",
+                        "",
+                        "typedef void(^unityMessageCallbackType)(const char* message);",
+                        "",
+                    };
+                }
+
+                return new string[] { line };
+            }
+
+            return new string[] { line };
+        });
+
+        inScope = false;
+        markerDetected = false;
+
+        // Modify inline GetAppController
+        EditCodeFile(path, line =>
+        {
             inScope |= line.Contains("quitHandler)");
 
             if (inScope && !markerDetected)
@@ -243,69 +207,6 @@ public static class XcodePostBuild
             return new string[] { line };
         });
 
-        inScope = false;
-        markerDetected = false;
-
-        // Add static GetAppController
-        EditCodeFile(path, line =>
-        {
-			inScope |= line.Contains("- (void)startUnity:");
-
-			if (inScope)
-			{
-				if (line.Trim() == "")
-				{
-					inScope = false;
-
-					return new string[]
-					{
-						"",
-						"// Added by " + TouchedMarker,
-						"+ (UnityAppController*)GetAppController;",
-                        ""
-					};
-				}
-			}
-			
-			return new string[] { line };
-		});
-
-		inScope = false;
-		markerDetected = false;
-
-		// Modify inline GetAppController
-        EditCodeFile(path, line =>
-        {
-            inScope |= line.Contains("extern UnityAppController* GetAppController");
-
-            if (inScope && !markerDetected)
-            {
-                if (line.Trim() == "")
-                {
-                    inScope = false;
-					markerDetected = true;
-
-                    return new string[]
-                    {
-                        "// }",
-                        "",
-                        "// Added by " + TouchedMarker,
-                        "static inline UnityAppController* GetAppController()",
-                        "{",
-                        "    return [UnityAppController GetAppController];",
-                        "}",
-                        "",
-
-                    };
-                }
-
-                return new string[] { "// " + line };
-            }
-
-            return new string[] { line };
-        });
-
-
     }
 
     /// <summary>
@@ -313,6 +214,7 @@ public static class XcodePostBuild
     /// </summary>
     private static void EditUnityAppControllerMM(string path)
     {
+
         var inScope = false;
         var markerDetected = false;
 
@@ -321,28 +223,17 @@ public static class XcodePostBuild
             if (line.Trim() == "@end")
             {
                 return new string[]
-				{
-					"",
-					"// Added by " + TouchedMarker,
-					"static UnityAppController *unityAppController = nil;",
-					"",
-					@"+ (UnityAppController*)GetAppController",
-					"{",
-					"    static dispatch_once_t onceToken;",
-					"    dispatch_once(&onceToken, ^{",
-					"        unityAppController = [[self alloc] init];",
-					"    });",
-					"    return unityAppController;",
-					"}",
-					"",
+                {
+                    "",
                     "// Added by " + TouchedMarker,
-                    "extern \"C\" void onUnityMessage(const char* message)",
+                    "extern \"C\" void OnUnityMessage(const char* message)",
                     "{",
                     "    if (GetAppController().unityMessageHandler) {",
                     "        GetAppController().unityMessageHandler(message);",
                     "    }",
                     "}",
-                    "extern \"C\" void onUnitySceneLoaded(const char* name, const int* buildIndex, const bool* isLoaded, const bool* IsValid)",
+                    "",
+                    "extern \"C\" void OnUnitySceneLoaded(const char* name, const int* buildIndex, const bool* isLoaded, const bool* IsValid)",
                     "{",
                     "    if (GetAppController().unitySceneLoadedHandler) {",
                     "        GetAppController().unitySceneLoadedHandler(name, buildIndex, isLoaded, IsValid);",
@@ -350,7 +241,7 @@ public static class XcodePostBuild
                     "}",
                     line,
 
-				};
+                };
             }
 
             inScope |= line.Contains("- (void)startUnity:");
@@ -378,98 +269,8 @@ public static class XcodePostBuild
             return new string[] { line };
         });
 
-        inScope = false;
-        markerDetected = false;
-
-        // Modify inline GetAppController
-        EditCodeFile(path, line =>
-        {
-            inScope |= line.Contains("UnityAppController* GetAppController()");
-
-            if (inScope && !markerDetected)
-            {
-                if (line.Trim() == "}")
-                {
-                    inScope = false;
-                    markerDetected = true;
-
-                    return new string[]
-                    {
-                        "",
-                    };
-                }
-
-                return new string[] { "// " + line };
-            }
-
-            return new string[] { line };
-        });
-
-        inScope = false;
-        markerDetected = false;
-
-        // Modify inline GetAppController
-        EditCodeFile(path, line =>
-        {
-            inScope |= line.Contains("@synthesize quitHandler");
-
-            if (inScope && !markerDetected)
-            {
-                if (line.Trim() == "")
-                {
-                    inScope = false;
-                    markerDetected = true;
-
-                    return new string[]
-                    {
-                        "@synthesize unityMessageHandler     = _unityMessageHandler;",
-                        "@synthesize unitySceneLoadedHandler     = _unitySceneLoadedHandler;",
-                    };
-                }
-
-                return new string[] { line };
-            }
-
-            return new string[] { line };
-        });
     }
 
-    /// <summary>
-    /// Edit 'UnityView.mm': fix the width and height needed for the Metal renderer
-    /// </summary>
-    private static void EditUnityViewMM(string path)
-    {
-        var inScope = false;
-
-        // Add frameworkWarmup method
-        EditCodeFile(path, line =>
-        {
-            inScope |= line.Contains("UnityGetRenderingResolution(&requestedW, &requestedH)");
-
-            if (inScope)
-            {
-                if (line.Trim() == "")
-                {
-                    inScope = false;
-
-                    return new string[]
-                    {
-                        "",
-                        "// Added by " + TouchedMarker,
-                        "        if (requestedW == 0) {",
-                        "            requestedW = _surfaceSize.width;",
-                        "        }",
-                        "        if (requestedH == 0) {",
-                        "            requestedH = _surfaceSize.height;",
-                        "        }",
-                        ""
-                    };
-                }
-            }
-
-            return new string[] { line };
-        });
-    }
 
     private static void EditCodeFile(string path, Func<string, IEnumerable<string>> lineHandler)
     {

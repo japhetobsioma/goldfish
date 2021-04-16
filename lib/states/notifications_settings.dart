@@ -74,6 +74,7 @@ class NotificationSettingsNotifier
   }
 }
 
-final notificationSettingsProvider =
-    StateNotifierProvider<NotificationSettingsNotifier>(
-        (ref) => NotificationSettingsNotifier());
+final notificationSettingsProvider = StateNotifierProvider<
+    NotificationSettingsNotifier, AsyncValue<NotificationSettings>>(
+  (ref) => NotificationSettingsNotifier(),
+);
