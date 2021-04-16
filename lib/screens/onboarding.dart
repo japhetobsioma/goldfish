@@ -35,34 +35,18 @@ class ScreenTitle extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Drink Reminder',
+          'Aqua – Drink Reminder',
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.none,
-            foreground: Paint()
-              ..shader = LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  const Color(0xFF00AEFF),
-                  const Color(0xFF0076FF),
-                ],
-              ).createShader(
-                Rect.fromLTWH(
-                  0.0,
-                  0.0,
-                  350.0,
-                  30.0,
-                ),
-              ),
+            color: Theme.of(context).buttonColor,
           ),
         ),
         const Text(
           'Helps you to stay hydrated',
           style: TextStyle(
             fontSize: 16.0,
-            color: Color(0xFF797F8A),
             decoration: TextDecoration.none,
           ),
         ),
@@ -85,7 +69,6 @@ class FeaturesList extends HookWidget {
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF242629),
             decoration: TextDecoration.none,
           ),
         ),
@@ -105,10 +88,6 @@ class FeaturesList extends HookWidget {
               );
             },
             itemCount: welcomeScreenCards.length,
-            controller: PageController(
-              initialPage: 0,
-              viewportFraction: 0.75,
-            ),
             onPageChanged: (index) {
               currentPage.value = index;
             },
@@ -135,7 +114,7 @@ class Features extends StatelessWidget {
           width: 280.0,
           height: 280.0,
           decoration: BoxDecoration(
-            gradient: customCard.background,
+            color: Theme.of(context).buttonColor,
             borderRadius: BorderRadius.circular(41.0),
           ),
           child: Column(
@@ -143,15 +122,13 @@ class Features extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(
                   top: 32.0,
-                  left: 32.0,
-                  right: 32.0,
                 ),
                 child: Column(
                   children: [
                     Text(
                       customCard.cardSubtitle,
                       style: TextStyle(
-                        color: Color(0xE6FFFFFF),
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 13.0,
                         decoration: TextDecoration.none,
                       ),
@@ -163,7 +140,7 @@ class Features extends StatelessWidget {
                       customCard.cardTitle,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 22.0,
                         decoration: TextDecoration.none,
                       ),
@@ -195,53 +172,25 @@ final welcomeScreenCards = const [
   CustomCard(
     cardTitle: 'Hydrate',
     cardSubtitle: 'Motivates you to drink water',
-    background: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFF00AEFF),
-        Color(0xFF0076FF),
-      ],
-    ),
+    background: Color(0xFF0076FF),
     illustration: 'energizer.svg',
   ),
   CustomCard(
     cardTitle: 'Gamify',
     cardSubtitle: 'Enjoy your drinking habit',
-    background: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFF00AEFF),
-        Color(0xFF0076FF),
-      ],
-    ),
+    background: Color(0xFF0076FF),
     illustration: 'fish_bowl.svg',
   ),
   CustomCard(
     cardTitle: 'History',
     cardSubtitle: 'Check your daily water intake',
-    background: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFF00AEFF),
-        Color(0xFF0076FF),
-      ],
-    ),
+    background: Color(0xFF0076FF),
     illustration: 'personal_goals.svg',
   ),
   CustomCard(
     cardTitle: 'Notifications',
     cardSubtitle: 'Get notified for the better',
-    background: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xFF00AEFF),
-        Color(0xFF0076FF),
-      ],
-    ),
+    background: Color(0xFF0076FF),
     illustration: 'my_notifications.svg',
   ),
 ];
@@ -266,7 +215,9 @@ class UpdateIndicators extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: currentPage == index ? Color(0xFF0971FE) : Color(0xFFA6AEBD),
+            color: currentPage == index
+                ? Theme.of(context).buttonColor
+                : Color(0xFFA6AEBD),
           ),
         );
       }).toList(),
@@ -283,6 +234,10 @@ class GetStarted extends StatelessWidget {
       onPressed: () async {
         await Navigator.pushNamed(context, createPlanRoute);
       },
+      style: ElevatedButton.styleFrom(
+        primary: Theme.of(context).buttonColor,
+        onPrimary: Theme.of(context).colorScheme.onPrimary,
+      ),
       child: const Text('Get started'),
     );
   }

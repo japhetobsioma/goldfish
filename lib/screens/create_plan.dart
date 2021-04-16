@@ -55,7 +55,6 @@ class ScreenHeading extends StatelessWidget {
         'Create your hydration plan',
         style: TextStyle(
           fontSize: 20.0,
-          color: goldfishHeading1Color,
         ),
       ),
     );
@@ -99,7 +98,6 @@ class GenderField extends HookWidget {
                   'GENDER',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: goldfishContainerTextColor,
                   ),
                 ),
                 RadioListTile(
@@ -463,7 +461,6 @@ class DailyGoal extends HookWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         selectedLiquidMeasurement.descriptionPerDay,
-                        style: TextStyle(color: goldfishBlack),
                       ),
                     ),
                   ),
@@ -478,6 +475,7 @@ class DailyGoal extends HookWidget {
                 ),
               ),
               value: isUsingRecommendedDailyGoal,
+              activeColor: Theme.of(context).primaryColor,
               onChanged: (value) {
                 context
                     .read(createPlanFormProvider.notifier)
@@ -522,12 +520,18 @@ class BottomButtons extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton(
+            style: TextButton.styleFrom(
+              primary: Theme.of(context).accentColor,
+            ),
             onPressed: () {
               context.read(createPlanFormProvider.notifier).clearAllFields();
             },
             child: const Text('Clear'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).primaryColor,
+            ),
             onPressed: () async {
               // Validate all the fields.
               if (selectedGender.isNone) {

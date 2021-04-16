@@ -10,6 +10,6 @@ class CustomCard {
 
   final String cardTitle;
   final String cardSubtitle;
-  final LinearGradient background;
+  final Color background;
   final String illustration;
 }

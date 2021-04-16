@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/routes.dart';
-import 'common/theme.dart';
 import 'screens/aquarium.dart';
 import 'screens/create_plan.dart';
 import 'screens/history.dart';
@@ -38,7 +37,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Project goldfish',
-      theme: goldfishTheme(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       initialRoute: isUserSignedUp ? homeRoute : onboardingRoute,
       routes: {
         onboardingRoute: (context) => const OnboardingScreen(),
