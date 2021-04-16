@@ -43,7 +43,7 @@ class EditIntakeNotifier extends StateNotifier<EditIntake> {
   }
 
   Future<void> updateWaterIntakeCup() async {
-    await read(waterIntakeProvider).updateWaterIntakeCup(
+    await read(waterIntakeProvider.notifier).updateWaterIntakeCup(
       waterIntakeID: state.waterIntakeID,
       amount: state.amount,
       measurement: state.measurement,
@@ -51,21 +51,21 @@ class EditIntakeNotifier extends StateNotifier<EditIntake> {
   }
 
   Future<void> updateWaterIntakeDate() async {
-    await read(waterIntakeProvider).updateWaterIntakeDate(
+    await read(waterIntakeProvider.notifier).updateWaterIntakeDate(
       waterIntakeID: state.waterIntakeID,
       date: state.time,
     );
   }
 
   Future<void> updateWaterIntakeDrinkTypes() async {
-    await read(waterIntakeProvider).updateWaterIntakeDrinkTypes(
+    await read(waterIntakeProvider.notifier).updateWaterIntakeDrinkTypes(
       waterIntakeID: state.waterIntakeID,
       drinkTypes: state.drinkTypes,
     );
   }
 
   Future<void> updateWaterIntakeTileColors() async {
-    await read(waterIntakeProvider).updateWaterIntakeTileColors(
+    await read(waterIntakeProvider.notifier).updateWaterIntakeTileColors(
       waterIntakeID: state.waterIntakeID,
       tileColors: state.tileColors,
     );
@@ -131,16 +131,17 @@ class EditIntakeNotifier extends StateNotifier<EditIntake> {
   }
 
   Future<void> deleteWaterIntake() async {
-    await read(waterIntakeProvider)
+    await read(waterIntakeProvider.notifier)
         .deleteWaterIntake(waterIntakeID: state.waterIntakeID);
   }
 }
 
-final editIntakeProvider = StateNotifierProvider<EditIntakeNotifier>(
-    (ref) => EditIntakeNotifier(ref.read));
+final editIntakeProvider =
+    StateNotifierProvider<EditIntakeNotifier, EditIntake>(
+        (ref) => EditIntakeNotifier(ref.read));
 
 final _editWaterIntakeIDState = Provider<int>((ref) {
-  return ref.watch(editIntakeProvider.state).waterIntakeID;
+  return ref.watch(editIntakeProvider).waterIntakeID;
 });
 
 final editWaterIntakeIDProvider = Provider<int>((ref) {
@@ -148,7 +149,7 @@ final editWaterIntakeIDProvider = Provider<int>((ref) {
 });
 
 final _editAmountState = Provider<int>((ref) {
-  return ref.watch(editIntakeProvider.state).amount;
+  return ref.watch(editIntakeProvider).amount;
 });
 
 final editAmountProvider = Provider<int>((ref) {
@@ -156,7 +157,7 @@ final editAmountProvider = Provider<int>((ref) {
 });
 
 final _editMeasurementState = Provider<LiquidMeasurement>((ref) {
-  return ref.watch(editIntakeProvider.state).measurement;
+  return ref.watch(editIntakeProvider).measurement;
 });
 
 final editMeasurementProvider = Provider<LiquidMeasurement>((ref) {
@@ -164,7 +165,7 @@ final editMeasurementProvider = Provider<LiquidMeasurement>((ref) {
 });
 
 final _editDateState = Provider<TimeOfDay>((ref) {
-  return ref.watch(editIntakeProvider.state).time;
+  return ref.watch(editIntakeProvider).time;
 });
 
 final editDateProvider = Provider<TimeOfDay>((ref) {
@@ -172,7 +173,7 @@ final editDateProvider = Provider<TimeOfDay>((ref) {
 });
 
 final _editDrinkTypesState = Provider<DrinkTypes>((ref) {
-  return ref.watch(editIntakeProvider.state).drinkTypes;
+  return ref.watch(editIntakeProvider).drinkTypes;
 });
 
 final editDrinkTypesProvider = Provider<DrinkTypes>((ref) {
@@ -180,7 +181,7 @@ final editDrinkTypesProvider = Provider<DrinkTypes>((ref) {
 });
 
 final _editTileColorsState = Provider<TileColors>((ref) {
-  return ref.watch(editIntakeProvider.state).tileColors;
+  return ref.watch(editIntakeProvider).tileColors;
 });
 
 final editTileColorsProvider = Provider<TileColors>((ref) {
@@ -188,7 +189,7 @@ final editTileColorsProvider = Provider<TileColors>((ref) {
 });
 
 final _editIndexState = Provider<int>((ref) {
-  return ref.watch(editIntakeProvider.state).index;
+  return ref.watch(editIntakeProvider).index;
 });
 
 final editIndexProvider = Provider<int>((ref) {

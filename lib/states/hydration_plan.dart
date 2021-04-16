@@ -68,7 +68,7 @@ class HydrationPlanNotifier extends StateNotifier<AsyncValue<HydrationPlan>> {
 
     await fetchHydrationPlan();
 
-    await read(userInfoProvider).fetchUserInfo();
+    await read(userInfoProvider.notifier).fetchUserInfo();
   }
 
   Future<void> updateLiquidMeasurement(
@@ -78,7 +78,7 @@ class HydrationPlanNotifier extends StateNotifier<AsyncValue<HydrationPlan>> {
 
     await fetchHydrationPlan();
 
-    await read(userInfoProvider).fetchUserInfo();
+    await read(userInfoProvider.notifier).fetchUserInfo();
   }
 
   Future<void> updateUseRecommendedGoal(bool useRecommendedGoal) async {
@@ -113,6 +113,7 @@ class HydrationPlanNotifier extends StateNotifier<AsyncValue<HydrationPlan>> {
   }
 }
 
-final hydrationPlanProvider = StateNotifierProvider<HydrationPlanNotifier>(
+final hydrationPlanProvider =
+    StateNotifierProvider<HydrationPlanNotifier, AsyncValue<HydrationPlan>>(
   (ref) => HydrationPlanNotifier(ref.read),
 );

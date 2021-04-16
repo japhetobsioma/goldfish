@@ -351,7 +351,6 @@ GameObject:
   m_Component:
   - component: {fileID: 806328532628643365}
   - component: {fileID: 1118410300444695303}
-  - component: {fileID: 7512741130432948857}
   m_Layer: 0
   m_Name: Narwhal
   m_TagString: Untagged
@@ -437,20 +436,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: -0.0068892464, z: -0.003046963}
     m_Extent: {x: 0.025255783, y: 0.082178414, z: 0.015152231}
   m_DirtyAABB: 0
---- !u!64 &7512741130432948857
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5636742116149392365}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 7462903843288079800, guid: ae73ff3e4c21960458fae167c99660c4, type: 3}
 --- !u!1 &7499250968628775767
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,8 +509,9 @@ GameObject:
   - component: {fileID: 8946539414458285534}
   - component: {fileID: 3082805096265607076}
   - component: {fileID: 8908902155348270263}
-  - component: {fileID: -7123875360954386361}
-  - component: {fileID: 1874040834000059820}
+  - component: {fileID: -9017670341880107857}
+  - component: {fileID: 2338636033183973657}
+  - component: {fileID: 76440648465508738}
   m_Layer: 0
   m_Name: Narwhal
   m_TagString: Untagged
@@ -589,7 +575,7 @@ MonoBehaviour:
   wanderPeriodDuration: 0.8
   wanderProbability: 0.15
   swimSpeed: 0
---- !u!114 &-7123875360954386361
+--- !u!114 &-9017670341880107857
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -601,7 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabId: 4929210224369010050
+  prefabId: 8715203004111343492
   localRefs:
     _Keys:
     - {fileID: 8602911710281557860}
@@ -609,7 +595,8 @@ MonoBehaviour:
     - {fileID: 3082805096265607076}
     - {fileID: 8908902155348270263}
     - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: -7123875360954386361}
+    - {fileID: -9017670341880107857}
+    - {fileID: 76440648465508738}
     - {fileID: 1875574637602907914}
     - {fileID: 42972627974417728}
     - {fileID: 2627675389120452496}
@@ -647,9 +634,8 @@ MonoBehaviour:
     - {fileID: 1118410300444695303}
     - {fileID: 7462903843288079800, guid: ae73ff3e4c21960458fae167c99660c4, type: 3}
     - {fileID: 2100000, guid: 1d4ff22b83212844abebb29fc2d6b271, type: 2}
-    - {fileID: 7512741130432948857}
-    _Values: 6555ba1e8bb7607559e003541317d3149f9dfda57672037078430121f660d026370a28bb6e84ed67272e22ccf0f14529a6d5a37d13c7101223d933a8e70bf50093db9193b6b7fd46f8324fb4daca136876d53734fbb2c56ffa16dd47b7964f3223225fcc82d9df5e2e168bbae93b1258c7ca1ebd422afb445efe72336bba01728282d7fc29dfeb63f6d961123d80593529350e82b50c754d1ea46d8367acf318e702c7989ce9d118e0bbb31c8b0e8121a53c0a35ab7fbc7108dae431b290354ae6482a3ab8c0993f63f56171c091d92c268fdd2ba1bd6c68bbaa6f3efa609a70f2fd02d438bcda1aa2cad1b61d4bb17600b80b23b30aa828243d0b9ccf28c53c702e9d416b519a1d970777281449b505a419c14c9342dc04a72bb0fbb03d4a35900d264be9f3e1525229b9ba81d13c2577fabe1616ed2f4d0ba19b3fa09f6d58bd42b9216f01ee4ec991069577dd7d7769d672aafc604b5c94e9dfc15da5ae50
---- !u!114 &1874040834000059820
+    _Values: f3ca1fa3297ea525cc43c0c73355d66c50f8065353553b28495b9debb48d3b5fc4639625251b7d4bf8a7485f59ab42466ac0ad9d4f21236290f7ed851b91d9587f1f04cfbfb046337cba5cab0cdcce0b9ee381f4df9e0f1a88f8952e2ef83065320f1fc5598d781b06e1180a7ecf6e4c2ae123ff12ce371dd0e1b739e4e7fb7d750921e4046c9b11959a12027afa6357981dfbb22bcfad00463cf578d53f361fe69a9574ae8a486a7d356a78bb35a234bcf15e3914b7ad5a5c209dc777233c2c2ecd17ea6f27fa0dd5912f603a25bb7c21d6cc386190cb6248ef188ded80f35f8e695877b3725b1d1393f15a18f16b369bde17b2108a7240997aa27f0e6d20549ed0d2d0cc44c86dce16b30a7ed9845784e228cc98a56f19256621c63024f159739dbc481e9a6a20a88580263d7cbf400bb504d3bbab4407a0460acd9a70620df9f3681fe2c3c6167807731e26955758581f4385dfe2621f1f3c179b5ac84437
+--- !u!114 &2338636033183973657
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -664,10 +650,19 @@ MonoBehaviour:
   saveChildren: 0
   componentsToSave:
   - {fileID: 8946539414458285534}
-  - {fileID: 3082805096265607076}
-  - {fileID: 0}
-  - {fileID: 8908902155348270263}
-  - {fileID: -7123875360954386361}
+--- !u!65 &76440648465508738
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602911710281557860}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.0847864, y: 4.016425, z: 17.508818}
+  m_Center: {x: -0.040863514, y: 1.0598252, z: 0.14266333}
 --- !u!1 &8657770646309101647
 GameObject:
   m_ObjectHideFlags: 0

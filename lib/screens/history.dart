@@ -78,7 +78,7 @@ class ThisWeeksCharts extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dailyTotal = useProvider(dailyTotalProvider.state);
+    final dailyTotal = useProvider(dailyTotalProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -128,7 +128,7 @@ class ThisWeeksLineGauge extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = useProvider(userInfoProvider.state);
+    final userInfo = useProvider(userInfoProvider);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -242,10 +242,10 @@ class BestStreaks extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final streaks = useProvider(streaksProvider.state);
+    final streaks = useProvider(streaksProvider);
 
     useEffect(() {
-      context.read(streaksProvider).fetchStreaks();
+      context.read(streaksProvider.notifier).fetchStreaks();
       return () {};
     }, []);
 
@@ -282,10 +282,10 @@ class AllTime extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final completion = useProvider(completionProvider.state);
+    final completion = useProvider(completionProvider);
 
     useEffect(() {
-      context.read(completionProvider).fetchCompletion();
+      context.read(completionProvider.notifier).fetchCompletion();
       return () {};
     }, []);
 
@@ -322,10 +322,10 @@ class Completions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final completion = useProvider(completionProvider.state);
+    final completion = useProvider(completionProvider);
 
     useEffect(() {
-      context.read(completionProvider).fetchCompletion();
+      context.read(completionProvider.notifier).fetchCompletion();
       return () {};
     }, []);
 
@@ -400,10 +400,10 @@ class MostDrinkTypes extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drinkTypes = useProvider(drinkTypeProvider.state);
+    final drinkTypes = useProvider(drinkTypeProvider);
 
     useEffect(() {
-      context.read(drinkTypeProvider).fetchDrinkType();
+      context.read(drinkTypeProvider.notifier).fetchDrinkType();
       return () {};
     }, []);
 

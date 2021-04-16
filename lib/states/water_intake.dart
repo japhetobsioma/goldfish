@@ -24,7 +24,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     final todaysIntakes = await dbHelper.fetchTodaysIntakes();
 
     await hasUserAchievedGoal();
-    await read(dailyTotalProvider).fetchDailyTotal();
+    await read(dailyTotalProvider.notifier).fetchDailyTotal();
 
     state = AsyncValue.data(
       WaterIntake(
@@ -39,7 +39,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     final selectedDrinkType = await dbHelper.getSelectedDrinkType();
     final selectedTileColor = await dbHelper.getSelectedTileColor();
 
-    await read(intakeBankProvider).updateIntakeBank(
+    await read(intakeBankProvider.notifier).updateIntakeBank(
       value: (selectedCup[0]['amount'] as int).toDouble(),
       arithmeticOperator: '+',
     );
@@ -122,5 +122,7 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
   }
 }
 
-final waterIntakeProvider = StateNotifierProvider<WaterIntakeNotifier>(
-    (ref) => WaterIntakeNotifier(ref.read));
+final waterIntakeProvider =
+    StateNotifierProvider<WaterIntakeNotifier, AsyncValue<WaterIntake>>(
+  (ref) => WaterIntakeNotifier(ref.read),
+);

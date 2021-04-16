@@ -37,4 +37,6 @@ class DailyTotalNotifier extends StateNotifier<AsyncValue<DailyTotal>> {
 }
 
 final dailyTotalProvider =
-    StateNotifierProvider<DailyTotalNotifier>((ref) => DailyTotalNotifier());
+    StateNotifierProvider<DailyTotalNotifier, AsyncValue<DailyTotal>>(
+  (ref) => DailyTotalNotifier(),
+);

@@ -30,4 +30,6 @@ class StreaksNotifier extends StateNotifier<AsyncValue<Streaks>> {
 }
 
 final streaksProvider =
-    StateNotifierProvider<StreaksNotifier>((ref) => StreaksNotifier());
+    StateNotifierProvider<StreaksNotifier, AsyncValue<Streaks>>(
+  (ref) => StreaksNotifier(),
+);

@@ -266,6 +266,7 @@ class NotificationManagerNotifier
   }
 }
 
-final notificationManagerProvider =
-    StateNotifierProvider<NotificationManagerNotifier>(
-        (ref) => NotificationManagerNotifier());
+final notificationManagerProvider = StateNotifierProvider<
+    NotificationManagerNotifier, AsyncValue<NotificationManager>>(
+  (ref) => NotificationManagerNotifier(),
+);

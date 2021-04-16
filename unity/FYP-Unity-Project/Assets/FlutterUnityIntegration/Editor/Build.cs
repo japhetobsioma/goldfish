@@ -7,7 +7,7 @@ using UnityEngine;
 using Application = UnityEngine.Application;
 using BuildResult = UnityEditor.Build.Reporting.BuildResult;
 
-public class Build
+public class Build : EditorWindow
 {
     static readonly string ProjectPath = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
@@ -16,6 +16,9 @@ public class Build
     static readonly string androidExportPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../android/unityLibrary"));
     static readonly string iosExportPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/UnityLibrary"));
     static readonly string iosExportPluginPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios_xcode/UnityLibrary"));
+
+    bool pluginMode = false;
+    static string persistentKey = "flutter-unity-widget-pluginMode";
 
     [MenuItem("Flutter/Export Android %&n", false, 1)]
     public static void DoBuildAndroidLibrary()
@@ -35,12 +38,6 @@ public class Build
         Copy(Path.Combine(apkPath + "/launcher/src/main/res"), Path.Combine(androidExportPath, "src/main/res"));
     }
 
-    [MenuItem("Flutter/Legacy/Export Android", false, 5)]
-    public static void DoBuildAndroidLegacy()
-    {
-        DoBuildAndroid(Path.Combine(apkPath, Application.productName), true);
-    }
-
     public static void DoBuildAndroid(String buildPath, bool isPlugin)
     {
         if (Directory.Exists(apkPath))
@@ -54,7 +51,6 @@ public class Build
         // var options = BuildOptions.AcceptExternalModificationsToPlayer;
         var options = BuildOptions.AllowDebugging;
         EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
-        
         var report = BuildPipeline.BuildPlayer(
             GetEnabledScenes(),
             apkPath,
@@ -88,61 +84,73 @@ public class Build
 
         if(isPlugin)
         {
-            AndroidGetSomeRestWillYaPlugin();
+            SetupAndroidProjectForPlugin();
         } else
         {
-            AndroidGetSomeRestWillYa();
+            SetupAndroidProject();
         }
     }
 
     [MenuItem("Flutter/Export IOS %&i", false, 3)]
     public static void DoBuildIOS()
     {
-        if (Directory.Exists(iosExportPath))
-            Directory.Delete(iosExportPath, true);
-
-        EditorUserBuildSettings.iOSBuildConfigType = iOSBuildType.Release;
-
-        var options = BuildOptions.AcceptExternalModificationsToPlayer;
-        var report = BuildPipeline.BuildPlayer(
-            GetEnabledScenes(),
-            iosExportPath,
-            BuildTarget.iOS,
-            options
-        );
-
-        if (report.summary.result != BuildResult.Succeeded)
-            throw new Exception("Build failed");
+        BuildIOS(iosExportPath);
     }
-
 
     [MenuItem("Flutter/Export IOS Plugin %&o", false, 4)]
     public static void DoBuildIOSPlugin()
     {
-        if (Directory.Exists(iosExportPluginPath))
-            Directory.Delete(iosExportPluginPath, true);
+        BuildIOS(iosExportPluginPath);
+
+        // Automate so manual steps
+        SetupIOSProjectForPlugin();
+
+        // Build Archive
+        // BuildUnityFrameworkArchive();
+
+    }
+
+    [MenuItem("Flutter/Settings %&S", false, 5)]
+    public static void PluginSettings()
+    {
+        EditorWindow.GetWindow(typeof(Build));
+    }
+
+    void OnGUI()
+    {
+        GUILayout.Label("Flutter Unity Widget Settings", EditorStyles.boldLabel);
+
+        EditorGUI.BeginChangeCheck();
+        pluginMode = EditorGUILayout.Toggle("Plugin Mode", pluginMode);
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            EditorPrefs.SetBool(persistentKey, pluginMode);
+        }
+    }
+
+    private void OnEnable()
+    {
+      pluginMode = EditorPrefs.GetBool(persistentKey, false);
+    }
+
+    private static void BuildIOS(String path)
+    {
+        if (Directory.Exists(path))
+            Directory.Delete(path, true);
 
         EditorUserBuildSettings.iOSBuildConfigType = iOSBuildType.Release;
 
         var options = BuildOptions.AcceptExternalModificationsToPlayer;
-
         var report = BuildPipeline.BuildPlayer(
             GetEnabledScenes(),
-            iosExportPluginPath,
+            path,
             BuildTarget.iOS,
             options
         );
 
-
         if (report.summary.result != BuildResult.Succeeded)
             throw new Exception("Build failed");
-
-        // Automate so manual steps
-        GetSomeRestWillYaPlugin();
-
-        // Build Archive
-        buildArchive();
-
     }
 
     static void Copy(string source, string destinationPath)
@@ -174,7 +182,7 @@ public class Build
     /// <summary>
     /// This method tries to autome the build setup required for Android
     /// </summary>
-    static void AndroidGetSomeRestWillYa()
+    static void SetupAndroidProject()
     {
         string androidPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../android"));
         string androidAppPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../android/app"));
@@ -238,7 +246,7 @@ dependencies {
     /// <summary>
     /// This method tries to autome the build setup required for Android
     /// </summary>
-    static void AndroidGetSomeRestWillYaPlugin()
+    static void SetupAndroidProjectForPlugin()
     {
         string androidPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../android"));
         var proj_build_path = Path.Combine(androidPath, "build.gradle");
@@ -271,25 +279,7 @@ project("":unityLibrary"").projectDir = file(""./unityLibrary"")
         }
     }
 
-    static void GetSomeRestWillYa()
-    {
-        string iosRunnerPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/Runner"));
-        var info_file = Path.Combine(iosRunnerPath, "info.plist");
-        var info_text = File.ReadAllText(info_file);
-
-        if (!Regex.IsMatch(info_text, @"<key>io.flutter.embedded_views_preview</key>"))
-        {
-            Regex regex = new Regex(@"</dict>", RegexOptions.Multiline);
-            info_text = regex.Replace(info_text, @"
-				<key>io.flutter.embedded_views_preview</key>
-				<true/>
-			</dict>
-			");
-            File.WriteAllText(info_file, info_text);
-        }
-    }
-
-    static void GetSomeRestWillYaPlugin()
+    static void SetupIOSProjectForPlugin()
     {
         string iosRunnerPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios"));
         var pubsec_file = Path.Combine(iosRunnerPath, "flutter_unity_widget.podspec");
@@ -310,50 +300,42 @@ project("":unityLibrary"").projectDir = file(""./unityLibrary"")
         }
     }
 
-    static async void buildArchive() {
-        string framework = "UnityFramework";
-        string xcproj_name = iosExportPluginPath+"/Unity-iPhone.xcworkspace";
-        string scheme_name = $"{framework}";
-        string project_dir = iosExportPluginPath;
-        string buildPath = iosExportPluginPath + "/build";
-        string framework_name_with_ext = $"{framework}.framework";
-        string iosRunnerPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/"));
-        string framePath = Path.GetFullPath(Path.Combine(iosRunnerPath, $"{framework}"));
-        string ios_archive_dir = "Release-iphoneos-archive";
-        string ios_universal_dir = "Release-universal-iOS";
-        string ios_archive_framework_path = $"{buildPath}/{ios_archive_dir}/Products/Library/Frameworks/{framework_name_with_ext}";
-        string dsym_name_with_ext = $"{framework_name_with_ext}.dSYM";
+    // DO NOT USE (Contact before trying)
+    static async void BuildUnityFrameworkArchive()
+    {
+        string XCPROJECT_EXT = "/Unity-iPhone.xcodeproj";
+
+        // check if we have a workspace or not
+        if (Directory.Exists(iosExportPluginPath + "/Unity-iPhone.xcworkspace")) {
+            XCPROJECT_EXT = "/Unity-iPhone.xcworkspace";
+        }
+
+        string FRAMEWORK = "UnityFramework";
+        string XCPROJECT_NAME = $"{iosExportPluginPath}{XCPROJECT_EXT}";
+        string SCHEME_NAME = $"{FRAMEWORK}";
+        string BUILD_PATH = iosExportPluginPath + "/build";
+        string FRAMEWORK_NAME_WITH_EXT = $"{FRAMEWORK}.framework";
+
+        string IOS_RUNNER_PATH = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/"));
+        string IOS_ARCHIVE_DIR = "Release-iphoneos-archive";
+        string IOS_ARCHIVE_FRAMEWORK_PATH = $"{BUILD_PATH}/{IOS_ARCHIVE_DIR}/Products/Library/Frameworks/{FRAMEWORK_NAME_WITH_EXT}";
+        string DYSM_NAME_WITH_EXT = $"{FRAMEWORK_NAME_WITH_EXT}.dSYM";
 
         try
         {
             Debug.Log("### Cleaning up after old builds");
-            await $" - rf {framePath}.tar.bz2".Bash("rm");
-            await $" - rf {buildPath}".Bash("rm");
-        } catch (Exception)
-        {
-            // Debug.Log(e);
-        }
+            await $" - rf {IOS_RUNNER_PATH}{FRAMEWORK_NAME_WITH_EXT}".Bash("rm");
+            await $" - rf {BUILD_PATH}".Bash("rm");
 
-
-        try
-        {
             Debug.Log("### BUILDING FOR iOS");
             Debug.Log("### Building for device (Archive)");
-            await $"archive -workspace {xcproj_name} -scheme {scheme_name} - sdk iphoneos -archivePath {buildPath}/Release-iphoneos.xcarchive ENABLE_BITCODE=NO |xcpretty".Bash("xcodebuild");
+
+            await $"archive -workspace {XCPROJECT_NAME} -scheme {SCHEME_NAME} -sdk iphoneos -archivePath {BUILD_PATH}/Release-iphoneos.xcarchive ENABLE_BITCODE=NO |xcpretty".Bash("xcodebuild");
 
             Debug.Log("### Copying framework files");
-            await $" {buildPath}/Release-iphoneos.xcarchive {buildPath}/{ios_archive_dir}".Bash("mv");
-            await $" -p {buildPath}/{ios_universal_dir}".Bash("mkdir");
-
-            Debug.Log("### Copying framework files");
-            await $" -RL {ios_archive_framework_path} {buildPath}/{ios_universal_dir}/{framework_name_with_ext}".Bash("cp");
-            await $" -RL {ios_archive_framework_path}/{dsym_name_with_ext} {buildPath}/{ios_universal_dir}/{dsym_name_with_ext}".Bash("cp");
-
-            Debug.Log("### Copying iOS files into zip directory");
-            string target_dir = iosRunnerPath;
-            await $" -cjvf {target_dir}/{framework}.tar.bz2 {buildPath}/{ios_universal_dir}/{framework_name_with_ext} {buildPath}/{ios_universal_dir}/{dsym_name_with_ext}".Bash("tar");
-
-            Debug.Log("### Zipped resulting framework and dSYM to $TAR_DIR/$FRAMEWORK.tar.bz2");
+            await $" -RL {IOS_ARCHIVE_FRAMEWORK_PATH} {IOS_RUNNER_PATH}/{FRAMEWORK_NAME_WITH_EXT}".Bash("cp");
+            await $" -RL {IOS_ARCHIVE_FRAMEWORK_PATH}/{DYSM_NAME_WITH_EXT} {IOS_RUNNER_PATH}/{DYSM_NAME_WITH_EXT}".Bash("cp");
+            Debug.Log("### DONE ARCHIVING");
         }
         catch (Exception e)
         {

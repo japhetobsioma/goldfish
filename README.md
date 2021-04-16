@@ -1,7 +1,8 @@
 # project goldfish
-[![style: pedantic](https://img.shields.io/badge/style-pedantic-00B5A8.svg)](https://pub.dev/packages/pedantic)
 [![build](https://github.com/japhetobsioma/goldfish/actions/workflows/analyze_and_build.yml/badge.svg)](https://github.com/japhetobsioma/goldfish/actions/workflows/analyze_and_build.yml)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/japhetobsioma/goldfish?include_prereleases)
+
+A Flutter application that can track user's water intake.
 
 Final year project. (Work in progress)
 
@@ -15,7 +16,7 @@ Final year project. (Work in progress)
 
 ## APK
 
-[Download here](https://github.com/japhetobsioma/goldfish/releases)
+[aqua-v1.0.apk](https://github.com/japhetobsioma/goldfish/releases/download/v1.0/aqua-v1.0.apk)
 
 ## Preview
 
