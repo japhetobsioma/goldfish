@@ -43,6 +43,7 @@ dependencies:
   flutter_native_timezone: ^1.0.10
   battery_optimization: ^0.1.0
   android_power_manager: ^0.1.6
+  hardware_buttons: ^1.0.0
 
 dev_dependencies:
   flutter_test:

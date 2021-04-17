@@ -18,6 +18,7 @@ import '../states/drink_type.dart';
 import '../states/intake_bank.dart';
 import '../states/notifications_manager.dart';
 import '../states/tile_color.dart';
+import '../states/unity_loading.dart';
 import '../states/water_intake.dart';
 import 'water_intake.dart';
 
@@ -135,6 +136,9 @@ class MenuBottomSheet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final intakeBank = useProvider(intakeBankProvider);
+    final isFirstTimeOpeningUnity = useProvider(unityLoadingProvider.select(
+      (value) => value.isFirstTimeOpeningUnity,
+    ));
 
     useEffect(() {
       context.read(intakeBankProvider.notifier).fetchIntakeBank();
@@ -169,33 +173,40 @@ class MenuBottomSheet extends HookWidget {
                         arithmeticOperator: '-',
                       );
 
-                  await showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) {
-                      Future.delayed(
-                        const Duration(seconds: 1),
-                        () async {
-                          Navigator.pop(context);
+                  isFirstTimeOpeningUnity
+                      ? await showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            Future.delayed(
+                              const Duration(seconds: 1),
+                              () async {
+                                Navigator.pop(context);
 
-                          await Navigator.pushNamed(
-                            context,
-                            aquariumRoute,
-                            arguments: {'water': '$amount'},
-                          );
-                        },
-                      );
-                      return AlertDialog(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Opening Unity Player'),
-                            const CircularProgressIndicator(),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+                                await Navigator.pushNamed(
+                                  context,
+                                  aquariumRoute,
+                                  arguments: {'water': '$amount'},
+                                );
+                              },
+                            );
+                            return AlertDialog(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Opening Unity Player'),
+                                  const CircularProgressIndicator(),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      : await Navigator.pushNamed(
+                          context,
+                          aquariumRoute,
+                          arguments: {'water': '$amount'},
+                        );
                 },
               );
             },
