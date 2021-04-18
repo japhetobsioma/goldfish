@@ -243,7 +243,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2562331609216312173}
   - component: {fileID: 8462008412633970967}
-  - component: {fileID: 2595624215223521967}
+  - component: {fileID: 2547125845222111943}
   m_Layer: 0
   m_Name: Orca
   m_TagString: Untagged
@@ -286,7 +286,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2595624215223521967
+--- !u!114 &2547125845222111943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -295,7 +295,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2937731969354021335}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: c2b358a90eacb5343b5a878606023712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}

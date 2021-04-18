@@ -103,8 +103,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3116224529277995791}
   - component: {fileID: 9070004898372030837}
-  - component: {fileID: 3221679912293404470}
   - component: {fileID: 3588710688256857594}
+  - component: {fileID: -617509719663475217}
   m_Layer: 0
   m_Name: Dolphin
   m_TagString: Untagged
@@ -147,27 +147,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3221679912293404470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2338737229331501493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 20
-  swimSpeedMin: 10
-  swimSpeedMax: 15
-  maxTurnRateY: 5
-  maxWanderAngle: 45
-  wanderPeriodDuration: 0.8
-  wanderProbability: 0.15
-  swimSpeed: 0
 --- !u!64 &3588710688256857594
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -182,6 +161,27 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &-617509719663475217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2338737229331501493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7c0e16659d2f64eb52027e3095324b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tankCenterGoal: {fileID: 0}
+  obstacleSensingDistance: 25
+  swimSpeedMin: 10
+  swimSpeedMax: 15
+  maxTurnRateY: 5
+  maxWanderAngle: 45
+  wanderPeriodDuration: 0.8
+  wanderProbability: 0.15
+  swimSpeed: 0
 --- !u!1 &3777875909962052798
 GameObject:
   m_ObjectHideFlags: 0

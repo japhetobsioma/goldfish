@@ -180,7 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1691825376211266372}
   - component: {fileID: 4727300644508905790}
-  - component: {fileID: 1220523097970467065}
+  - component: {fileID: 8443996776638551562}
   m_Layer: 0
   m_Name: Manatee
   m_TagString: Untagged
@@ -223,7 +223,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1220523097970467065
+--- !u!114 &8443996776638551562
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -232,11 +232,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2031478143925105150}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: a1ee194e34b72684290ba943a980e498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 20
+  obstacleSensingDistance: 25
   swimSpeedMin: 10
   swimSpeedMax: 15
   maxTurnRateY: 5

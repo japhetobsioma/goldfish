@@ -492,7 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6932419099753144015}
   - component: {fileID: 3951005585672406197}
-  - component: {fileID: 7475516938410440037}
+  - component: {fileID: 7381960248185588064}
   m_Layer: 0
   m_Name: Whale
   m_TagString: Untagged
@@ -535,7 +535,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7475516938410440037
+--- !u!114 &7381960248185588064
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -544,13 +544,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7745970209203881077}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: e616afbd949895044ac7f8dda5618631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
   obstacleSensingDistance: 70
-  swimSpeedMin: 10
-  swimSpeedMax: 15
+  swimSpeedMin: 5
+  swimSpeedMax: 10
   maxTurnRateY: 5
   maxWanderAngle: 45
   wanderPeriodDuration: 0.8

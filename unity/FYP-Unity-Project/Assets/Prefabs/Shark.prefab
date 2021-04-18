@@ -72,7 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2137901579315063064}
   - component: {fileID: 5425561001920557922}
-  - component: {fileID: 1883036077389362218}
+  - component: {fileID: -1466122396089984125}
   m_Layer: 0
   m_Name: Shark
   m_TagString: Untagged
@@ -115,7 +115,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1883036077389362218
+--- !u!114 &-1466122396089984125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,11 +124,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1648469764724650914}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: d9b69103e8ac3084284431663d08ed63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 30
+  obstacleSensingDistance: 35
   swimSpeedMin: 10
   swimSpeedMax: 15
   maxTurnRateY: 5

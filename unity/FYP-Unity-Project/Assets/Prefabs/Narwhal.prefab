@@ -508,8 +508,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8946539414458285534}
   - component: {fileID: 3082805096265607076}
-  - component: {fileID: 8908902155348270263}
   - component: {fileID: 76440648465508738}
+  - component: {fileID: 5645482818480486009}
   m_Layer: 0
   m_Name: Narwhal
   m_TagString: Untagged
@@ -552,27 +552,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &8908902155348270263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8602911710281557860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 20
-  swimSpeedMin: 10
-  swimSpeedMax: 15
-  maxTurnRateY: 5
-  maxWanderAngle: 45
-  wanderPeriodDuration: 0.8
-  wanderProbability: 0.15
-  swimSpeed: 0
 --- !u!65 &76440648465508738
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -586,6 +565,27 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5.0847864, y: 4.016425, z: 17.508818}
   m_Center: {x: -0.040863514, y: 1.0598252, z: 0.14266333}
+--- !u!114 &5645482818480486009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602911710281557860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35748cd747df97e47883236cdc7d2615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tankCenterGoal: {fileID: 0}
+  obstacleSensingDistance: 25
+  swimSpeedMin: 10
+  swimSpeedMax: 15
+  maxTurnRateY: 5
+  maxWanderAngle: 45
+  wanderPeriodDuration: 0.8
+  wanderProbability: 0.15
+  swimSpeed: 0
 --- !u!1 &8657770646309101647
 GameObject:
   m_ObjectHideFlags: 0

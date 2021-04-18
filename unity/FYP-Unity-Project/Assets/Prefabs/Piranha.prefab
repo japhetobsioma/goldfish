@@ -230,9 +230,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 10
-  swimSpeedMin: 1
-  swimSpeedMax: 8
+  obstacleSensingDistance: 15
+  swimSpeedMin: 10
+  swimSpeedMax: 15
   maxTurnRateY: 5
   maxWanderAngle: 45
   wanderPeriodDuration: 0.8
