@@ -316,10 +316,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6206071971421873389}
   - component: {fileID: 54123765598404247}
-  - component: {fileID: 5884758781213278217}
   - component: {fileID: 8785660015832410070}
-  - component: {fileID: 8389705736850319433}
-  - component: {fileID: -1025127393680050537}
+  - component: {fileID: 8109290573282865493}
   m_Layer: 0
   m_Name: Trout
   m_TagString: Untagged
@@ -362,27 +360,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &5884758781213278217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6731673351056244311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 20
-  swimSpeedMin: 10
-  swimSpeedMax: 15
-  maxTurnRateY: 5
-  maxWanderAngle: 45
-  wanderPeriodDuration: 0.8
-  wanderProbability: 0.15
-  swimSpeed: 0
 --- !u!65 &8785660015832410070
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -396,7 +373,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.2338257, y: 5.5617247, z: 13.577335}
   m_Center: {x: -0.0638237, y: 1.0752616, z: 0.3258381}
---- !u!114 &8389705736850319433
+--- !u!114 &8109290573282865493
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,60 +382,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 6731673351056244311}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Script: {fileID: 11500000, guid: a60f9c33135281b4186885624cfa4a70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabId: 1234269136162988649
-  localRefs:
-    _Keys:
-    - {fileID: 6731673351056244311}
-    - {fileID: 6206071971421873389}
-    - {fileID: 54123765598404247}
-    - {fileID: 5884758781213278217}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: 8785660015832410070}
-    - {fileID: 8389705736850319433}
-    - {fileID: 3463121414088261177}
-    - {fileID: 3067145690786313331}
-    - {fileID: 1044689401772592803}
-    - {fileID: 789469153388205855}
-    - {fileID: 5292536872166857564}
-    - {fileID: 8518468954834090900}
-    - {fileID: 1390023612088731788}
-    - {fileID: 7417811222619990097}
-    - {fileID: 8417340392490578685}
-    - {fileID: 8960733996077273137}
-    - {fileID: 8342683757333240818}
-    - {fileID: 8779371592965175437}
-    - {fileID: 3371739477646901437}
-    - {fileID: 3527968868861822624}
-    - {fileID: 4608825078293672977}
-    - {fileID: 5602674199978731460}
-    - {fileID: 7265018662301780361}
-    - {fileID: 2246039226337269431}
-    - {fileID: 4591137609246202054}
-    - {fileID: 3422362431011419698}
-    - {fileID: 4990394642583613646}
-    - {fileID: 8997604143346292840}
-    - {fileID: 258809269105316921}
-    - {fileID: 6480787514047575783, guid: b0102ea650e0d914b8c2f9ddabc0381f, type: 3}
-    - {fileID: 2100000, guid: 24c59db797bf92e449d156b703c41e4f, type: 2}
-    _Values: 14531debb385cf4a461a9768303cac375db1d31a3ee24529864858d8f2a23354dd4909bbfb447200dae53c7629b3b859cf710c8b2e06d20966b99995d308a85c18bdba86b997cd193ed2f4241ebc522e91fea763afbe822977005541aadd2d1d7166701991c1ed375d0cb3a4ed5214569995d92e4ff3f32840e40eb9428c6e615b294c48b4c76352ecde07a30bdd3c3614abd93fb75b6d655a98d9adb333f41785ebb53bfa335e2ecd78bd8e13afe31e2044a497b22eaa4a98b2a24da010051fd41f28f69377311fb3558ec06221ae55b5bb8d6e8e5d6556bf942d522954302183229dcc27254e678a3bb5f843945376044d025c9e73ae30857e38fe4adef55d
---- !u!114 &-1025127393680050537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6731673351056244311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 6206071971421873389}
+  tankCenterGoal: {fileID: 0}
+  obstacleSensingDistance: 20
+  swimSpeedMin: 10
+  swimSpeedMax: 15
+  maxTurnRateY: 5
+  maxWanderAngle: 45
+  wanderPeriodDuration: 0.8
+  wanderProbability: 0.15
+  swimSpeed: 0
 --- !u!1 &7265018662301780361
 GameObject:
   m_ObjectHideFlags: 0

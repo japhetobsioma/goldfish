@@ -492,9 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6932419099753144015}
   - component: {fileID: 3951005585672406197}
-  - component: {fileID: 7475516938410440037}
-  - component: {fileID: 2811781634653650525}
-  - component: {fileID: -8655009322153591048}
+  - component: {fileID: 7381960248185588064}
   m_Layer: 0
   m_Name: Whale
   m_TagString: Untagged
@@ -537,7 +535,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7475516938410440037
+--- !u!114 &7381960248185588064
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -546,91 +544,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7745970209203881077}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: e616afbd949895044ac7f8dda5618631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
   obstacleSensingDistance: 70
-  swimSpeedMin: 10
-  swimSpeedMax: 15
+  swimSpeedMin: 5
+  swimSpeedMax: 10
   maxTurnRateY: 5
   maxWanderAngle: 45
   wanderPeriodDuration: 0.8
   wanderProbability: 0.15
   swimSpeed: 0
---- !u!114 &2811781634653650525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745970209203881077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabId: 426126005236479589
-  localRefs:
-    _Keys:
-    - {fileID: 7745970209203881077}
-    - {fileID: 6932419099753144015}
-    - {fileID: 3951005585672406197}
-    - {fileID: 7475516938410440037}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: 2811781634653650525}
-    - {fileID: 440219653889311771}
-    - {fileID: 2054823559234096721}
-    - {fileID: 4065616435059487873}
-    - {fileID: 4386578474251693373}
-    - {fileID: 9180128090919608702}
-    - {fileID: 4621587683458974134}
-    - {fileID: 2692828216707838638}
-    - {fileID: 5829311462222008947}
-    - {fileID: 4811222776591550687}
-    - {fileID: 5354340106440501779}
-    - {fileID: 5031551368636424656}
-    - {fileID: 5747178135110582959}
-    - {fileID: 1791958566387497631}
-    - {fileID: 495782008905399426}
-    - {fileID: 711944910708379187}
-    - {fileID: 8922811061120982502}
-    - {fileID: 5964459266028106667}
-    - {fileID: 2972106528411987093}
-    - {fileID: 979975034002988137}
-    - {fileID: 6761672393700247040}
-    - {fileID: 8112071843838707080}
-    - {fileID: 5216969604985503067}
-    - {fileID: 5592075866729452555}
-    - {fileID: 832974348748885203}
-    - {fileID: 3839565773672582297}
-    - {fileID: 3393510714979551609}
-    - {fileID: 7297591316047212261}
-    - {fileID: 2543404708142899952}
-    - {fileID: 6405469517554352073}
-    - {fileID: 7362981475431291672}
-    - {fileID: 220468728261800707}
-    - {fileID: 2762258004050205472, guid: e9b5837ef718cb540aeaabdae3e14554, type: 3}
-    - {fileID: -8939640760034921261, guid: e9b5837ef718cb540aeaabdae3e14554, type: 3}
-    - {fileID: -6388254203272786494, guid: e9b5837ef718cb540aeaabdae3e14554, type: 3}
-    - {fileID: 1358659479680502452, guid: e9b5837ef718cb540aeaabdae3e14554, type: 3}
-    - {fileID: 331629518011699414}
-    _Values: e44aed2d557e4b4c11a0bbf096045259ba10fd8415913c05dbb92f1ee432d1468077d58e90660924df9ad88374a741698906cc68e46d1a767a0dad63b0d298437302711e2fc3c852f8279c509540863377c594de66686113924b1582b8a6734d331cf577195f984dce1f70bdd1cae0466c1e24899888552465848ce3ae4599609ae91c794a0f1a17d4b8f0b8075bbd5c2d5cefd7cafde555c6d0db9dec7cfb14b8d023e7ad67fc5dfcf3a2af86f1d308c830b65156c29667318e4c86cc83d44f4cfb8e27805bf66c594cdbd75a36ce48a4e4651c324c6b7b9974e8c44b7dd6771f53fc817ffb8922d9dd07f51941f205c0042bb0e8f181008f12c0f543bab7247663b8063a4cc85f6d8743554575612568ee044751258f2d2e03ee6d4380991edb1c94820606c072c434e18fcb28ba1a4f65a2ce40018a4fd58a353d3a36a31313dbd09ef51bd461d26ef47af8e00605
---- !u!114 &-8655009322153591048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745970209203881077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 6932419099753144015}
 --- !u!1 &8112071843838707080
 GameObject:
   m_ObjectHideFlags: 0

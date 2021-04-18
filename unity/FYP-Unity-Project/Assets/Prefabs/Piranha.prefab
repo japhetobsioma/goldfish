@@ -160,10 +160,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3266214994018615611}
   - component: {fileID: 8913681323427961665}
-  - component: {fileID: 3087591679997129916}
   - component: {fileID: 8570717699466530642}
-  - component: {fileID: 984330185725628074}
-  - component: {fileID: -8345223956127309501}
+  - component: {fileID: -3459966580777516293}
   m_Layer: 0
   m_Name: Piranha
   m_TagString: Untagged
@@ -206,27 +204,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3087591679997129916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2745011694923717505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 15
-  swimSpeedMin: 10
-  swimSpeedMax: 15
-  maxTurnRateY: 5
-  maxWanderAngle: 45
-  wanderPeriodDuration: 0.8
-  wanderProbability: 0.15
-  swimSpeed: 0
 --- !u!65 &8570717699466530642
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -240,7 +217,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.9133863, y: 4.7652583, z: 8.330593}
   m_Center: {x: -0.00000024835268, y: 1.8826289, z: 0.09996414}
---- !u!114 &984330185725628074
+--- !u!114 &-3459966580777516293
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,56 +226,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2745011694923717505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ae829f0af333014db127e812dcbe12f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabId: 9124308936794713029
-  localRefs:
-    _Keys:
-    - {fileID: 2745011694923717505}
-    - {fileID: 3266214994018615611}
-    - {fileID: 8913681323427961665}
-    - {fileID: 3087591679997129916}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: 8570717699466530642}
-    - {fileID: 984330185725628074}
-    - {fileID: 5439488785464450031}
-    - {fileID: 5900621963229073829}
-    - {fileID: 8434384281682733941}
-    - {fileID: 8180589350019805897}
-    - {fileID: 3603256381126917770}
-    - {fileID: 955931666822929986}
-    - {fileID: 7510266626859035994}
-    - {fileID: 2126495798579989895}
-    - {fileID: 1127006932958287659}
-    - {fileID: 516054404338611687}
-    - {fileID: 627304394510564900}
-    - {fileID: 190593031316643163}
-    - {fileID: 6177069072943752555}
-    - {fileID: 5442129929992299382}
-    - {fileID: 4823826313590062965}
-    - {fileID: 921339601875380183}
-    - {fileID: 1465484839417349310}
-    - {fileID: 2663564299718689673}
-    - {fileID: 6616969734440698693}
-    - {fileID: -4199818294640821237, guid: 059d3218cf411274fb4827a4e5a366a6, type: 3}
-    - {fileID: 2100000, guid: aae29a78c84b300418c00f62c151899e, type: 2}
-    _Values: 626b503ff8123041ec8f1e326871a548b7e6ca4780cfca74cf83f95fd489e550d46334fc96691324fd8ddaba014f763630251144bba7013037c5717418d16d625631a0fac3574e210610b60c0bef8c1efb302fae77a1942c6204c6d1f89f0c30fb3d64cfae7b737874323fabf0f5254739527ae8a2beea083b32a438e1e0e66505860748535ccc75a4a83b4562e93b6be07f98a524238e46286c09e120ac5a6db326599512230c24870444f983a5a65108c7a69db8bfbe1ff8c171c066ad964f03a8f88942d07e038cbd1f20df94c331eda527a6fa424b0c673a8dd494cc8a26
---- !u!114 &-8345223956127309501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2745011694923717505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 3266214994018615611}
+  tankCenterGoal: {fileID: 0}
+  obstacleSensingDistance: 15
+  swimSpeedMin: 10
+  swimSpeedMax: 15
+  maxTurnRateY: 5
+  maxWanderAngle: 45
+  wanderPeriodDuration: 0.8
+  wanderProbability: 0.15
+  swimSpeed: 0
 --- !u!1 &3603256381126917770
 GameObject:
   m_ObjectHideFlags: 0

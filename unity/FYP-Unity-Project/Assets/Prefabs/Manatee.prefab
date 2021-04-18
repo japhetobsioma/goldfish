@@ -180,9 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1691825376211266372}
   - component: {fileID: 4727300644508905790}
-  - component: {fileID: 1220523097970467065}
-  - component: {fileID: -3061474411604707040}
-  - component: {fileID: -6868166425634910897}
+  - component: {fileID: 8443996776638551562}
   m_Layer: 0
   m_Name: Manatee
   m_TagString: Untagged
@@ -225,7 +223,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1220523097970467065
+--- !u!114 &8443996776638551562
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,11 +232,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2031478143925105150}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: a1ee194e34b72684290ba943a980e498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 20
+  obstacleSensingDistance: 25
   swimSpeedMin: 10
   swimSpeedMax: 15
   maxTurnRateY: 5
@@ -246,75 +244,6 @@ MonoBehaviour:
   wanderPeriodDuration: 0.8
   wanderProbability: 0.15
   swimSpeed: 0
---- !u!114 &-3061474411604707040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2031478143925105150}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabId: 167709931567000335
-  localRefs:
-    _Keys:
-    - {fileID: 2031478143925105150}
-    - {fileID: 1691825376211266372}
-    - {fileID: 4727300644508905790}
-    - {fileID: 1220523097970467065}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: -3061474411604707040}
-    - {fileID: 8166588766749520272}
-    - {fileID: 7767099009654307802}
-    - {fileID: 5703119384844615946}
-    - {fileID: 5453355193403873462}
-    - {fileID: 587765494419952885}
-    - {fileID: 3993947148585514045}
-    - {fileID: 5913416219897087781}
-    - {fileID: 2858567116190132216}
-    - {fileID: 3858056394405657940}
-    - {fileID: 4395543692110749592}
-    - {fileID: 3647314307811595355}
-    - {fileID: 4074737686384195364}
-    - {fileID: 8038965553739960084}
-    - {fileID: 8191813914488391945}
-    - {fileID: 9128552737893563320}
-    - {fileID: 908114299177789549}
-    - {fileID: 2704535132464694816}
-    - {fileID: 6805360572384057630}
-    - {fileID: 8851796891395221986}
-    - {fileID: 3069270704880530315}
-    - {fileID: 566796159407845379}
-    - {fileID: 4550907701421443280}
-    - {fileID: 4239434370404491648}
-    - {fileID: 8989507595606407512}
-    - {fileID: 8710208949053925547}
-    - {fileID: 3748094407990153748}
-    - {fileID: 1822440058371446822}
-    - {fileID: 1613237282513738722}
-    - {fileID: 4752546653390251369}
-    - {fileID: -2396795056160738326, guid: 6a21a0842e833d442a29a94c914b81bb, type: 3}
-    - {fileID: 2100000, guid: 28248e81a94e6ea4296093b8349683bf, type: 2}
-    - {fileID: 3912751223142960551}
-    _Values: f714df4da80fba044c9a6e185367af027fd41a33fc459206d7da723a5633c8311b8ec47f3729f11c77f7ce75c26428587d59d01fed86ff3ca7e5258382f55b7f63a0fdc4a230cb57c536bb05771c4472b11ab7b004e71e6b707726aefc91666cadb2279d9d12054c71861bdbbdfb4c3d2b98349dac0b834a4196cae5a986ac3331b04ed6bb1def3b1f033e7dcc43ae752ae9d995c603185e2fdcde33ddebf5142618f491b6dc070caaf9bcaf4a01170119aa444052e9933336525721c044a10af853a3e537402b060f1ac13f3f37562dc6dc1b32a6b4c13c7a3f38f6ccd732129cc7a79da4fd395829b4cec7d8ac0c6e577b1962a02b4f5314df6af708343a19b22b5b876f467738a4c35c5b82891532cd36b2b80f6b4d6f7954b1846830600b7ab415ac5184fe62f351beddcef3d062
---- !u!114 &-6868166425634910897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2031478143925105150}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 1691825376211266372}
 --- !u!1 &2704535132464694816
 GameObject:
   m_ObjectHideFlags: 0

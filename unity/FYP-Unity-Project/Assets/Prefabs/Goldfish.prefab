@@ -222,8 +222,6 @@ GameObject:
   - component: {fileID: 3657482984539600506}
   - component: {fileID: 7181949260148922119}
   - component: {fileID: 5757894047202172845}
-  - component: {fileID: -4563496927006093515}
-  - component: {fileID: 8796299721934159745}
   m_Layer: 0
   m_Name: Goldfish
   m_TagString: Untagged
@@ -280,8 +278,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
   obstacleSensingDistance: 10
-  swimSpeedMin: 6
-  swimSpeedMax: 4
+  swimSpeedMin: 10
+  swimSpeedMax: 15
   maxTurnRateY: 5
   maxWanderAngle: 45
   wanderPeriodDuration: 0.8
@@ -300,61 +298,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.4886856, y: 3.2171912, z: 3.523368}
   m_Center: {x: 0.0271492, y: 1.1085956, z: -0.4476943}
---- !u!114 &-4563496927006093515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8028230511657301690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabId: 7025469051457223696
-  localRefs:
-    _Keys:
-    - {fileID: 8028230511657301690}
-    - {fileID: 7215278640273648640}
-    - {fileID: 3657482984539600506}
-    - {fileID: 7181949260148922119}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: 5757894047202172845}
-    - {fileID: -4563496927006093515}
-    - {fileID: 148283100494165716}
-    - {fileID: 1770201501576379550}
-    - {fileID: 4359149481416443470}
-    - {fileID: 4104316521658425330}
-    - {fileID: 8895570361199563697}
-    - {fileID: 4915144922362196857}
-    - {fileID: 2399274276408967265}
-    - {fileID: 6120647131302273212}
-    - {fileID: 5780407327124379498}
-    - {fileID: 2755009265530610832}
-    - {fileID: 506396248093334736}
-    - {fileID: 6292216837626808950}
-    - {fileID: 900617028376340510}
-    - {fileID: 3339211567834323865, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
-    - {fileID: -770769185735333164, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
-    - {fileID: 1358659479680502452, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
-    - {fileID: -6481666890843136435, guid: 19a31ab6f34e2434c997ce0de31132e8, type: 3}
-    _Values: 5ec7832372ccbd1a7f5cfc4f7504f222e48a2e0c003c1a4865106b2815ccd74436edaee588929d413a877dc728dcb614afbd54564b72602254c5429e9e6afb4bccbfe578a9f26576d88f2e8640ade0765a5678577780f9574fd092c250fea25a7e37049608c2954258de2edba0e662591b34060a1cad3c4bc58dc67a8428c627132cf7f656b5911d15440066ade1483434ecde8405ad762b8bb0a46976f0382f1707c774ef6b03655e16e19f515c06582a04528ff9b4d33f5edd9459eed75904
---- !u!114 &8796299721934159745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8028230511657301690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 7215278640273648640}
 --- !u!1 &8895570361199563697
 GameObject:
   m_ObjectHideFlags: 0

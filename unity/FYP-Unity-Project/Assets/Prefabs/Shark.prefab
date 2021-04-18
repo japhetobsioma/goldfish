@@ -72,9 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2137901579315063064}
   - component: {fileID: 5425561001920557922}
-  - component: {fileID: 1883036077389362218}
-  - component: {fileID: -1545993181575083514}
-  - component: {fileID: 2723730488337518831}
+  - component: {fileID: -1466122396089984125}
   m_Layer: 0
   m_Name: Shark
   m_TagString: Untagged
@@ -117,7 +115,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1883036077389362218
+--- !u!114 &-1466122396089984125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,11 +124,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1648469764724650914}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: d9b69103e8ac3084284431663d08ed63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 30
+  obstacleSensingDistance: 35
   swimSpeedMin: 10
   swimSpeedMax: 15
   maxTurnRateY: 5
@@ -138,71 +136,6 @@ MonoBehaviour:
   wanderPeriodDuration: 0.8
   wanderProbability: 0.15
   swimSpeed: 0
---- !u!114 &-1545993181575083514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1648469764724650914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabId: 3436278876510673254
-  localRefs:
-    _Keys:
-    - {fileID: 1648469764724650914}
-    - {fileID: 2137901579315063064}
-    - {fileID: 5425561001920557922}
-    - {fileID: 1883036077389362218}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: -1545993181575083514}
-    - {fileID: 8900314803974616012}
-    - {fileID: 6997344201029056902}
-    - {fileID: 5040729486061765462}
-    - {fileID: 4719769902500338410}
-    - {fileID: 214450422631388841}
-    - {fileID: 4448590901179971169}
-    - {fileID: 1787546637558695804}
-    - {fileID: 8733145025655019138}
-    - {fileID: 7716365859444980962}
-    - {fileID: 8344537569441297237}
-    - {fileID: 9148767656981184435}
-    - {fileID: 4798601045799547944}
-    - {fileID: 3985358752515504238}
-    - {fileID: 4011592832433571796}
-    - {fileID: 7840379376738175390}
-    - {fileID: 6469306890999047248}
-    - {fileID: 5095549554814749796}
-    - {fileID: 9073135015457035521}
-    - {fileID: 1575141430227480999}
-    - {fileID: 7756771200655269886}
-    - {fileID: 1761231602533454650}
-    - {fileID: 17415467524904352}
-    - {fileID: 4509260460522815392}
-    - {fileID: 1361670863493176361}
-    - {fileID: 3452791651633846733}
-    - {fileID: -4842471987438158858, guid: d959447aa889c984c9f45634c229e75d, type: 3}
-    - {fileID: 2100000, guid: d196d2f47c2a3614eb58f611508e4378, type: 2}
-    - {fileID: 6260812750276532803}
-    _Values: 87026e39d1ee7417f9c5aeed8b36876f84cbe80b15f7fe391df52a02c8beb05ec2b0989d157efe13da6ec0381992ce2e52291b3905bc457dfe57a938e78920488af3d4246216a60237041a7b47c9ac503da7ab0d25159b056b1b9c6d2737fa638f09c20c66f39168d01d0300a1c93637fc068a71cad191608eda8f7db31329010bb7ed3d07a0e948e9bcc1f8ee659c5f1b9a8edf53766743879e64be7cf1e31d4805f6eadcf8305ae2bda5786c76b0293e306218844aad7f1f30c5a504a8c507d8a440f35b863b14cbe9fc95d1efd611ed3a804c8fcb986db376cbac338b56747d536037c94232480cb1b364b2e7520ef9296dc0d7ed690d0bd2a6d252e747563f7112244f0edb306cc857417efd1f35
---- !u!114 &2723730488337518831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1648469764724650914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 2137901579315063064}
 --- !u!1 &1761231602533454650
 GameObject:
   m_ObjectHideFlags: 0
