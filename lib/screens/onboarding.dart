@@ -32,6 +32,9 @@ class ScreenTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
+
     return Column(
       children: [
         Text(
@@ -40,7 +43,7 @@ class ScreenTitle extends StatelessWidget {
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.none,
-            color: Theme.of(context).buttonColor,
+            color: darkModeOn ? Colors.white : Theme.of(context).primaryColor,
           ),
         ),
         const Text(
@@ -48,6 +51,7 @@ class ScreenTitle extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.0,
             decoration: TextDecoration.none,
+            color: Colors.grey,
           ),
         ),
       ],
@@ -108,13 +112,16 @@ class Features extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
+
     return Column(
       children: [
         Container(
           width: 280.0,
           height: 280.0,
           decoration: BoxDecoration(
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(41.0),
           ),
           child: Column(
@@ -128,7 +135,7 @@ class Features extends StatelessWidget {
                     Text(
                       customCard.cardSubtitle,
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: darkModeOn ? Colors.grey : Colors.white,
                         fontSize: 13.0,
                         decoration: TextDecoration.none,
                       ),
@@ -216,8 +223,8 @@ class UpdateIndicators extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: currentPage == index
-                ? Theme.of(context).buttonColor
-                : Color(0xFFA6AEBD),
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
           ),
         );
       }).toList(),
@@ -230,15 +237,22 @@ class GetStarted extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
+
     return ElevatedButton(
       onPressed: () async {
         await Navigator.pushNamed(context, createPlanRoute);
       },
       style: ElevatedButton.styleFrom(
-        primary: Theme.of(context).buttonColor,
-        onPrimary: Theme.of(context).colorScheme.onPrimary,
+        primary: darkModeOn
+            ? Theme.of(context).accentColor
+            : Theme.of(context).primaryColor,
+        onPrimary: darkModeOn
+            ? Theme.of(context).colorScheme.onSecondary
+            : Theme.of(context).colorScheme.onPrimary,
       ),
-      child: const Text('Get started'),
+      child: const Text('GET STARTED'),
     );
   }
 }

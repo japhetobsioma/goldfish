@@ -560,6 +560,8 @@ class DailyGoalDialog extends HookWidget {
     final dailyGoalKey = useState(GlobalKey<FormState>());
     final dailyGoalController = useTextEditingController();
     final useRecommendedGoal = useState(true);
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
 
     useEffect(() {
       dailyGoalController.text = hydrationPlan.when(
@@ -619,6 +621,9 @@ class DailyGoalDialog extends HookWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
+            checkColor: darkModeOn
+                ? Theme.of(context).colorScheme.onSecondary
+                : Theme.of(context).colorScheme.onPrimary,
             value: useRecommendedGoal.value,
             onChanged: (value) async {
               useRecommendedGoal.value = value;
