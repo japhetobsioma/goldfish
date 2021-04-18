@@ -23,7 +23,6 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     final todaysTotalIntakes = await dbHelper.fetchTodaysTotalIntakes();
     final todaysIntakes = await dbHelper.fetchTodaysIntakes();
 
-    await hasUserAchievedGoal();
     await read(dailyTotalProvider.notifier).fetchDailyTotal();
 
     state = AsyncValue.data(
@@ -105,22 +104,25 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<WaterIntake>> {
     await fetchWaterIntake();
   }
 
-  Future<void> hasUserAchievedGoal() async {
+  Future<bool> hasUserAchievedGoal() async {
     final todaysTotalWaterIntake =
         await dbHelper.fetchTodaysTotalIntakes() ?? 0;
     final hydrationPlan = await dbHelper.fetchHydrationPlan();
     final dailyGoal = hydrationPlan[0]['dailyGoal'] as int;
     final todaysCompletionStatus = await dbHelper.fetchTodaysCompletionStatus();
 
-    if (todaysTotalWaterIntake >= dailyGoal) {
-      if (todaysCompletionStatus.toBool == false) {
-        await dbHelper.updateCompletionStatus(true);
+    if (todaysTotalWaterIntake >= dailyGoal &&
+        todaysCompletionStatus.toBool == false) {
+      await dbHelper.updateCompletionStatus(true);
 
-        await read(intakeBankProvider.notifier).updateIntakeBank(
-          value: dailyGoal.toDouble(),
-          arithmeticOperator: '+',
-        );
-      }
+      await read(intakeBankProvider.notifier).updateIntakeBank(
+        value: dailyGoal.toDouble(),
+        arithmeticOperator: '+',
+      );
+
+      return true;
+    } else {
+      return false;
     }
   }
 }

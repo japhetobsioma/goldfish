@@ -44,6 +44,8 @@ dependencies:
   battery_optimization: ^0.1.0
   android_power_manager: ^0.1.6
   hardware_buttons: ^1.0.0
+  confetti: ^0.5.5
+  giffy_dialog: ^1.8.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +67,7 @@ flutter:
   assets:
     - assets/database/
     - assets/illustrations/
+    - assets/gifs/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
