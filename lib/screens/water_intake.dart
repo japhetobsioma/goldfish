@@ -9,20 +9,22 @@ import '../models/cup.dart';
 import '../models/drink_type.dart';
 import '../models/tile_color.dart';
 import '../models/water_intake.dart';
+import '../providers/goal_tips_banner.dart';
 import '../states/animated_key.dart';
 import '../states/cup.dart';
 import '../states/drink_type.dart';
 import '../states/edit_intake.dart';
-import '../states/intake_bank.dart';
 import '../states/tile_color.dart';
 import '../states/user_info.dart';
 import '../states/water_intake.dart';
 
-class WaterIntakeScreen extends StatelessWidget {
+class WaterIntakeScreen extends HookWidget {
   const WaterIntakeScreen();
 
   @override
   Widget build(BuildContext context) {
+    final goalTipsBanner = useProvider(goalTipsBannerProvider);
+
     return RefreshIndicator(
       onRefresh: () =>
           context.read(waterIntakeProvider.notifier).fetchWaterIntake(),
@@ -35,6 +37,36 @@ class WaterIntakeScreen extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
+              goalTipsBanner.when(
+                data: (value) {
+                  if (value) {
+                    return MaterialBanner(
+                      forceActionsBelow: true,
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.lightbulb),
+                      ),
+                      content: const Text(
+                        'Achieve your today\'s goal to put your water intake '
+                        'into your virtual aquarium.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            await context
+                                .read(goalTipsBannerProvider.notifier)
+                                .setGoalTipsBanner(false);
+                          },
+                          child: const Text('Hide'),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (error, stackTrace) => const SizedBox.shrink(),
+              ),
               const SizedBox(height: 30.0),
               const WaterIntakeGauge(),
               const WaterIntakeLists(),
@@ -482,19 +514,6 @@ class DeleteWaterIntakeDialog extends HookWidget {
         TextButton(
           onPressed: () async {
             await context.read(editIntakeProvider.notifier).deleteWaterIntake();
-
-            waterIntake.when(
-              data: (value) {
-                final amount = value.todaysIntakes[index]['amount'] as int;
-
-                context.read(intakeBankProvider.notifier).updateIntakeBank(
-                      value: amount.toDouble(),
-                      arithmeticOperator: '-',
-                    );
-              },
-              loading: () {},
-              error: (_, __) {},
-            );
 
             final builder = (context, animation) {
               return waterIntake.when(

@@ -6,6 +6,7 @@ import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 import 'package:hardware_buttons/hardware_buttons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../states/intake_bank.dart';
 import '../states/unity_loading.dart';
 
 class Aquarium extends StatefulWidget {
@@ -83,12 +84,16 @@ class _AquariumState extends State<Aquarium> with WidgetsBindingObserver {
     final _arguments = ModalRoute.of(context).settings.arguments as Map;
 
     /// This will transfer water amount from the data passed on to this screen.
-    void transferWaterAmount() {
-      _unityWidgetController.postMessage(
+    void transferWaterAmount() async {
+      await _unityWidgetController.postMessage(
         'GameManager',
         'AddWaterLevel',
         _arguments['water'],
       );
+
+      await context
+          .read(intakeBankProvider.notifier)
+          .updateIntakeBank(value: 0, arithmeticOperator: '*');
     }
 
     void onUnityCreated(UnityWidgetController controller) async {

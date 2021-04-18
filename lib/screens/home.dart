@@ -166,13 +166,6 @@ class MenuBottomSheet extends HookWidget {
                 onTap: () async {
                   Navigator.pop(context);
 
-                  await context
-                      .read(intakeBankProvider.notifier)
-                      .updateIntakeBank(
-                        value: amount.toDouble(),
-                        arithmeticOperator: '-',
-                      );
-
                   isFirstTimeOpeningUnity
                       ? await showDialog(
                           barrierDismissible: false,
