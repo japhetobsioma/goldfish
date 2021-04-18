@@ -504,6 +504,8 @@ class AddNotificationDialog extends HookWidget {
     final titleFormKey = useState(GlobalKey<FormState>());
     final bodyTextController = useTextEditingController();
     final bodyFormKey = useState(GlobalKey<FormState>());
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -606,6 +608,14 @@ class AddNotificationDialog extends HookWidget {
             Padding(
               padding: const EdgeInsets.only(right: 30.0),
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: darkModeOn
+                      ? Theme.of(context).accentColor
+                      : Theme.of(context).primaryColor,
+                  onPrimary: darkModeOn
+                      ? Theme.of(context).colorScheme.onSecondary
+                      : Theme.of(context).colorScheme.onPrimary,
+                ),
                 onPressed: () async {
                   timeFormKey.value.currentState.validate();
                   titleFormKey.value.currentState.validate();
