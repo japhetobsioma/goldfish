@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +33,7 @@ class HomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final animatedList = useProvider(animatedListKeyProvider);
+    ConfettiController _confettiController;
 
     Future<dynamic> selectNotification(String payload) async {
       await Navigator.pushNamedAndRemoveUntil(
@@ -40,6 +44,9 @@ class HomeScreen extends HookWidget {
     }
 
     useEffect(() {
+      _confettiController =
+          ConfettiController(duration: const Duration(seconds: 10));
+
       Future.microtask(() async {
         const initializationSettingsAndroid = AndroidInitializationSettings(
           '@mipmap/ic_launcher',
@@ -73,7 +80,9 @@ class HomeScreen extends HookWidget {
 
         await sharedPreferences.setBool('initializeNotification', false);
       });
-      return () {};
+      return () {
+        _confettiController.dispose();
+      };
     }, []);
 
     return WillPopScope(
@@ -82,7 +91,26 @@ class HomeScreen extends HookWidget {
         appBar: AppBar(
           title: const Text('Home'),
         ),
-        body: WaterIntakeScreen(),
+        body: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                shouldLoop: true,
+                colors: [
+                  Colors.green,
+                  Colors.blue,
+                  Colors.pink,
+                  Colors.orange,
+                  Colors.purple,
+                ],
+              ),
+            ),
+            WaterIntakeScreen(),
+          ],
+        ),
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           child: Row(
@@ -119,6 +147,63 @@ class HomeScreen extends HookWidget {
               animatedList.key.currentState.insertItem(
                 0,
                 duration: const Duration(milliseconds: 500),
+              );
+            }
+
+            final hasUserAchievedGoal = await context
+                .read(waterIntakeProvider.notifier)
+                .hasUserAchievedGoal();
+
+            final randomNumber = Random().nextInt(4);
+
+            if (hasUserAchievedGoal) {
+              await showDialog(
+                context: context,
+                builder: (context) {
+                  _confettiController.play();
+                  return Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: ConfettiWidget(
+                          confettiController: _confettiController,
+                          blastDirectionality: BlastDirectionality.explosive,
+                          shouldLoop: true,
+                          colors: [
+                            Colors.green,
+                            Colors.blue,
+                            Colors.pink,
+                            Colors.orange,
+                            Colors.purple,
+                          ],
+                        ),
+                      ),
+                      AssetGiffyDialog(
+                        image: Image.asset(
+                          'assets/gifs/congrats_$randomNumber.gif',
+                          fit: BoxFit.cover,
+                        ),
+                        title: const Text(
+                          'Hooray!',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        description: const Text(
+                          'Congratulations on completing today\'s goal!',
+                          textAlign: TextAlign.center,
+                        ),
+                        entryAnimation: EntryAnimation.DEFAULT,
+                        onlyOkButton: true,
+                        onOkButtonPressed: () {
+                          _confettiController.stop();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
             }
           },
