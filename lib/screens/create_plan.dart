@@ -536,7 +536,9 @@ class BottomButtons extends HookWidget {
         children: [
           TextButton(
             style: TextButton.styleFrom(
-              primary: Theme.of(context).accentColor,
+              primary: darkModeOn
+                  ? Theme.of(context).accentColor
+                  : Theme.of(context).primaryColor,
             ),
             onPressed: () {
               context.read(createPlanFormProvider.notifier).clearAllFields();

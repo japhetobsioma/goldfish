@@ -130,9 +130,8 @@ class WaterIntakeGauge extends HookWidget {
                   },
                 ),
                 width: 25.0,
-                color: darkModeOn
-                    ? Theme.of(context).accentColor
-                    : Theme.of(context).primaryColor,
+                color:
+                    darkModeOn ? Colors.white : Theme.of(context).primaryColor,
                 enableAnimation: true,
               ),
             ],
@@ -163,7 +162,7 @@ class WaterIntakeGauge extends HookWidget {
                         ),
                         style: TextStyle(
                           color: darkModeOn
-                              ? Theme.of(context).accentColor
+                              ? Colors.white
                               : Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 28.0,
@@ -186,7 +185,7 @@ class WaterIntakeGauge extends HookWidget {
                           },
                         ),
                         style: TextStyle(
-                          color: darkModeOn ? Colors.white : Colors.black54,
+                          color: darkModeOn ? Colors.grey : Colors.black54,
                           fontWeight: FontWeight.bold,
                           fontSize: 28.0,
                         ),
@@ -316,20 +315,20 @@ class WaterIntakeItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: tileColors.color == Colors.white && darkModeOn
+                        color: darkModeOn
                             ? Theme.of(context).chipTheme.backgroundColor
                             : const Color(0xFFe0e0e0),
                         width: 1.0,
                       ),
                     ),
                     child: CircleAvatar(
-                      backgroundColor:
-                          tileColors.color == Colors.white && darkModeOn
-                              ? Theme.of(context).chipTheme.backgroundColor
-                              : tileColors.color,
+                      backgroundColor: darkModeOn
+                          ? Theme.of(context).chipTheme.backgroundColor
+                          : tileColors.color,
                       child: Icon(
                         drinkTypes.icon,
-                        color: const Color(0xFF202124),
+                        color:
+                            darkModeOn ? Colors.white : const Color(0xFF202124),
                       ),
                     ),
                   )
@@ -344,7 +343,9 @@ class WaterIntakeItem extends StatelessWidget {
               '${value.todaysIntakes[index]['amount']} '
               '${value.todaysIntakes[index]['measurement']} ',
               style: TextStyle(
-                color: const Color(0xFF202124),
+                color: tileColors.color == Colors.white && darkModeOn
+                    ? Colors.white
+                    : const Color(0xFF202124),
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
               ),
@@ -352,7 +353,9 @@ class WaterIntakeItem extends StatelessWidget {
             subtitle: Text(
               '${drinkTypes.description} · $timeDifference',
               style: TextStyle(
-                color: const Color(0xFF202124),
+                color: tileColors.color == Colors.white && darkModeOn
+                    ? Colors.white
+                    : const Color(0xFF202124),
               ),
             ),
             onTap: () {

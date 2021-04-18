@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'Project goldfish',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       initialRoute: isUserSignedUp ? homeRoute : onboardingRoute,
       routes: {
         onboardingRoute: (context) => const OnboardingScreen(),
