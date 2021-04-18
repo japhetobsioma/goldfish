@@ -719,9 +719,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5068601417492369356}
   - component: {fileID: 1204544636133135798}
-  - component: {fileID: 4746217173625105802}
-  - component: {fileID: -3957503729847268575}
-  - component: {fileID: 6741931227517434964}
+  - component: {fileID: 8771270665693928172}
   m_Layer: 0
   m_Name: Seahorse
   m_TagString: Untagged
@@ -764,7 +762,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4746217173625105802
+--- !u!114 &8771270665693928172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -773,119 +771,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5556485978956027254}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
+  m_Script: {fileID: 11500000, guid: a530f216edb2b764ab16679127e8d1a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tankCenterGoal: {fileID: 0}
-  obstacleSensingDistance: 5
-  swimSpeedMin: 10
-  swimSpeedMax: 15
+  obstacleSensingDistance: 10
+  swimSpeedMin: 1
+  swimSpeedMax: 8
   maxTurnRateY: 5
   maxWanderAngle: 45
   wanderPeriodDuration: 0.8
   wanderProbability: 0.15
   swimSpeed: 0
---- !u!114 &-3957503729847268575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5556485978956027254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabId: 386201885356577083
-  localRefs:
-    _Keys:
-    - {fileID: 5556485978956027254}
-    - {fileID: 5068601417492369356}
-    - {fileID: 1204544636133135798}
-    - {fileID: 4746217173625105802}
-    - {fileID: 11500000, guid: 974be49543da9854fb03dd2a3be59d67, type: 3}
-    - {fileID: -3957503729847268575}
-    - {fileID: 2339713611916645656}
-    - {fileID: 4244536479403433810}
-    - {fileID: 2164072839122134402}
-    - {fileID: 1910632019963051070}
-    - {fileID: 6414798842295677053}
-    - {fileID: 7368031722570731701}
-    - {fileID: 233471044575503277}
-    - {fileID: 8540640945951785840}
-    - {fileID: 7252846868399774172}
-    - {fileID: 7795101648657103632}
-    - {fileID: 7183247027163345107}
-    - {fileID: 7611567443192796076}
-    - {fileID: 4521047232182053788}
-    - {fileID: 2342702278316797313}
-    - {fileID: 3423573873917714224}
-    - {fileID: 6753039004193328357}
-    - {fileID: 8405309317814919848}
-    - {fileID: 1106943739644509590}
-    - {fileID: 3168913777659219306}
-    - {fileID: 8914283259359549187}
-    - {fileID: 6264632493160502411}
-    - {fileID: 7927965251686657112}
-    - {fileID: 7780152026502415624}
-    - {fileID: 3309298632460033488}
-    - {fileID: 1381282274477563290}
-    - {fileID: 683280881314519162}
-    - {fileID: 187158988721514888}
-    - {fileID: 944063646693088632}
-    - {fileID: 3971609873192024310}
-    - {fileID: 3910491503226744273}
-    - {fileID: 1918952210263186076}
-    - {fileID: 9218498127082800693}
-    - {fileID: 659322887813876769}
-    - {fileID: 4683291531838039407}
-    - {fileID: 9176243224612200811}
-    - {fileID: 1087764292921116756}
-    - {fileID: 1164031115091530270}
-    - {fileID: 4719118839385153208}
-    - {fileID: 8242172147377857293}
-    - {fileID: 5250460864396151067}
-    - {fileID: 4727339342510739650}
-    - {fileID: 5536758585692836910}
-    - {fileID: 611408903134017763}
-    - {fileID: 816510794543339698}
-    - {fileID: 1693224612326879541}
-    - {fileID: 5177528324089044885}
-    - {fileID: 2190532775396207535}
-    - {fileID: 1082684951618323087}
-    - {fileID: 1381482476965402201}
-    - {fileID: 7312962810604119394}
-    - {fileID: 7041998826485941353}
-    - {fileID: 6823420747684938213}
-    - {fileID: 1417070303451789248}
-    - {fileID: 6908223238347342802}
-    - {fileID: 678843418033263536}
-    - {fileID: 4189905260202745524}
-    - {fileID: 1996253149366844468}
-    - {fileID: 7928838993299126858}
-    - {fileID: 7790138589222250150}
-    - {fileID: -5740335484341258137, guid: 0859630cdab52eb46bcd875f82a7eb21, type: 3}
-    - {fileID: 5200753494579969130, guid: 0859630cdab52eb46bcd875f82a7eb21, type: 3}
-    - {fileID: -2310514774154243031, guid: 0859630cdab52eb46bcd875f82a7eb21, type: 3}
-    - {fileID: -749338713933554755, guid: 0859630cdab52eb46bcd875f82a7eb21, type: 3}
-    - {fileID: 6206001221512585294}
-    _Values: 296490df938a1d2cb37c13d9b8237964583f59f07551ea77c571319fa2681d058dd0ed35f4571262c03db7b65c531917a821ccad48947079b0f85bfb4443314ba2f19a76ee51a64f52bc30389a341a72571947c334cb4d079f8c1a134df2587df594a8b1126ffa55858300fb3b57ec7b23165cd40392e96dc05ee9859445635f9c4dd3d123337b38139c3db1cb52cb486161ca9bb0d37e6254c48e8fa780154020a097892abd9e1164dc185f3064c76d92a1e5f60ffe1037cf7126e8c10adf6c79036ed544bde21d01db008debde920ffd20fd059a1f3121905f579be386d36ebc84d833d39cb24f8403f6eaff9d231021e91a1ef81af867cb709a5bea81fe785190b68f49391c6193527f68d7b9de0dc4b88505934a895e8c70676201566402fc816691196c391834464fb4669ec17ab258e05cf8fbf4641a1503d8d2ba5f16b8816d55534cf35780922db3042b072a32e1135a37c1fb0072fd53d190ee1512a766fde4306c26656588dd8b29a76810f3275a0f59fa20797e6ec7519fc4e86e84e4a695d714a4610879bebf9e872a1a6664c3b849256c54ba7b993d5b2b3a605f91f8bbfe2cc62183f817d2b9e01704661d47fb775f485751fa4f53ade2bd233e5e600d8f6f1b3a635ec5bdc3c1f164939ed73ee43ee80048a00bf97b1acf603cf4111740259308010c5ed624061a7009eae64cb9fb07008a9f3b119cdd417c2e2582cfafd9244732df3cd7e012db427b64fd99ffe4e63fed118ea0e9826b21b325fbb57716e02e39608166c7211e64
---- !u!114 &6741931227517434964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5556485978956027254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cfcc9ceea0bf419cb3bcaf548c2600d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  saveChildren: 0
-  componentsToSave:
-  - {fileID: 5068601417492369356}
 --- !u!1 &6264632493160502411
 GameObject:
   m_ObjectHideFlags: 0
