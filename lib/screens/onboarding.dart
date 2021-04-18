@@ -252,7 +252,7 @@ class GetStarted extends StatelessWidget {
             ? Theme.of(context).colorScheme.onSecondary
             : Theme.of(context).colorScheme.onPrimary,
       ),
-      child: const Text('Get started'),
+      child: const Text('GET STARTED'),
     );
   }
 }

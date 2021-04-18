@@ -185,6 +185,7 @@ class BirthdayField extends HookWidget {
             Form(
               key: birthdayFormKey,
               child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: birthdayTextController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -223,9 +224,15 @@ class BirthdayField extends HookWidget {
                 onPressed: () async {
                   final selectedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: birthdayTextController.text.isEmpty ||
+                            birthdayTextController.text.dateFormatIsNotValid ||
+                            !DateTime(1905, 1, 1).isBefore(
+                                birthdayTextController.text.toDateTimeFormatted)
+                        ? DateTime.now()
+                        : birthdayTextController.text.toDateTimeFormatted,
                     firstDate: DateTime(1905, 1, 1),
                     lastDate: DateTime.now(),
+                    initialDatePickerMode: DatePickerMode.year,
                   );
 
                   if (selectedDate != null) {
@@ -266,6 +273,7 @@ class WakeupTimeField extends HookWidget {
             Form(
               key: wakeupTimeFormKey,
               child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: wakeupTimeTextController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -292,7 +300,10 @@ class WakeupTimeField extends HookWidget {
                 onPressed: () async {
                   final selectedTime = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: 8, minute: 30),
+                    initialTime: wakeupTimeTextController.text.isEmpty ||
+                            wakeupTimeTextController.text.timeFormatIsNotValid
+                        ? TimeOfDay(hour: 8, minute: 30)
+                        : wakeupTimeTextController.text.toTimeOfDayFormatted,
                   );
 
                   if (selectedTime != null) {
@@ -330,6 +341,7 @@ class BedtimeField extends HookWidget {
             Form(
               key: bedtimeFormKey,
               child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: bedtimeTextController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -356,7 +368,10 @@ class BedtimeField extends HookWidget {
                 onPressed: () async {
                   final selectedTime = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: 22, minute: 30),
+                    initialTime: bedtimeTextController.text.isEmpty ||
+                            bedtimeTextController.text.timeFormatIsNotValid
+                        ? TimeOfDay(hour: 22, minute: 30)
+                        : bedtimeTextController.text.toTimeOfDayFormatted,
                   );
 
                   if (selectedTime != null) {
@@ -381,10 +396,10 @@ class DailyGoal extends HookWidget {
     final dailyGoalFormKey = useProvider(dailyGoalFormKeyProvider);
     final dailyGoalTextController =
         useProvider(dailyGoalTextControllerProvider);
-    final selectedLiquidMeasurement =
-        useProvider(selectedLiquidMeasurementProvider);
     final isUsingRecommendedDailyGoal =
         useProvider(isUsingRecommendedDailyGoalProvider);
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -401,67 +416,60 @@ class DailyGoal extends HookWidget {
               children: <Widget>[
                 Form(
                   key: dailyGoalFormKey,
-                  child: TextFormField(
-                    controller: dailyGoalTextController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Daily Goal',
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    enabled: !isUsingRecommendedDailyGoal,
-                    validator: (dailyGoal) {
-                      if (dailyGoal.isEmpty) {
-                        return 'Enter daily goal';
+                  child: GestureDetector(
+                    onTap: () {
+                      if (isUsingRecommendedDailyGoal) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Cannot change this'),
+                            content: const Text(
+                              'You are currently using recommended daily goal, '
+                              'in which it automatically calculate your daily '
+                              'goal based on your age and gender. Unselect the '
+                              'Use recommended daily goal check box to change '
+                              'this.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('CLOSE'),
+                              ),
+                            ],
+                          ),
+                        );
                       }
-
-                      if (dailyGoal.isZero) {
-                        return 'Daily goal cannot be 0';
-                      }
-
-                      if (int.tryParse(dailyGoal) == null) {
-                        return 'Invalid number format';
-                      }
-
-                      return null;
                     },
-                  ),
-                ),
-                Positioned(
-                  top: 10.0,
-                  right: 5.0,
-                  child: PopupMenuButton(
-                    initialValue: selectedLiquidMeasurement,
-                    onSelected: (value) {
-                      context
-                          .read(createPlanFormProvider.notifier)
-                          .setLiquidMeasurement(value);
+                    child: TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: dailyGoalTextController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Daily Goal',
+                        suffixText: 'ml/per day',
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      enabled: !isUsingRecommendedDailyGoal,
+                      validator: (dailyGoal) {
+                        if (dailyGoal.isEmpty) {
+                          return 'Enter daily goal';
+                        }
 
-                      isUsingRecommendedDailyGoal
-                          ? context
-                              .read(createPlanFormProvider.notifier)
-                              .calculateDailyGoal()
-                          : context
-                              .read(createPlanFormProvider.notifier)
-                              .convertDailyGoal();
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                      const PopupMenuItem(
-                        value: LiquidMeasurement.Milliliter,
-                        child: Text('Milliliter'),
-                      ),
-                      const PopupMenuItem(
-                        value: LiquidMeasurement.FluidOunce,
-                        child: Text('Fluid Ounce'),
-                      ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        selectedLiquidMeasurement.descriptionPerDay,
-                      ),
+                        if (dailyGoal.isZero) {
+                          return 'Daily goal cannot be 0';
+                        }
+
+                        if (int.tryParse(dailyGoal) == null) {
+                          return 'Invalid number format';
+                        }
+
+                        return null;
+                      },
                     ),
                   ),
                 ),
@@ -475,7 +483,12 @@ class DailyGoal extends HookWidget {
                 ),
               ),
               value: isUsingRecommendedDailyGoal,
-              activeColor: Theme.of(context).primaryColor,
+              activeColor: darkModeOn
+                  ? Theme.of(context).accentColor
+                  : Theme.of(context).primaryColor,
+              checkColor: darkModeOn
+                  ? Theme.of(context).colorScheme.onSecondary
+                  : Theme.of(context).colorScheme.onPrimary,
               onChanged: (value) {
                 context
                     .read(createPlanFormProvider.notifier)
@@ -509,6 +522,8 @@ class BottomButtons extends HookWidget {
     final wakeupTimeFormKey = useProvider(wakeupTimeFormKeyProvider);
     final bedtimeFormKey = useProvider(bedtimeFormKeyProvider);
     final dailyGoalFormKey = useProvider(dailyGoalFormKeyProvider);
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -526,11 +541,16 @@ class BottomButtons extends HookWidget {
             onPressed: () {
               context.read(createPlanFormProvider.notifier).clearAllFields();
             },
-            child: const Text('Clear'),
+            child: const Text('CLEAR'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
+              primary: darkModeOn
+                  ? Theme.of(context).accentColor
+                  : Theme.of(context).primaryColor,
+              onPrimary: darkModeOn
+                  ? Theme.of(context).colorScheme.onSecondary
+                  : Theme.of(context).colorScheme.onPrimary,
             ),
             onPressed: () async {
               // Validate all the fields.
@@ -583,7 +603,7 @@ class BottomButtons extends HookWidget {
                 );
               }
             },
-            child: const Text('Save Plan'),
+            child: const Text('SAVE PLAN'),
           ),
         ],
       ),
