@@ -129,6 +129,8 @@ class ThisWeeksLineGauge extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final userInfo = useProvider(userInfoProvider);
+    final brightness = Theme.of(context).brightness;
+    final darkModeOn = brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -160,15 +162,17 @@ class ThisWeeksLineGauge extends HookWidget {
                   thickness: 20,
                   edgeStyle: LinearEdgeStyle.bothCurve,
                   borderWidth: 0,
-                  borderColor: const Color.fromRGBO(75, 135, 185, 1),
-                  color: const Color.fromRGBO(75, 135, 185, 0.15),
+                  borderColor: Theme.of(context).chipTheme.backgroundColor,
+                  color: Theme.of(context).chipTheme.backgroundColor,
                 ),
                 barPointers: [
                   LinearBarPointer(
                     value: totalIntake.toDouble(),
                     thickness: 20,
                     edgeStyle: LinearEdgeStyle.startCurve,
-                    color: Colors.blueAccent,
+                    color: darkModeOn
+                        ? Colors.white
+                        : Theme.of(context).primaryColor,
                   ),
                 ],
               ),
