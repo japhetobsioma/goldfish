@@ -496,6 +496,22 @@ class DatabaseHelper {
     ''');
   }
 
+  Future<int> fetchTodaysCompletionStatus() async {
+    final db = await instance.database;
+
+    return Sqflite.firstIntValue(
+      await db.rawQuery('''
+        SELECT
+          isCompleted
+        FROM
+          Completion
+        WHERE
+          strftime('%d-%m-%Y', currentDate) = 
+          strftime('%d-%m-%Y', 'now', 'localtime')
+      '''),
+    );
+  }
+
   Future<List<Map<String, dynamic>>> fetchTodayIntakes() async {
     final db = await instance.database;
 
