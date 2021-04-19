@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/routes.dart';
 import 'providers/app_theme.dart';
-import 'providers/user_status.dart';
 import 'screens/aquarium.dart';
 import 'screens/create_plan.dart';
 import 'screens/history.dart';
@@ -19,20 +19,23 @@ import 'screens/settings/scheduled_notification.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final isUserSignedUp = sharedPreferences.getBool('isUserSignedUp') ?? false;
+
   runApp(
     ProviderScope(
-      child: MyApp(),
+      child: MyApp(isUserSignedUp),
     ),
   );
 }
 
 class MyApp extends HookWidget {
-  const MyApp();
+  const MyApp(this.isUserSignedUp);
+  final bool isUserSignedUp;
 
   @override
   Widget build(BuildContext context) {
     final appTheme = useProvider(appThemeProvider);
-    final isUserSignedUp = useProvider(userStatusProvider);
 
     return appTheme.when(
       data: (value) => MaterialApp(
@@ -41,13 +44,7 @@ class MyApp extends HookWidget {
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.values[value],
-        initialRoute: isUserSignedUp.when(
-          data: (value) => value,
-          loading: () => false,
-          error: (_, __) => false,
-        )
-            ? homeRoute
-            : onboardingRoute,
+        initialRoute: isUserSignedUp ? homeRoute : onboardingRoute,
         routes: {
           onboardingRoute: (context) => const OnboardingScreen(),
           createPlanRoute: (context) => const CreatePlanScreen(),
