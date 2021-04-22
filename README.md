@@ -18,10 +18,6 @@ Final year project. (Work in progress)
 
 [aqua-v1.0.apk](https://github.com/japhetobsioma/goldfish/releases/download/v1.0/aqua-v1.0.apk)
 
-## Preview
-
-![Recording](recording.gif)
-
 ## Authors
 
 * [Japhet Mert Catilo Obsioma](https://github.com/japhetobsioma) (Dart, Flutter, SQLite)
