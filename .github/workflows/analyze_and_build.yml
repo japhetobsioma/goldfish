@@ -7,9 +7,9 @@ on:
   pull_request:
     ## Runs the CI whenever there is a pull request  in main branch.
     # branches: [ main ]
-  schedule:
+  ## schedule:
     ## Runs the CI once a week at 00:00 on Sunday.
-    - cron: '0 0 * * 0'
+    ## - cron: '0 0 * * 0'
 
 jobs:
   analyze:
